@@ -104,13 +104,12 @@ class BoardState {
           rookSquare.piece!.symbol != PieceSymbol.rook) {
         throw ArgumentError('No rook at ${move.rook.to} for castling.');
       }
-    } else {
-      if (this[move.to].piece != move.moving) {
-        throw ArgumentError(
-          'The piece at ${move.to} does not match the moving piece: '
-          '${this[move.to].piece?.symbol.lexeme} != ${move.moving.symbol.lexeme}',
-        );
-      }
+    }
+    if (this[move.to].piece != move.moving) {
+      throw ArgumentError(
+        'The piece at ${move.to} does not match the moving piece: '
+        '${this[move.to].piece?.symbol.lexeme} != ${move.moving.symbol.lexeme}',
+      );
     }
 
     Square newSquare = this[move.to].removePiece();

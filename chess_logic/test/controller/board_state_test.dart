@@ -412,13 +412,17 @@ void main() {
         final e4 = Position.fromAlgebraic('e4');
 
         // Setup: make a move first
-        final move = PawnMove(from: e2, to: e4, moving: Pawn(Team.white));
+        final move = PawnInitialMove(
+          from: e2,
+          to: e4,
+          moving: Pawn(Team.white),
+        );
         boardState.actOn(move);
 
         // Try to undo with wrong piece
         final wrongMove = KnightMove(
           from: e2,
-          to: e4,
+          to: Position.fromAlgebraic('f4'),
           moving: Knight(Team.white),
         );
 
@@ -428,7 +432,7 @@ void main() {
             isA<ArgumentError>().having(
               (e) => e.message,
               'message',
-              contains('The piece at e2 does not match the moving piece'),
+              contains('The piece at f4 does not match the moving piece'),
             ),
           ),
         );
@@ -541,14 +545,14 @@ void main() {
     });
 
     group('integration tests', () {
-      test('should handle Scholar\'s Mate sequence', () {
+      test("should handle Scholar's Mate sequence", () {
         final moves = <Move>[
-          PawnMove(
+          PawnInitialMove(
             from: Position.fromAlgebraic('e2'),
             to: Position.fromAlgebraic('e4'),
             moving: Pawn(Team.white),
           ),
-          PawnMove(
+          PawnInitialMove(
             from: Position.fromAlgebraic('e7'),
             to: Position.fromAlgebraic('e5'),
             moving: Pawn(Team.black),
@@ -600,15 +604,15 @@ void main() {
       test('should maintain board consistency during complex sequence', () {
         final d2 = Position.fromAlgebraic('d2');
         final d4 = Position.fromAlgebraic('d4');
-        final d5 = Position.fromAlgebraic('d5');
-        final d7 = Position.fromAlgebraic('d7');
+        final e5 = Position.fromAlgebraic('e5');
+        final e7 = Position.fromAlgebraic('e7');
 
         final moves = [
           PawnInitialMove(from: d2, to: d4, moving: Pawn(Team.white)),
-          PawnInitialMove(from: d7, to: d5, moving: Pawn(Team.black)),
+          PawnInitialMove(from: e7, to: e5, moving: Pawn(Team.black)),
           PawnCaptureMove(
             from: d4,
-            to: d5,
+            to: e5,
             moving: Pawn(Team.white),
             captured: Pawn(Team.black),
           ),
@@ -633,9 +637,9 @@ void main() {
         // Verify specific positions
         expect(boardState[d2].isEmpty, isTrue);
         expect(boardState[d4].isEmpty, isTrue);
-        expect(boardState[d5].piece, isA<Pawn>());
-        expect(boardState[d5].piece!.team, equals(Team.white));
-        expect(boardState[d7].isEmpty, isTrue);
+        expect(boardState[e5].piece, isA<Pawn>());
+        expect(boardState[e5].piece!.team, equals(Team.white));
+        expect(boardState[e7].isEmpty, isTrue);
       });
 
       test('should handle castling moves', () {

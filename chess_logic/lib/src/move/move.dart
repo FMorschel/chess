@@ -1,4 +1,5 @@
 import 'package:chess_logic/src/controller/capture.dart';
+import 'package:chess_logic/src/controller/direction.dart';
 import 'package:chess_logic/src/move/algebraic_notation_formatter.dart';
 import 'package:chess_logic/src/move/ambiguous_movement_type.dart';
 import 'package:chess_logic/src/move/check.dart';
