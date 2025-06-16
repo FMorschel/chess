@@ -13,8 +13,8 @@ void main() {
       group('PawnCaptureMove', () {
         test('should modify check parameter', () {
           final original = PawnCaptureMove<Rook>(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Rook(Team.black),
             check: Check.none,
@@ -31,8 +31,8 @@ void main() {
 
         test('should preserve original values when no parameters provided', () {
           final original = PawnCaptureMove<Bishop>(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Bishop(Team.black),
             check: Check.checkmate,
@@ -49,8 +49,8 @@ void main() {
 
         test('should preserve original when null parameters provided', () {
           final original = PawnCaptureMove<Knight>(
-            from: Position.fromAlgebraic('a7'),
-            to: Position.fromAlgebraic('b8'),
+            from: Position.a7,
+            to: Position.b8,
             moving: Pawn(Team.white),
             captured: Knight(Team.black),
             check: Check.check,
@@ -69,8 +69,8 @@ void main() {
 
         test('should create different instances (immutability)', () {
           final original = PawnCaptureMove<Pawn>(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Pawn(Team.black),
           );
@@ -83,8 +83,8 @@ void main() {
 
         test('should modify only check parameter', () {
           final original = PawnCaptureMove<Rook>(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Rook(Team.black),
             check: Check.none,
@@ -103,8 +103,8 @@ void main() {
       group('QueenCaptureMove', () {
         test('should modify check and ambiguous parameters', () {
           final original = QueenCaptureMove<Bishop>(
-            from: Position.fromAlgebraic('d1'),
-            to: Position.fromAlgebraic('h5'),
+            from: Position.d1,
+            to: Position.h5,
             moving: Queen(Team.white),
             captured: Bishop(Team.black),
             check: Check.none,
@@ -126,8 +126,8 @@ void main() {
 
         test('should handle ambiguous movement modification', () {
           final original = QueenCaptureMove<Knight>(
-            from: Position.fromAlgebraic('d1'),
-            to: Position.fromAlgebraic('d4'),
+            from: Position.d1,
+            to: Position.d4,
             moving: Queen(Team.white),
             captured: Knight(Team.black),
             ambiguous: AmbiguousMovementType.file,
@@ -149,8 +149,8 @@ void main() {
       group('RookCaptureMove', () {
         test('should modify check and ambiguous parameters', () {
           final original = RookCaptureMove<Pawn>(
-            from: Position.fromAlgebraic('a1'),
-            to: Position.fromAlgebraic('a8'),
+            from: Position.a1,
+            to: Position.a8,
             moving: Rook(Team.black),
             captured: Pawn(Team.white),
             check: Check.none,
@@ -173,8 +173,8 @@ void main() {
       group('BishopCaptureMove', () {
         test('should modify check and ambiguous parameters', () {
           final original = BishopCaptureMove<Queen>(
-            from: Position.fromAlgebraic('c1'),
-            to: Position.fromAlgebraic('f4'),
+            from: Position.c1,
+            to: Position.f4,
             moving: Bishop(Team.white),
             captured: Queen(Team.black),
             check: Check.check,
@@ -197,8 +197,8 @@ void main() {
       group('KnightCaptureMove', () {
         test('should modify check and ambiguous parameters', () {
           final original = KnightCaptureMove<Pawn>(
-            from: Position.fromAlgebraic('b1'),
-            to: Position.fromAlgebraic('c3'),
+            from: Position.b1,
+            to: Position.c3,
             moving: Knight(Team.black),
             captured: Pawn(Team.white),
             check: Check.none,
@@ -221,8 +221,8 @@ void main() {
       group('KingCaptureMove', () {
         test('should modify only check parameter (ambiguous not supported)', () {
           final original = KingCaptureMove<Pawn>(
-            from: Position.fromAlgebraic('e1'),
-            to: Position.fromAlgebraic('e2'),
+            from: Position.e1,
+            to: Position.e2,
             moving: King(Team.white),
             captured: Pawn(Team.black),
             check: Check.none,
@@ -244,8 +244,8 @@ void main() {
       group('EnPassantMove', () {
         test('should modify check parameter', () {
           final original = EnPassantMove(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Pawn(Team.black),
             check: Check.none,
@@ -263,8 +263,8 @@ void main() {
 
         test('should preserve ambiguous movement type (always file)', () {
           final original = EnPassantMove(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Pawn(Team.black),
           );
@@ -279,8 +279,8 @@ void main() {
       group('PromotionCaptureMove', () {
         test('should modify check parameter and preserve promotion', () {
           final original = PromotionCaptureMove<Rook>(
-            from: Position.fromAlgebraic('e7'),
-            to: Position.fromAlgebraic('d8'),
+            from: Position.e7,
+            to: Position.d8,
             moving: Pawn(Team.white),
             captured: Rook(Team.black),
             promotion: PieceSymbol.queen,
@@ -300,8 +300,8 @@ void main() {
 
         test('should preserve promotion when null check provided', () {
           final original = PromotionCaptureMove<Knight>(
-            from: Position.fromAlgebraic('e7'),
-            to: Position.fromAlgebraic('d8'),
+            from: Position.e7,
+            to: Position.d8,
             moving: Pawn(Team.white),
             captured: Knight(Team.black),
             promotion: PieceSymbol.bishop,
@@ -325,8 +325,8 @@ void main() {
 
         for (final check in checkTypes) {
           final original = RookCaptureMove<Bishop>(
-            from: Position.fromAlgebraic('a1'),
-            to: Position.fromAlgebraic('a8'),
+            from: Position.a1,
+            to: Position.a8,
             moving: Rook(Team.white),
             captured: Bishop(Team.black),
           );
@@ -347,8 +347,8 @@ void main() {
 
         for (final ambiguous in ambiguousTypes) {
           final original = QueenCaptureMove<Rook>(
-            from: Position.fromAlgebraic('d1'),
-            to: Position.fromAlgebraic('d8'),
+            from: Position.d1,
+            to: Position.d8,
             moving: Queen(Team.white),
             captured: Rook(Team.black),
           );
@@ -369,8 +369,8 @@ void main() {
 
         for (final promotion in promotionTypes) {
           final original = PromotionCaptureMove<Pawn>(
-            from: Position.fromAlgebraic('e7'),
-            to: Position.fromAlgebraic('d8'),
+            from: Position.e7,
+            to: Position.d8,
             moving: Pawn(Team.white),
             captured: Pawn(Team.black),
             promotion: promotion,
@@ -387,8 +387,8 @@ void main() {
     group('Complex modification scenarios', () {
       test('should handle multiple parameter modifications', () {
         final original = BishopCaptureMove<Queen>(
-          from: Position.fromAlgebraic('c1'),
-          to: Position.fromAlgebraic('f4'),
+          from: Position.c1,
+          to: Position.f4,
           moving: Bishop(Team.white),
           captured: Queen(Team.black),
           check: Check.none,
@@ -410,8 +410,8 @@ void main() {
 
       test('should chain copyWith calls correctly', () {
         final original = KnightCaptureMove<Rook>(
-          from: Position.fromAlgebraic('b1'),
-          to: Position.fromAlgebraic('c3'),
+          from: Position.b1,
+          to: Position.c3,
           moving: Knight(Team.white),
           captured: Rook(Team.black),
           check: Check.none,
@@ -433,8 +433,8 @@ void main() {
     group('Immutability verification', () {
       test('should not modify original instance', () {
         final original = PawnCaptureMove<Bishop>(
-          from: Position.fromAlgebraic('e5'),
-          to: Position.fromAlgebraic('d6'),
+          from: Position.e5,
+          to: Position.d6,
           moving: Pawn(Team.white),
           captured: Bishop(Team.black),
           check: Check.none,
@@ -457,8 +457,8 @@ void main() {
 
       test('should create independent instances', () {
         final original = RookCaptureMove<Knight>(
-          from: Position.fromAlgebraic('a1'),
-          to: Position.fromAlgebraic('a8'),
+          from: Position.a1,
+          to: Position.a8,
           moving: Rook(Team.white),
           captured: Knight(Team.black),
           check: Check.check,
@@ -477,8 +477,8 @@ void main() {
     group('Algebraic notation consistency', () {
       test('should maintain correct algebraic notation after copyWith', () {
         final original = QueenCaptureMove<Rook>(
-          from: Position.fromAlgebraic('d1'),
-          to: Position.fromAlgebraic('d8'),
+          from: Position.d1,
+          to: Position.d8,
           moving: Queen(Team.white),
           captured: Rook(Team.black),
           check: Check.none,
@@ -498,8 +498,8 @@ void main() {
 
       test('should maintain promotion notation after copyWith', () {
         final original = PromotionCaptureMove<Bishop>(
-          from: Position.fromAlgebraic('e7'),
-          to: Position.fromAlgebraic('d8'),
+          from: Position.e7,
+          to: Position.d8,
           moving: Pawn(Team.white),
           captured: Bishop(Team.black),
           promotion: PieceSymbol.queen,
@@ -517,8 +517,8 @@ void main() {
     group('Edge cases', () {
       test('should handle copyWith with no parameters', () {
         final original = PawnCaptureMove<Queen>(
-          from: Position.fromAlgebraic('e5'),
-          to: Position.fromAlgebraic('d6'),
+          from: Position.e5,
+          to: Position.d6,
           moving: Pawn(Team.white),
           captured: Queen(Team.black),
           check: Check.check,
@@ -537,8 +537,8 @@ void main() {
 
       test('should handle copyWith with all null parameters', () {
         final original = QueenCaptureMove<Knight>(
-          from: Position.fromAlgebraic('d1'),
-          to: Position.fromAlgebraic('h5'),
+          from: Position.d1,
+          to: Position.h5,
           moving: Queen(Team.white),
           captured: Knight(Team.black),
           check: Check.check,

@@ -83,36 +83,36 @@ void main() {
 
       setUp(() {
         squares = [
-          EmptySquare(Position.fromAlgebraic('a1')),
-          OccupiedSquare(Position.fromAlgebraic('b1'), Rook(Team.white)),
-          EmptySquare(Position.fromAlgebraic('c1')),
-          OccupiedSquare(Position.fromAlgebraic('d1'), Queen(Team.white)),
+          EmptySquare(Position.a1),
+          OccupiedSquare(Position.b1, Rook(Team.white)),
+          EmptySquare(Position.c1),
+          OccupiedSquare(Position.d1, Queen(Team.white)),
         ];
       });
 
       group('at', () {
         test('should return correct index for existing position', () {
-          final index = squares.at(Position.fromAlgebraic('b1'));
+          final index = squares.at(Position.b1);
 
           expect(index, equals(1));
-          expect(squares[index].position, equals(Position.fromAlgebraic('b1')));
+          expect(squares[index].position, equals(Position.b1));
         });
 
         test('should return correct index for first position', () {
-          final index = squares.at(Position.fromAlgebraic('a1'));
+          final index = squares.at(Position.a1);
 
           expect(index, equals(0));
         });
 
         test('should return correct index for last position', () {
-          final index = squares.at(Position.fromAlgebraic('d1'));
+          final index = squares.at(Position.d1);
 
           expect(index, equals(3));
         });
 
         test('should throw ArgumentError for non-existent position', () {
           expect(
-            () => squares.at(Position.fromAlgebraic('e1')),
+            () => squares.at(Position.e1),
             throwsA(
               isA<ArgumentError>().having(
                 (e) => e.message,
@@ -127,7 +127,7 @@ void main() {
           final emptySquares = <Square>[];
 
           expect(
-            () => emptySquares.at(Position.fromAlgebraic('a1')),
+            () => emptySquares.at(Position.a1),
             throwsA(isA<ArgumentError>()),
           );
         });
@@ -136,7 +136,7 @@ void main() {
       group('replace', () {
         test('should replace square at existing position', () {
           final newSquare = OccupiedSquare(
-            Position.fromAlgebraic('a1'),
+            Position.a1,
             Pawn(Team.black),
           );
 
@@ -148,7 +148,7 @@ void main() {
         });
 
         test('should replace occupied square with empty square', () {
-          final newSquare = EmptySquare(Position.fromAlgebraic('b1'));
+          final newSquare = EmptySquare(Position.b1);
 
           squares.replace(newSquare);
 
@@ -158,7 +158,7 @@ void main() {
 
         test('should replace empty square with occupied square', () {
           final newSquare = OccupiedSquare(
-            Position.fromAlgebraic('c1'),
+            Position.c1,
             Knight(Team.black),
           );
 
@@ -170,7 +170,7 @@ void main() {
         });
 
         test('should throw ArgumentError when position not found', () {
-          final newSquare = EmptySquare(Position.fromAlgebraic('e1'));
+          final newSquare = EmptySquare(Position.e1);
 
           expect(
             () => squares.replace(newSquare),
@@ -181,7 +181,7 @@ void main() {
         test('should maintain list length after replacement', () {
           final originalLength = squares.length;
           final newSquare = OccupiedSquare(
-            Position.fromAlgebraic('a1'),
+            Position.a1,
             Bishop(Team.white),
           );
 
@@ -213,13 +213,13 @@ void main() {
         test('should return empty list for moves without captures', () {
           final moves = <Move>[
             PawnInitialMove(
-              from: Position.fromAlgebraic('e2'),
-              to: Position.fromAlgebraic('e4'),
+              from: Position.e2,
+              to: Position.e4,
               moving: Pawn(Team.white),
             ),
             KnightMove(
-              from: Position.fromAlgebraic('b1'),
-              to: Position.fromAlgebraic('c3'),
+              from: Position.b1,
+              to: Position.c3,
               moving: Knight(Team.white),
             ),
           ];
@@ -231,8 +231,8 @@ void main() {
 
         test('should create team scores for single capture move', () {
           final captureMove = PawnCaptureMove(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Pawn(Team.black),
           );
@@ -249,14 +249,14 @@ void main() {
 
         test('should group captures by team', () {
           final whiteCaptureMove = PawnCaptureMove(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Pawn(Team.black),
           );
           final blackCaptureMove = PawnCaptureMove(
-            from: Position.fromAlgebraic('d6'),
-            to: Position.fromAlgebraic('e5'),
+            from: Position.d6,
+            to: Position.e5,
             moving: Pawn(Team.black),
             captured: Rook(Team.white),
           );
@@ -279,14 +279,14 @@ void main() {
 
         test('should accumulate multiple captures for same team', () {
           final captureMove1 = PawnCaptureMove(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Pawn(Team.black),
           );
           final captureMove2 = QueenCaptureMove(
-            from: Position.fromAlgebraic('d1'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.d1,
+            to: Position.d6,
             moving: Queen(Team.white),
             captured: Rook(Team.black),
           );
@@ -302,13 +302,13 @@ void main() {
 
         test('should handle mixed capture and non-capture moves', () {
           final regularMove = PawnInitialMove(
-            from: Position.fromAlgebraic('e2'),
-            to: Position.fromAlgebraic('e4'),
+            from: Position.e2,
+            to: Position.e4,
             moving: Pawn(Team.white),
           );
           final captureMove = PawnCaptureMove(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Pawn(Team.black),
           );
@@ -323,20 +323,20 @@ void main() {
 
         test('should handle different types of capture moves', () {
           final pawnCapture = PawnCaptureMove(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Pawn(Team.black),
           );
           final queenCapture = QueenCaptureMove(
-            from: Position.fromAlgebraic('d1'),
-            to: Position.fromAlgebraic('h5'),
+            from: Position.d1,
+            to: Position.h5,
             moving: Queen(Team.white),
             captured: Bishop(Team.black),
           );
           final rookCapture = RookCaptureMove(
-            from: Position.fromAlgebraic('a1'),
-            to: Position.fromAlgebraic('a8'),
+            from: Position.a1,
+            to: Position.a8,
             moving: Rook(Team.white),
             captured: Knight(Team.black),
           );
@@ -589,24 +589,24 @@ Capture _createCapture<P extends Piece, C extends Piece>({
   Position from, to;
 
   if (captor is Rook) {
-    from = Position.fromAlgebraic('a1');
-    to = Position.fromAlgebraic('a8'); // Vertical move for rook
+    from = Position.a1;
+    to = Position.a8; // Vertical move for rook
   } else if (captor is Bishop) {
-    from = Position.fromAlgebraic('a1');
-    to = Position.fromAlgebraic('h8'); // Diagonal move for bishop
+    from = Position.a1;
+    to = Position.h8; // Diagonal move for bishop
   } else if (captor is Knight) {
-    from = Position.fromAlgebraic('b1');
-    to = Position.fromAlgebraic('c3'); // L-shaped move for knight
+    from = Position.b1;
+    to = Position.c3; // L-shaped move for knight
   } else if (captor is Queen) {
-    from = Position.fromAlgebraic('d1');
-    to = Position.fromAlgebraic('d8'); // Vertical move for queen
+    from = Position.d1;
+    to = Position.d8; // Vertical move for queen
   } else if (captor is King) {
-    from = Position.fromAlgebraic('e1');
-    to = Position.fromAlgebraic('e2'); // One square move for king
+    from = Position.e1;
+    to = Position.e2; // One square move for king
   } else {
     // Default for pawns and other pieces - diagonal capture for pawn
-    from = Position.fromAlgebraic('e2');
-    to = Position.fromAlgebraic('d3'); // Diagonal capture move
+    from = Position.e2;
+    to = Position.d3; // Diagonal capture move
   }
 
   final move = CaptureMove<P, C>.create(

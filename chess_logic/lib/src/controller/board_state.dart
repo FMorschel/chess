@@ -43,7 +43,7 @@ class BoardState {
 
   static List<Square> get _emptySquares => [
     for (var file in File.values)
-      for (var rank in Rank.values) EmptySquare(Position._(file, rank)),
+      for (var rank in Rank.values) EmptySquare(Position(file, rank)),
   ];
 
   static final BoardPrinter _printer = BoardPrinter.instance;
@@ -159,7 +159,7 @@ class BoardState {
     clear();
     for (var file in File.values) {
       for (var rank in Rank.values) {
-        final position = Position._(file, rank);
+        final position = Position(file, rank);
         final (team, symbol) = switch (rank) {
           Rank.one => (Team.white, file.defaultSymbol),
           Rank.two => (Team.white, PieceSymbol.pawn),

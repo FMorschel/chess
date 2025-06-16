@@ -1,7 +1,6 @@
 import 'package:chess_logic/src/controller/board_state.dart';
 import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/direction.dart';
-import 'package:chess_logic/src/position/file.dart';
 import 'package:chess_logic/src/position/position.dart';
 import 'package:chess_logic/src/position/rank.dart';
 import 'package:chess_logic/src/square/piece_symbol.dart';
@@ -49,18 +48,18 @@ final class King extends Piece {
   bool get _shouldIteratePositions => false;
 
   Position get _startPosition => switch (team) {
-    Team.white => Position._(File.e, Rank.one),
-    Team.black => Position._(File.e, Rank.eight),
+    Team.white => Position.e1,
+    Team.black => Position.e8,
   };
 
   List<(Position, Direction)> get rookPositions => switch (team) {
     Team.white => [
-      (Position._(File.a, Rank.one), Direction.left),
-      (Position._(File.h, Rank.one), Direction.right),
+      (Position.a1, Direction.left),
+      (Position.h1, Direction.right),
     ],
     Team.black => [
-      (Position._(File.a, Rank.eight), Direction.left),
-      (Position._(File.h, Rank.eight), Direction.right),
+      (Position.a8, Direction.left),
+      (Position.h8, Direction.right),
     ],
   };
 
@@ -166,7 +165,7 @@ final class Pawn extends Piece {
       if (nextSquare is EmptySquare) {
         if (lastMove case PawnInitialMove(
           :var to,
-        ) when to == Position._(nextPosition.file, position.rank)) {
+        ) when to == Position(nextPosition.file, position.rank)) {
           continue; // Skip if the last move was a pawn initial move
         }
         list.remove(nextPosition);

@@ -8,12 +8,12 @@ import 'package:test/test.dart';
 void main() {
   group('KingsideCastling', () {
     final whiteKing = King(Team.white);
-    final kingFrom = Position.fromAlgebraic('e1');
-    final kingTo = Position.fromAlgebraic('g1');
+    final kingFrom = Position.e1;
+    final kingTo = Position.g1;
     final rookMove = RookMove(
       moving: Rook(Team.white),
-      from: Position.fromAlgebraic('h1'),
-      to: Position.fromAlgebraic('f1'),
+      from: Position.h1,
+      to: Position.f1,
     );
 
     test('stores all fields correctly', () {
@@ -34,8 +34,8 @@ void main() {
       test('position', () {
         final rookMove = RookMove(
           moving: Rook(Team.white),
-          from: Position.fromAlgebraic('a1'),
-          to: Position.fromAlgebraic('c1'),
+          from: Position.a1,
+          to: Position.c1,
         );
         expect(
           () => KingsideCastling(
@@ -50,8 +50,8 @@ void main() {
       test('team', () {
         final rookMove = RookMove(
           moving: Rook(Team.black),
-          from: Position.fromAlgebraic('h1'),
-          to: Position.fromAlgebraic('f1'),
+          from: Position.h1,
+          to: Position.f1,
         );
         expect(
           () => KingsideCastling(

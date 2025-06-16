@@ -22,14 +22,14 @@ void main() {
         final board = BoardState();
 
         // Position instances
-        final e1 = Position.fromAlgebraic('e1');
-        final d1 = Position.fromAlgebraic('d1');
-        final a1 = Position.fromAlgebraic('a1');
-        final h1 = Position.fromAlgebraic('h1');
-        final b1 = Position.fromAlgebraic('b1');
-        final g1 = Position.fromAlgebraic('g1');
-        final c1 = Position.fromAlgebraic('c1');
-        final f1 = Position.fromAlgebraic('f1');
+        final e1 = Position.e1;
+        final d1 = Position.d1;
+        final a1 = Position.a1;
+        final h1 = Position.h1;
+        final b1 = Position.b1;
+        final g1 = Position.g1;
+        final c1 = Position.c1;
+        final f1 = Position.f1;
 
         // Test white pieces
         expect(board[e1].piece, isA<King>());
@@ -49,18 +49,18 @@ void main() {
 
         // Test white pawns
         for (final file in File.values) {
-          final position = Position._(file, Rank.two);
+          final position = Position(file, Rank.two);
           expect(board[position].piece, isA<Pawn>());
           expect(board[position].piece!.team, equals(Team.white));
         } // Test black pieces
-        final e8 = Position.fromAlgebraic('e8');
-        final d8 = Position.fromAlgebraic('d8');
-        final a8 = Position.fromAlgebraic('a8');
-        final h8 = Position.fromAlgebraic('h8');
-        final b8 = Position.fromAlgebraic('b8');
-        final g8 = Position.fromAlgebraic('g8');
-        final c8 = Position.fromAlgebraic('c8');
-        final f8 = Position.fromAlgebraic('f8');
+        final e8 = Position.e8;
+        final d8 = Position.d8;
+        final a8 = Position.a8;
+        final h8 = Position.h8;
+        final b8 = Position.b8;
+        final g8 = Position.g8;
+        final c8 = Position.c8;
+        final f8 = Position.f8;
 
         expect(board[e8].piece, isA<King>());
         expect(board[e8].piece!.team, equals(Team.black));
@@ -79,7 +79,7 @@ void main() {
 
         // Test black pawns
         for (final file in File.values) {
-          final position = Position._(file, Rank.seven);
+          final position = Position(file, Rank.seven);
           expect(board[position].piece, isA<Pawn>());
           expect(board[position].piece!.team, equals(Team.black));
         }
@@ -87,16 +87,16 @@ void main() {
         // Test empty squares
         for (final file in File.values) {
           for (final rank in [Rank.three, Rank.four, Rank.five, Rank.six]) {
-            final position = Position._(file, rank);
+            final position = Position(file, rank);
             expect(board[position].isEmpty, isTrue);
           }
         }
       });
       test('should create board with provided history', () {
-        final e2 = Position.fromAlgebraic('e2');
-        final e4 = Position.fromAlgebraic('e4');
-        final e7 = Position.fromAlgebraic('e7');
-        final e5 = Position.fromAlgebraic('e5');
+        final e2 = Position.e2;
+        final e4 = Position.e4;
+        final e7 = Position.e7;
+        final e5 = Position.e5;
 
         final moves = [
           PawnInitialMove(from: e2, to: e4, moving: Pawn(Team.white)),
@@ -122,7 +122,7 @@ void main() {
 
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position._(file, rank);
+            final position = Position(file, rank);
             expect(board[position].isEmpty, isTrue);
           }
         }
@@ -130,10 +130,10 @@ void main() {
     });
     group('BoardState.custom', () {
       test('should create board with custom pieces', () {
-        final e1 = Position.fromAlgebraic('e1');
-        final e8 = Position.fromAlgebraic('e8');
-        final d1 = Position.fromAlgebraic('d1');
-        final d8 = Position.fromAlgebraic('d8');
+        final e1 = Position.e1;
+        final e8 = Position.e8;
+        final d1 = Position.d1;
+        final d8 = Position.d8;
 
         final customPieces = {
           e1: King(Team.white),
@@ -156,7 +156,7 @@ void main() {
         // All other squares should be empty
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position._(file, rank);
+            final position = Position(file, rank);
             if (!customPieces.containsKey(position)) {
               expect(board[position].isEmpty, isTrue);
             }
@@ -169,7 +169,7 @@ void main() {
 
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position._(file, rank);
+            final position = Position(file, rank);
             expect(board[position].isEmpty, isTrue);
           }
         }
@@ -177,7 +177,7 @@ void main() {
     });
     group('operator []', () {
       test('should return square at given position', () {
-        final e4 = Position.fromAlgebraic('e4');
+        final e4 = Position.e4;
         final square = boardState[e4];
 
         expect(square.position, equals(e4));
@@ -186,7 +186,7 @@ void main() {
       test('should return correct square for all positions', () {
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position._(file, rank);
+            final position = Position(file, rank);
             final square = boardState[position];
 
             expect(square.position, equals(position));
@@ -197,8 +197,8 @@ void main() {
 
     group('actOn', () {
       test('should move piece from one square to another', () {
-        final from = Position.fromAlgebraic('e2');
-        final to = Position.fromAlgebraic('e3');
+        final from = Position.e2;
+        final to = Position.e3;
         final move = PawnMove(from: from, to: to, moving: Pawn(Team.white));
 
         boardState.actOn(move);
@@ -209,8 +209,8 @@ void main() {
       });
       test('should handle capture moves', () {
         // Position instances
-        final e4 = Position.fromAlgebraic('e4');
-        final d5 = Position.fromAlgebraic('d5');
+        final e4 = Position.e4;
+        final d5 = Position.d5;
 
         // Setup: place a black pawn at d5 and white pawn at e4
         final blackPawn = Pawn(Team.black);
@@ -233,9 +233,9 @@ void main() {
       });
       test('should handle en passant captures', () {
         // Position instances
-        final e5 = Position.fromAlgebraic('e5');
-        final d5 = Position.fromAlgebraic('d5');
-        final d6 = Position.fromAlgebraic('d6');
+        final e5 = Position.e5;
+        final d5 = Position.d5;
+        final d6 = Position.d6;
 
         // Setup: white pawn at e5, black pawn at d5
         final whitePawn = Pawn(Team.white);
@@ -259,8 +259,8 @@ void main() {
       });
       test('should throw ArgumentError when piece does not match', () {
         // Position instances
-        final e4 = Position.fromAlgebraic('e4');
-        final e5 = Position.fromAlgebraic('e5');
+        final e4 = Position.e4;
+        final e5 = Position.e5;
 
         final move = PawnMove(
           from: e4, // Empty square
@@ -281,8 +281,8 @@ void main() {
       });
       test('should throw ArgumentError when wrong piece type', () {
         // Position instances
-        final e2 = Position.fromAlgebraic('e2');
-        final f4 = Position.fromAlgebraic('f4');
+        final e2 = Position.e2;
+        final f4 = Position.f4;
 
         final move = KnightMove(
           from: e2, // Has pawn, not knight
@@ -302,12 +302,12 @@ void main() {
         );
       });
       test('should handle multiple moves in sequence', () {
-        final e2 = Position.fromAlgebraic('e2');
-        final e4 = Position.fromAlgebraic('e4');
-        final d7 = Position.fromAlgebraic('d7');
-        final d5 = Position.fromAlgebraic('d5');
-        final g1 = Position.fromAlgebraic('g1');
-        final f3 = Position.fromAlgebraic('f3');
+        final e2 = Position.e2;
+        final e4 = Position.e4;
+        final d7 = Position.d7;
+        final d5 = Position.d5;
+        final g1 = Position.g1;
+        final f3 = Position.f3;
 
         final moves = <Move>[
           PawnInitialMove(from: e2, to: e4, moving: Pawn(Team.white)),
@@ -330,8 +330,8 @@ void main() {
         'should throw ArgumentError when moving to occupied square with non-capture move',
         () {
           // Setup: place pieces on board
-          final e4 = Position.fromAlgebraic('e4');
-          final e5 = Position.fromAlgebraic('e5');
+          final e4 = Position.e4;
+          final e5 = Position.e5;
 
           final whitePawn = Pawn(Team.white);
           final blackPawn = Pawn(Team.black);
@@ -363,8 +363,8 @@ void main() {
 
       test('should allow moving to occupied square with capture move', () {
         // Setup: place pieces on board
-        final e4 = Position.fromAlgebraic('e4');
-        final d5 = Position.fromAlgebraic('d5');
+        final e4 = Position.e4;
+        final d5 = Position.d5;
 
         final whitePawn = Pawn(Team.white);
         final blackPawn = Pawn(Team.black);
@@ -393,8 +393,8 @@ void main() {
 
     group('undo', () {
       test('should reverse a regular move', () {
-        final from = Position.fromAlgebraic('e2');
-        final to = Position.fromAlgebraic('e4');
+        final from = Position.e2;
+        final to = Position.e4;
         final pawn = Pawn(Team.white);
         final move = PawnInitialMove(from: from, to: to, moving: pawn);
 
@@ -410,8 +410,8 @@ void main() {
       });
       test('should reverse a capture move', () {
         // Position instances
-        final e4 = Position.fromAlgebraic('e4');
-        final d5 = Position.fromAlgebraic('d5');
+        final e4 = Position.e4;
+        final d5 = Position.d5;
 
         // Setup: place pieces
         final whitePawn = Pawn(Team.white);
@@ -439,9 +439,9 @@ void main() {
       });
       test('should reverse an en passant move', () {
         // Position instances
-        final e5 = Position.fromAlgebraic('e5');
-        final d5 = Position.fromAlgebraic('d5');
-        final d6 = Position.fromAlgebraic('d6');
+        final e5 = Position.e5;
+        final d5 = Position.d5;
+        final d6 = Position.d6;
 
         // Setup: place pieces
         final whitePawn = Pawn(Team.white);
@@ -471,8 +471,8 @@ void main() {
       });
       test('should throw ArgumentError when piece does not match', () {
         // Position instances
-        final e2 = Position.fromAlgebraic('e2');
-        final e4 = Position.fromAlgebraic('e4');
+        final e2 = Position.e2;
+        final e4 = Position.e4;
 
         // Setup: make a move first
         final move = PawnInitialMove(
@@ -485,7 +485,7 @@ void main() {
         // Try to undo with wrong piece
         final wrongMove = KnightMove(
           from: e2,
-          to: Position.fromAlgebraic('f4'),
+          to: Position.f4,
           moving: Knight(Team.white),
         );
 
@@ -501,10 +501,10 @@ void main() {
         );
       });
       test('should handle multiple moves and undos', () {
-        final e2 = Position.fromAlgebraic('e2');
-        final e4 = Position.fromAlgebraic('e4');
-        final d7 = Position.fromAlgebraic('d7');
-        final d5 = Position.fromAlgebraic('d5');
+        final e2 = Position.e2;
+        final e4 = Position.e4;
+        final d7 = Position.d7;
+        final d5 = Position.d5;
 
         final moves = [
           PawnInitialMove(from: e2, to: e4, moving: Pawn(Team.white)),
@@ -536,11 +536,11 @@ void main() {
     });
     group('reset', () {
       test('should reset board to starting position', () {
-        final e2 = Position.fromAlgebraic('e2');
-        final e4 = Position.fromAlgebraic('e4');
-        final g1 = Position.fromAlgebraic('g1');
-        final f3 = Position.fromAlgebraic('f3');
-        final e1 = Position.fromAlgebraic('e1');
+        final e2 = Position.e2;
+        final e4 = Position.e4;
+        final g1 = Position.g1;
+        final f3 = Position.f3;
+        final e1 = Position.e1;
 
         // Make some moves to change the board
         boardState.actOn(
@@ -563,8 +563,8 @@ void main() {
         expect(boardState[f3].isEmpty, isTrue);
       });
       test('should reset empty board to starting position', () {
-        final e1 = Position.fromAlgebraic('e1');
-        final e8 = Position.fromAlgebraic('e8');
+        final e1 = Position.e1;
+        final e8 = Position.e8;
 
         final emptyBoard = BoardState.empty();
 
@@ -584,7 +584,7 @@ void main() {
 
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position._(file, rank);
+            final position = Position(file, rank);
             expect(boardState[position].isEmpty, isTrue);
           }
         }
@@ -592,15 +592,15 @@ void main() {
 
       test('should clear custom board', () {
         final customBoard = BoardState.custom({
-          Position.fromAlgebraic('e1'): King(Team.white),
-          Position.fromAlgebraic('e8'): King(Team.black),
+          Position.e1: King(Team.white),
+          Position.e8: King(Team.black),
         });
 
         customBoard.clear();
 
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position._(file, rank);
+            final position = Position(file, rank);
             expect(customBoard[position].isEmpty, isTrue);
           }
         }
@@ -611,38 +611,38 @@ void main() {
       test("should handle Scholar's Mate sequence", () {
         final moves = <Move>[
           PawnInitialMove(
-            from: Position.fromAlgebraic('e2'),
-            to: Position.fromAlgebraic('e4'),
+            from: Position.e2,
+            to: Position.e4,
             moving: Pawn(Team.white),
           ),
           PawnInitialMove(
-            from: Position.fromAlgebraic('e7'),
-            to: Position.fromAlgebraic('e5'),
+            from: Position.e7,
+            to: Position.e5,
             moving: Pawn(Team.black),
           ),
           BishopMove(
-            from: Position.fromAlgebraic('f1'),
-            to: Position.fromAlgebraic('c4'),
+            from: Position.f1,
+            to: Position.c4,
             moving: Bishop(Team.white),
           ),
           KnightMove(
-            from: Position.fromAlgebraic('b8'),
-            to: Position.fromAlgebraic('c6'),
+            from: Position.b8,
+            to: Position.c6,
             moving: Knight(Team.black),
           ),
           QueenMove(
-            from: Position.fromAlgebraic('d1'),
-            to: Position.fromAlgebraic('h5'),
+            from: Position.d1,
+            to: Position.h5,
             moving: Queen(Team.white),
           ),
           KnightMove(
-            from: Position.fromAlgebraic('g8'),
-            to: Position.fromAlgebraic('f6'),
+            from: Position.g8,
+            to: Position.f6,
             moving: Knight(Team.black),
           ),
           QueenCaptureMove(
-            from: Position.fromAlgebraic('h5'),
-            to: Position.fromAlgebraic('f7'),
+            from: Position.h5,
+            to: Position.f7,
             moving: Queen(Team.white),
             captured: Pawn(Team.black),
           ),
@@ -653,22 +653,19 @@ void main() {
         }
 
         // Verify final position
-        expect(boardState[Position.fromAlgebraic('f7')].piece, isA<Queen>());
-        expect(
-          boardState[Position.fromAlgebraic('f7')].piece!.team,
-          equals(Team.white),
-        );
-        expect(boardState[Position.fromAlgebraic('h5')].isEmpty, isTrue);
-        expect(boardState[Position.fromAlgebraic('c4')].piece, isA<Bishop>());
-        expect(boardState[Position.fromAlgebraic('e4')].piece, isA<Pawn>());
-        expect(boardState[Position.fromAlgebraic('e5')].piece, isA<Pawn>());
+        expect(boardState[Position.f7].piece, isA<Queen>());
+        expect(boardState[Position.f7].piece!.team, equals(Team.white));
+        expect(boardState[Position.h5].isEmpty, isTrue);
+        expect(boardState[Position.c4].piece, isA<Bishop>());
+        expect(boardState[Position.e4].piece, isA<Pawn>());
+        expect(boardState[Position.e5].piece, isA<Pawn>());
       });
 
       test('should maintain board consistency during complex sequence', () {
-        final d2 = Position.fromAlgebraic('d2');
-        final d4 = Position.fromAlgebraic('d4');
-        final e5 = Position.fromAlgebraic('e5');
-        final e7 = Position.fromAlgebraic('e7');
+        final d2 = Position.d2;
+        final d4 = Position.d4;
+        final e5 = Position.e5;
+        final e7 = Position.e7;
 
         final moves = [
           PawnInitialMove(from: d2, to: d4, moving: Pawn(Team.white)),
@@ -689,7 +686,7 @@ void main() {
         var pieceCount = 0;
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position._(file, rank);
+            final position = Position(file, rank);
             if (boardState[position].isOccupied) {
               pieceCount++;
             }
@@ -707,10 +704,10 @@ void main() {
 
       test('should handle castling moves', () {
         // Position instances
-        final e1 = Position.fromAlgebraic('e1');
-        final f1 = Position.fromAlgebraic('f1');
-        final g1 = Position.fromAlgebraic('g1');
-        final h1 = Position.fromAlgebraic('h1');
+        final e1 = Position.e1;
+        final f1 = Position.f1;
+        final g1 = Position.g1;
+        final h1 = Position.h1;
 
         // Clear pieces between king and rook
         boardState.squares.replace(EmptySquare(f1));
@@ -735,8 +732,8 @@ void main() {
     group('edge cases', () {
       test('should handle moves on empty board', () {
         // Position instances
-        final e4 = Position.fromAlgebraic('e4');
-        final e5 = Position.fromAlgebraic('e5');
+        final e4 = Position.e4;
+        final e5 = Position.e5;
 
         final emptyBoard = BoardState.empty();
 
@@ -753,8 +750,8 @@ void main() {
 
       test('should handle promotion moves', () {
         // Position instances
-        final e7 = Position.fromAlgebraic('e7');
-        final e8 = Position.fromAlgebraic('e8');
+        final e7 = Position.e7;
+        final e8 = Position.e8;
 
         // Setup: white pawn at e7
         boardState.squares.replace(EmptySquare(e8));
@@ -777,8 +774,8 @@ void main() {
 
       test('should handle board with single piece', () {
         // Position instances
-        final a1 = Position.fromAlgebraic('a1');
-        final a2 = Position.fromAlgebraic('a2');
+        final a1 = Position.a1;
+        final a2 = Position.a2;
 
         final singlePieceBoard = BoardState.custom({a1: King(Team.white)});
 
@@ -793,14 +790,14 @@ void main() {
 
     group('board state preservation', () {
       test('should preserve other pieces when making a move', () {
-        final e2 = Position.fromAlgebraic('e2');
-        final e4 = Position.fromAlgebraic('e4');
+        final e2 = Position.e2;
+        final e4 = Position.e4;
         final originalPieces = <Position, Piece>{};
 
         // Record all original pieces
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position._(file, rank);
+            final position = Position(file, rank);
             final piece = boardState[position].piece;
             if (piece != null) {
               originalPieces[position] = piece;

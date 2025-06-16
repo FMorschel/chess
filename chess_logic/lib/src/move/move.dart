@@ -65,11 +65,11 @@ sealed class Move<P extends Piece> extends Equatable
     if (queenCastling != null) {
       return KingMove.queensideCastling(
             king: King(team),
-            from: Position._(File.e, team.homeRank),
-            to: Position._(File.c, team.homeRank),
+            from: Position(File.e, team.homeRank),
+            to: Position(File.c, team.homeRank),
             rook: RookMove(
-              from: Position._(File.a, team.homeRank),
-              to: Position._(File.d, team.homeRank),
+              from: Position(File.a, team.homeRank),
+              to: Position(File.d, team.homeRank),
               moving: Rook(team),
               check: check,
             ),
@@ -81,11 +81,11 @@ sealed class Move<P extends Piece> extends Equatable
     if (kingCastling != null) {
       return KingMove.kingsideCastling(
             king: King(team),
-            from: Position._(File.e, team.homeRank),
-            to: Position._(File.g, team.homeRank),
+            from: Position(File.e, team.homeRank),
+            to: Position(File.g, team.homeRank),
             rook: RookMove(
-              from: Position._(File.h, team.homeRank),
-              to: Position._(File.f, team.homeRank),
+              from: Position(File.h, team.homeRank),
+              to: Position(File.f, team.homeRank),
               moving: Rook(team),
               check: check,
             ),

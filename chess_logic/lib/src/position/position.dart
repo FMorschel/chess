@@ -129,8 +129,8 @@ enum Position implements AmbiguousPosition, Comparable<Position> {
 
   const Position._(this.file, this.rank);
 
-  // factory Position(File file, Rank rank) =>
-  //     Position.values.firstWhere((p) => p.file == file && p.rank == rank);
+  factory Position(File file, Rank rank) =>
+      Position.values.firstWhere((p) => p.file == file && p.rank == rank);
 
   @override
   final File file;

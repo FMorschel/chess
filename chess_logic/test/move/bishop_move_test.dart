@@ -9,8 +9,8 @@ import 'package:test/test.dart';
 void main() {
   group('BishopMove', () {
     final whiteBishop = Bishop(Team.white);
-    final from = Position.fromAlgebraic('c1');
-    final to = Position.fromAlgebraic('f4');
+    final from = Position.c1;
+    final to = Position.f4;
 
     test('stores all fields correctly', () {
       final move = BishopMove(from: from, to: to, moving: whiteBishop);
@@ -24,7 +24,7 @@ void main() {
       expect(
         () => BishopMove(
           from: from,
-          to: Position.fromAlgebraic('f3'),
+          to: Position.f3,
           moving: whiteBishop,
         ),
         throwsA(isA<AssertionError>()),
@@ -97,8 +97,8 @@ void main() {
 
   group('BishopCaptureMove', () {
     final whiteBishop = Bishop(Team.white);
-    final from = Position.fromAlgebraic('c1');
-    final to = Position.fromAlgebraic('f4');
+    final from = Position.c1;
+    final to = Position.f4;
     final captured = Pawn(Team.black);
 
     test('stores all fields correctly', () {
@@ -119,7 +119,7 @@ void main() {
       expect(
         () => BishopCaptureMove(
           from: from,
-          to: Position.fromAlgebraic('f3'),
+          to: Position.f3,
           moving: whiteBishop,
           captured: captured,
         ),

@@ -93,7 +93,7 @@ class GameController {
           algebraic,
           currentTeam,
           enpassant: ({required from, required to}) {
-            final position = Position._(to.file, from.rank);
+            final position = Position(to.file, from.rank);
             final piece = controller.state[position].piece;
             if (piece is Pawn && piece.team != currentTeam) {
               return piece;

@@ -16,38 +16,38 @@ void main() {
 
   final moves = <Move>[
     PawnInitialMove(
-      from: Position._(File.e, Rank.two),
-      to: Position._(File.e, Rank.four),
+      from: Position(File.e, Rank.two),
+      to: Position(File.e, Rank.four),
       moving: Pawn(Team.white),
     ),
     PawnInitialMove(
-      from: Position._(File.e, Rank.seven),
-      to: Position._(File.e, Rank.five),
+      from: Position(File.e, Rank.seven),
+      to: Position(File.e, Rank.five),
       moving: Pawn(Team.black),
     ),
     BishopMove(
-      from: Position._(File.f, Rank.one),
-      to: Position._(File.c, Rank.four),
+      from: Position(File.f, Rank.one),
+      to: Position(File.c, Rank.four),
       moving: Bishop(Team.white),
     ),
     KnightMove(
-      from: Position._(File.b, Rank.eight),
-      to: Position._(File.c, Rank.six),
+      from: Position(File.b, Rank.eight),
+      to: Position(File.c, Rank.six),
       moving: Knight(Team.black),
     ),
     QueenMove(
-      from: Position._(File.d, Rank.one),
-      to: Position._(File.h, Rank.five),
+      from: Position(File.d, Rank.one),
+      to: Position(File.h, Rank.five),
       moving: Queen(Team.white),
     ),
     KnightMove(
-      from: Position._(File.g, Rank.eight),
-      to: Position._(File.f, Rank.six),
+      from: Position(File.g, Rank.eight),
+      to: Position(File.f, Rank.six),
       moving: Knight(Team.black),
     ),
     QueenCaptureMove(
-      from: Position._(File.h, Rank.five),
-      to: Position._(File.f, Rank.seven),
+      from: Position(File.h, Rank.five),
+      to: Position(File.f, Rank.seven),
       moving: Queen(Team.white),
       captured: Pawn(Team.black),
     ),

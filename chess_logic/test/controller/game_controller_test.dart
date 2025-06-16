@@ -2,9 +2,7 @@ import 'package:chess_logic/src/controller/game_controller.dart';
 import 'package:chess_logic/src/controller/game_state.dart';
 import 'package:chess_logic/src/controller/team_score.dart';
 import 'package:chess_logic/src/move/move.dart';
-import 'package:chess_logic/src/position/file.dart';
 import 'package:chess_logic/src/position/position.dart';
-import 'package:chess_logic/src/position/rank.dart';
 import 'package:chess_logic/src/square/piece.dart';
 import 'package:chess_logic/src/team/team.dart';
 import 'package:test/test.dart';
@@ -28,8 +26,8 @@ void main() {
       });
       test('should create game controller with move history', () {
         final move = Move.create(
-          from: Position.fromAlgebraic('e2'),
-          to: Position.fromAlgebraic('e3'),
+          from: Position.e2,
+          to: Position.e3,
           moving: Pawn(Team.white),
         );
         final moveHistory = [move];
@@ -76,8 +74,8 @@ void main() {
     group('constructor.custom', () {
       test('should create game controller with custom pieces', () {
         final customPieces = <Position, Piece>{
-          Position.fromAlgebraic('e1'): King(Team.white),
-          Position.fromAlgebraic('e8'): King(Team.black),
+          Position.e1: King(Team.white),
+          Position.e8: King(Team.black),
         };
 
         final controller = GameController.custom(teams, customPieces);
@@ -86,14 +84,8 @@ void main() {
         expect(controller.scores, hasLength(2));
         expect(controller.currentTeam, equals(Team.white));
         expect(controller.history, isEmpty);
-        expect(
-          controller.state[Position.fromAlgebraic('e1')].piece,
-          isA<King>(),
-        );
-        expect(
-          controller.state[Position.fromAlgebraic('e8')].piece,
-          isA<King>(),
-        );
+        expect(controller.state[Position.e1].piece, isA<King>());
+        expect(controller.state[Position.e8].piece, isA<King>());
       });
 
       test('should throw assertion error with single team', () {
@@ -132,14 +124,8 @@ void main() {
           final controller = GameController.import(data);
 
           expect(controller.teams, hasLength(2));
-          expect(
-            controller.state[Position.fromAlgebraic('e1')].piece,
-            isA<King>(),
-          );
-          expect(
-            controller.state[Position.fromAlgebraic('e8')].piece,
-            isA<King>(),
-          );
+          expect(controller.state[Position.e1].piece, isA<King>());
+          expect(controller.state[Position.e8].piece, isA<King>());
         },
       );
       test('should handle empty import data', () {
@@ -197,8 +183,8 @@ void main() {
       setUp(() {
         // Create a simple custom setup with just kings
         final customPieces = <Position, Piece>{
-          Position.fromAlgebraic('e1'): King(Team.white),
-          Position.fromAlgebraic('e8'): King(Team.black),
+          Position.e1: King(Team.white),
+          Position.e8: King(Team.black),
         };
         controller = GameController.custom(teams, customPieces);
       });
@@ -210,9 +196,7 @@ void main() {
       });
 
       test('should return empty list for team with no pieces', () {
-        final customPieces = <Position, Piece>{
-          Position.fromAlgebraic('e1'): King(Team.white),
-        };
+        final customPieces = <Position, Piece>{Position.e1: King(Team.white)};
         final testController = GameController.custom(teams, customPieces);
 
         final blackMoves = testController.movesFor(team: Team.black);
@@ -225,8 +209,8 @@ void main() {
 
       setUp(() {
         final customPieces = <Position, Piece>{
-          Position.fromAlgebraic('e1'): King(Team.white),
-          Position.fromAlgebraic('e8'): King(Team.black),
+          Position.e1: King(Team.white),
+          Position.e8: King(Team.black),
         };
         controller = GameController.custom(teams, customPieces);
       });
@@ -246,18 +230,18 @@ void main() {
 
       setUp(() {
         final customPieces = <Position, Piece>{
-          Position.fromAlgebraic('e1'): King(Team.white),
-          Position.fromAlgebraic('e8'): King(Team.black),
-          Position.fromAlgebraic('d2'): Pawn(Team.white),
-          Position.fromAlgebraic('d7'): Pawn(Team.black),
+          Position.e1: King(Team.white),
+          Position.e8: King(Team.black),
+          Position.d2: Pawn(Team.white),
+          Position.d7: Pawn(Team.black),
         };
         controller = GameController.custom(teams, customPieces);
       });
       test('should execute move and switch teams', () {
         final initialTeam = controller.currentTeam;
         final move = Move.create(
-          from: Position.fromAlgebraic('d2'),
-          to: Position.fromAlgebraic('d3'),
+          from: Position.d2,
+          to: Position.d3,
           moving: Pawn(Team.white),
         );
 
@@ -269,8 +253,8 @@ void main() {
       test('should update score on capture move', () {
         final initialWhiteScore = controller[Team.white];
         final captureMove = CaptureMove.create(
-          from: Position.fromAlgebraic('d2'),
-          to: Position.fromAlgebraic('e3'),
+          from: Position.d2,
+          to: Position.e3,
           moving: Pawn(Team.white),
           captured: Pawn(Team.black),
         );
@@ -281,13 +265,13 @@ void main() {
       });
       test('should cycle through teams correctly', () {
         final move1 = Move.create(
-          from: Position.fromAlgebraic('d2'),
-          to: Position.fromAlgebraic('d3'),
+          from: Position.d2,
+          to: Position.d3,
           moving: Pawn(Team.white),
         );
         final move2 = Move.create(
-          from: Position.fromAlgebraic('d7'),
-          to: Position.fromAlgebraic('d6'),
+          from: Position.d7,
+          to: Position.d6,
           moving: Pawn(Team.black),
         );
 
@@ -302,8 +286,8 @@ void main() {
     group('export', () {
       test('should export game state with custom pieces', () {
         final customPieces = <Position, Piece>{
-          Position.fromAlgebraic('e1'): King(Team.white),
-          Position.fromAlgebraic('e8'): King(Team.black),
+          Position.e1: King(Team.white),
+          Position.e8: King(Team.black),
         };
         final controller = GameController.custom(teams, customPieces);
 
@@ -317,9 +301,9 @@ void main() {
 
       test('should export game state with move history', () {
         final customPieces = <Position, Piece>{
-          Position.fromAlgebraic('e1'): King(Team.white),
-          Position.fromAlgebraic('e8'): King(Team.black),
-          Position.fromAlgebraic('d2'): Pawn(Team.white),
+          Position.e1: King(Team.white),
+          Position.e8: King(Team.black),
+          Position.d2: Pawn(Team.white),
         };
         final testController = GameController.custom(teams, customPieces);
 
@@ -344,38 +328,32 @@ void main() {
 
       setUp(() {
         final customPieces = <Position, Piece>{
-          Position.fromAlgebraic('e1'): King(Team.white),
-          Position.fromAlgebraic('e8'): King(Team.black),
+          Position.e1: King(Team.white),
+          Position.e8: King(Team.black),
         };
         controller = GameController.custom(teams, customPieces);
       });
 
       test('should provide access to board state', () {
         expect(controller.state, isNotNull);
-        expect(
-          controller.state[Position.fromAlgebraic('e1')].piece,
-          isA<King>(),
-        );
-        expect(
-          controller.state[Position.fromAlgebraic('e8')].piece,
-          isA<King>(),
-        );
+        expect(controller.state[Position.e1].piece, isA<King>());
+        expect(controller.state[Position.e8].piece, isA<King>());
       });
     });
 
     group('history', () {
       test('should track move history', () {
         final customPieces = <Position, Piece>{
-          Position.fromAlgebraic('e1'): King(Team.white),
-          Position.fromAlgebraic('e8'): King(Team.black),
-          Position.fromAlgebraic('d2'): Pawn(Team.white),
+          Position.e1: King(Team.white),
+          Position.e8: King(Team.black),
+          Position.d2: Pawn(Team.white),
         };
         final controller = GameController.custom(teams, customPieces);
 
         expect(controller.history, isEmpty);
         final move = Move.create(
-          from: Position.fromAlgebraic('d2'),
-          to: Position.fromAlgebraic('d3'),
+          from: Position.d2,
+          to: Position.d3,
           moving: Pawn(Team.white),
         );
 
@@ -397,10 +375,10 @@ void main() {
 
       test('should maintain team order in cycling', () {
         final customPieces = <Position, Piece>{
-          Position.fromAlgebraic('e1'): King(Team.white),
-          Position.fromAlgebraic('e8'): King(Team.black),
-          Position.fromAlgebraic('d2'): Pawn(Team.white),
-          Position.fromAlgebraic('d7'): Pawn(Team.black),
+          Position.e1: King(Team.white),
+          Position.e8: King(Team.black),
+          Position.d2: Pawn(Team.white),
+          Position.d7: Pawn(Team.black),
         };
         final controller = GameController.custom(teams, customPieces);
         // Make several moves to test team cycling
@@ -429,38 +407,38 @@ void main() {
           // Scholar's Mate sequence
           final moves = <Move>[
             PawnInitialMove(
-              from: Position._(File.e, Rank.two),
-              to: Position._(File.e, Rank.four),
+              from: Position.e2,
+              to: Position.e4,
               moving: Pawn(Team.white),
             ),
             PawnInitialMove(
-              from: Position._(File.e, Rank.seven),
-              to: Position._(File.e, Rank.five),
+              from: Position.e7,
+              to: Position.e5,
               moving: Pawn(Team.black),
             ),
             BishopMove(
-              from: Position._(File.f, Rank.one),
-              to: Position._(File.c, Rank.four),
+              from: Position.f1,
+              to: Position.c4,
               moving: Bishop(Team.white),
             ),
             KnightMove(
-              from: Position._(File.b, Rank.eight),
-              to: Position._(File.c, Rank.six),
+              from: Position.b8,
+              to: Position.c6,
               moving: Knight(Team.black),
             ),
             QueenMove(
-              from: Position._(File.d, Rank.one),
-              to: Position._(File.h, Rank.five),
+              from: Position.d1,
+              to: Position.h5,
               moving: Queen(Team.white),
             ),
             KnightMove(
-              from: Position._(File.g, Rank.eight),
-              to: Position._(File.f, Rank.six),
+              from: Position.g8,
+              to: Position.f6,
               moving: Knight(Team.black),
             ),
             QueenCaptureMove(
-              from: Position._(File.h, Rank.five),
-              to: Position._(File.f, Rank.seven),
+              from: Position.h5,
+              to: Position.f7,
               moving: Queen(Team.white),
               captured: Pawn(Team.black),
             ),
@@ -480,14 +458,14 @@ void main() {
       );
       test('set state to stalemate', () {
         final controller = GameController.custom(Team.values, {
-          Position._(File.h, Rank.eight): King(Team.black),
-          Position._(File.h, Rank.six): King(Team.white),
-          Position._(File.f, Rank.five): Queen(Team.white),
+          Position.h8: King(Team.black),
+          Position.h6: King(Team.white),
+          Position.f5: Queen(Team.white),
         });
 
         final move = Move.create(
-          from: Position._(File.f, Rank.five),
-          to: Position._(File.g, Rank.five),
+          from: Position.f5,
+          to: Position.g5,
           moving: Queen(Team.white),
         );
 
@@ -497,18 +475,18 @@ void main() {
       });
       test('set state to draw on insufficient material - King vs King', () {
         final controller = GameController.custom(Team.values, {
-          Position._(File.h, Rank.five): King(Team.white),
-          Position._(File.e, Rank.eight): King(Team.black),
+          Position.h5: King(Team.white),
+          Position.e8: King(Team.black),
           // Last piece to be captured
-          Position._(File.h, Rank.four): Pawn(Team.black),
+          Position.h4: Pawn(Team.black),
         });
 
         expect(controller.gameState, equals(GameState.inProgress));
 
         // Move to capture the last remaining piece besides kings
         final move = CaptureMove.create(
-          from: Position._(File.h, Rank.five),
-          to: Position._(File.h, Rank.four),
+          from: Position.h5,
+          to: Position.h4,
           moving: King(Team.white),
           captured: Pawn(Team.black),
         );
@@ -522,19 +500,19 @@ void main() {
         'set state to draw on insufficient material - King vs King + Bishop',
         () {
           final controller = GameController.custom(Team.values, {
-            Position._(File.e, Rank.one): King(Team.black),
-            Position._(File.h, Rank.five): King(Team.white),
-            Position._(File.c, Rank.one): Bishop(Team.white),
+            Position.e1: King(Team.black),
+            Position.h5: King(Team.white),
+            Position.c1: Bishop(Team.white),
             // Last piece to be captured
-            Position._(File.h, Rank.four): Pawn(Team.black),
+            Position.h4: Pawn(Team.black),
           });
 
           expect(controller.gameState, equals(GameState.inProgress));
 
           // Move to capture the last piece besides kings and bishop
           final move = CaptureMove.create(
-            from: Position._(File.h, Rank.five),
-            to: Position._(File.h, Rank.four),
+            from: Position.h5,
+            to: Position.h4,
             moving: King(Team.white),
             captured: Pawn(Team.black),
           );
@@ -549,19 +527,19 @@ void main() {
         'set state to draw on insufficient material - King vs King + Knight',
         () {
           final controller = GameController.custom(Team.values, {
-            Position._(File.e, Rank.one): King(Team.black),
-            Position._(File.h, Rank.five): King(Team.white),
-            Position._(File.c, Rank.one): Knight(Team.white),
+            Position.e1: King(Team.black),
+            Position.h5: King(Team.white),
+            Position.c1: Knight(Team.white),
             // Last piece to be captured
-            Position._(File.h, Rank.four): Pawn(Team.black),
+            Position.h4: Pawn(Team.black),
           });
 
           expect(controller.gameState, equals(GameState.inProgress));
 
           // Move to capture the last piece besides kings and knight
           final move = CaptureMove.create(
-            from: Position._(File.h, Rank.five),
-            to: Position._(File.h, Rank.four),
+            from: Position.h5,
+            to: Position.h4,
             moving: King(Team.white),
             captured: Pawn(Team.black),
           );
@@ -575,20 +553,20 @@ void main() {
       test('set state to draw on insufficient material - King+Bishop vs '
           'King+Bishop (same color)', () {
         final controller = GameController.custom(Team.values, {
-          Position._(File.e, Rank.five): King(Team.white),
-          Position._(File.c, Rank.two): Bishop(Team.white),
-          Position._(File.e, Rank.eight): King(Team.black),
-          Position._(File.c, Rank.eight): Bishop(Team.black),
+          Position.e5: King(Team.white),
+          Position.c2: Bishop(Team.white),
+          Position.e8: King(Team.black),
+          Position.c8: Bishop(Team.black),
           // Last piece to be captured
-          Position._(File.e, Rank.four): Pawn(Team.black),
+          Position.e4: Pawn(Team.black),
         });
 
         expect(controller.gameState, equals(GameState.inProgress));
 
         // Move to capture the last piece besides kings and bishops
         final move = CaptureMove.create(
-          from: Position._(File.e, Rank.five),
-          to: Position._(File.e, Rank.four),
+          from: Position.e5,
+          to: Position.e4,
           moving: King(Team.white),
           captured: Pawn(Team.black),
         );
@@ -602,20 +580,20 @@ void main() {
         'should not set draw when King+Bishop vs King+Bishop on different colors',
         () {
           final controller = GameController.custom(Team.values, {
-            Position._(File.e, Rank.five): King(Team.white),
-            Position._(File.c, Rank.one): Bishop(Team.white),
-            Position._(File.e, Rank.eight): King(Team.black),
-            Position._(File.c, Rank.eight): Bishop(Team.black),
+            Position.e5: King(Team.white),
+            Position.c1: Bishop(Team.white),
+            Position.e8: King(Team.black),
+            Position.c8: Bishop(Team.black),
             // Last piece to be captured
-            Position._(File.e, Rank.four): Pawn(Team.black),
+            Position.e4: Pawn(Team.black),
           });
 
           expect(controller.gameState, equals(GameState.inProgress));
 
           // Move to capture the last piece besides kings and bishops
           final move = CaptureMove.create(
-            from: Position._(File.e, Rank.five),
-            to: Position._(File.e, Rank.four),
+            from: Position.e5,
+            to: Position.e4,
             moving: King(Team.white),
             captured: Pawn(Team.black),
           );

@@ -13,7 +13,7 @@ void main() {
     late Piece piece;
 
     setUp(() {
-      position = Position._(File.e, Rank.four);
+      position = Position.e4;
       piece = Piece.fromSymbol(PieceSymbol.king, Team.white);
     });
 
@@ -89,7 +89,7 @@ void main() {
       });
 
       test('should not be equal for different positions', () {
-        final position2 = Position._(File.a, Rank.one);
+        final position2 = Position.a1;
         final square1 = Square(position, piece);
         final square2 = Square(position2, piece);
 
@@ -131,7 +131,7 @@ void main() {
       });
 
       test('should handle different positions correctly', () {
-        final pos = Position._(File.a, Rank.eight);
+        final pos = Position.a8;
         final square = Square(pos);
         final result = square.toString();
         expect(result, equals('a8, empty'));
@@ -282,7 +282,7 @@ void main() {
       test('should work with all board positions', () {
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final pos = Position._(file, rank);
+            final pos = Position(file, rank);
             final square = Square(pos);
             expect(square.position, equals(pos));
             expect(square.isEmpty, isTrue);
@@ -293,14 +293,14 @@ void main() {
       test('should support chess starting position squares', () {
         // Test some typical starting position squares
         final e1 = Square(
-          Position._(File.e, Rank.one),
+          Position.e1,
           Piece.fromSymbol(PieceSymbol.king, Team.white),
         );
         final e8 = Square(
-          Position._(File.e, Rank.eight),
+          Position.e8,
           Piece.fromSymbol(PieceSymbol.king, Team.black),
         );
-        final e4 = Square(Position._(File.e, Rank.four)); // Empty center
+        final e4 = Square(Position.e4); // Empty center
 
         expect(e1.isOccupied, isTrue);
         expect(e8.isOccupied, isTrue);
@@ -314,10 +314,10 @@ void main() {
       test('should support piece movement simulation with replace/remove', () {
         // Simulate moving a piece from one square to another
         final fromSquare = Square(
-          Position._(File.e, Rank.two),
+          Position.e2,
           Piece.fromSymbol(PieceSymbol.pawn, Team.white),
         );
-        final toSquare = Square(Position._(File.e, Rank.four));
+        final toSquare = Square(Position.e4);
 
         expect(fromSquare.isOccupied, isTrue);
         expect(toSquare.isEmpty, isTrue);
@@ -334,11 +334,11 @@ void main() {
       test('should support piece capture simulation', () {
         // Simulate capturing a piece
         final attackerSquare = Square(
-          Position._(File.d, Rank.four),
+          Position.d4,
           Piece.fromSymbol(PieceSymbol.queen, Team.white),
         );
         final targetSquare = Square(
-          Position._(File.e, Rank.five),
+          Position.e5,
           Piece.fromSymbol(PieceSymbol.pawn, Team.black),
         );
 

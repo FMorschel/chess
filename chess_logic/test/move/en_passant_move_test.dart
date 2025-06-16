@@ -10,8 +10,8 @@ void main() {
   group('EnPassantMove', () {
     final whitePawn = Pawn(Team.white);
     final blackPawn = Pawn(Team.black);
-    final from = Position.fromAlgebraic('e5');
-    final to = Position.fromAlgebraic('d6');
+    final from = Position.e5;
+    final to = Position.d6;
     final captured = Pawn(Team.black);
 
     test('stores all fields correctly', () {
@@ -46,7 +46,7 @@ void main() {
       test('throws assertion error if from is not a pawn move', () {
         expect(
           () => EnPassantMove(
-            from: Position.fromAlgebraic('e4'),
+            from: Position.e4,
             to: to,
             moving: whitePawn,
             captured: captured,

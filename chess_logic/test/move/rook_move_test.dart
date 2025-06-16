@@ -9,8 +9,8 @@ import 'package:test/test.dart';
 void main() {
   group('RookMove', () {
     final whiteRook = Rook(Team.white);
-    final from = Position.fromAlgebraic('a1');
-    final to = Position.fromAlgebraic('a4');
+    final from = Position.a1;
+    final to = Position.a4;
 
     test('stores all fields correctly', () {
       final move = RookMove(from: from, to: to, moving: whiteRook);
@@ -24,7 +24,7 @@ void main() {
       expect(
         () => RookMove(
           from: from,
-          to: Position.fromAlgebraic('b2'),
+          to: Position.b2,
           moving: whiteRook,
         ),
         throwsA(isA<AssertionError>()),
@@ -97,8 +97,8 @@ void main() {
 
   group('RookCaptureMove', () {
     final whiteRook = Rook(Team.white);
-    final from = Position.fromAlgebraic('a1');
-    final to = Position.fromAlgebraic('a4');
+    final from = Position.a1;
+    final to = Position.a4;
     final captured = Pawn(Team.black);
 
     test('stores all fields correctly', () {
@@ -119,7 +119,7 @@ void main() {
       expect(
         () => RookCaptureMove(
           from: from,
-          to: Position.fromAlgebraic('b2'),
+          to: Position.b2,
           moving: whiteRook,
           captured: captured,
         ),

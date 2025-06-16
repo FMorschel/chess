@@ -42,7 +42,7 @@ class BoardPrinter {
       buffer.write('${rank.value} │ ');
 
       for (final file in File.values) {
-        final position = Position._(file, rank);
+        final position = Position(file, rank);
         final square = boardState[position];
         final piece = square.piece;
 
@@ -96,7 +96,7 @@ class BoardPrinter {
     // Print board from rank 8 (top) to rank 1 (bottom)
     for (final rank in Rank.values.reversed) {
       for (final file in File.values) {
-        final position = Position._(file, rank);
+        final position = Position(file, rank);
         final square = boardState[position];
         final piece = square.piece;
 

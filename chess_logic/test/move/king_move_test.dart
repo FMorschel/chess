@@ -8,8 +8,8 @@ import 'package:test/test.dart';
 void main() {
   group('KingMove', () {
     final whiteKing = King(Team.white);
-    final from = Position.fromAlgebraic('e1');
-    final to = Position.fromAlgebraic('e2');
+    final from = Position.e1;
+    final to = Position.e2;
     test('stores all fields correctly', () {
       final move = KingMove(from: from, to: to, moving: whiteKing);
 
@@ -22,7 +22,7 @@ void main() {
       expect(
         () => KingMove(
           from: from,
-          to: Position.fromAlgebraic('e3'),
+          to: Position.e3,
           moving: whiteKing,
         ),
         throwsA(isA<AssertionError>()),
@@ -61,8 +61,8 @@ void main() {
   });
   group('KingCaptureMove', () {
     final whiteKing = King(Team.white);
-    final from = Position.fromAlgebraic('e1');
-    final to = Position.fromAlgebraic('e2');
+    final from = Position.e1;
+    final to = Position.e2;
     final captured = Pawn(Team.black);
 
     test('stores all fields correctly', () {
@@ -82,7 +82,7 @@ void main() {
       expect(
         () => KingCaptureMove(
           from: from,
-          to: Position.fromAlgebraic('e3'),
+          to: Position.e3,
           moving: whiteKing,
           captured: captured,
         ),

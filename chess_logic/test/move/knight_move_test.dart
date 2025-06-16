@@ -9,8 +9,8 @@ import 'package:test/test.dart';
 void main() {
   group('KnightMove', () {
     final whiteKnight = Knight(Team.white);
-    final from = Position.fromAlgebraic('b1');
-    final to = Position.fromAlgebraic('c3');
+    final from = Position.b1;
+    final to = Position.c3;
 
     test('stores all fields correctly', () {
       final move = KnightMove(from: from, to: to, moving: whiteKnight);
@@ -24,7 +24,7 @@ void main() {
       expect(
         () => KnightMove(
           from: from,
-          to: Position.fromAlgebraic('c2'),
+          to: Position.c2,
           moving: whiteKnight,
         ),
         throwsA(isA<AssertionError>()),
@@ -97,8 +97,8 @@ void main() {
 
   group('KnightCaptureMove', () {
     final whiteKnight = Knight(Team.white);
-    final from = Position.fromAlgebraic('b1');
-    final to = Position.fromAlgebraic('c3');
+    final from = Position.b1;
+    final to = Position.c3;
     final captured = Pawn(Team.black);
 
     test('stores all fields correctly', () {
@@ -119,7 +119,7 @@ void main() {
       expect(
         () => KnightCaptureMove(
           from: from,
-          to: Position.fromAlgebraic('c2'),
+          to: Position.c2,
           moving: whiteKnight,
           captured: captured,
         ),

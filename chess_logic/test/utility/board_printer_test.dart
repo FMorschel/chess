@@ -1,7 +1,5 @@
 import 'package:chess_logic/src/controller/board_state.dart';
-import 'package:chess_logic/src/position/file.dart';
 import 'package:chess_logic/src/position/position.dart';
-import 'package:chess_logic/src/position/rank.dart';
 import 'package:chess_logic/src/square/piece.dart';
 import 'package:chess_logic/src/square/piece_symbol.dart';
 import 'package:chess_logic/src/team/team.dart';
@@ -59,19 +57,19 @@ void main() {
 
       test('should display custom board position correctly', () {
         final customPieces = <Position, Piece>{
-          Position._(File.e, Rank.one): Piece.fromSymbol(
+          Position.e1: Piece.fromSymbol(
             PieceSymbol.king,
             Team.white,
           ),
-          Position._(File.e, Rank.eight): Piece.fromSymbol(
+          Position.e8: Piece.fromSymbol(
             PieceSymbol.king,
             Team.black,
           ),
-          Position._(File.d, Rank.one): Piece.fromSymbol(
+          Position.d1: Piece.fromSymbol(
             PieceSymbol.queen,
             Team.white,
           ),
-          Position._(File.d, Rank.eight): Piece.fromSymbol(
+          Position.d8: Piece.fromSymbol(
             PieceSymbol.queen,
             Team.black,
           ),
@@ -133,19 +131,19 @@ void main() {
 
       test('should display custom position correctly', () {
         final customPieces = <Position, Piece>{
-          Position._(File.a, Rank.one): Piece.fromSymbol(
+          Position.a1: Piece.fromSymbol(
             PieceSymbol.rook,
             Team.white,
           ),
-          Position._(File.h, Rank.eight): Piece.fromSymbol(
+          Position.h8: Piece.fromSymbol(
             PieceSymbol.rook,
             Team.black,
           ),
-          Position._(File.e, Rank.four): Piece.fromSymbol(
+          Position.e4: Piece.fromSymbol(
             PieceSymbol.king,
             Team.white,
           ),
-          Position._(File.d, Rank.five): Piece.fromSymbol(
+          Position.d5: Piece.fromSymbol(
             PieceSymbol.queen,
             Team.black,
           ),
@@ -179,10 +177,7 @@ void main() {
 
         for (final entry in whitePieces.entries) {
           final customPieces = <Position, Piece>{
-            Position._(File.a, Rank.one): Piece.fromSymbol(
-              entry.key,
-              Team.white,
-            ),
+            Position.a1: Piece.fromSymbol(entry.key, Team.white),
           };
           final boardState = BoardState.custom(customPieces);
           final result = boardPrinter.getCompactBoardString(boardState);
@@ -203,7 +198,7 @@ void main() {
 
         for (final entry in blackPieces.entries) {
           final customPieces = <Position, Piece>{
-            Position._(File.a, Rank.eight): Piece.fromSymbol(
+            Position.a8: Piece.fromSymbol(
               entry.key,
               Team.black,
             ),
@@ -256,11 +251,11 @@ void main() {
 
         // For compact board, check that positions correspond to correct files
         final customPieces = <Position, Piece>{
-          Position._(File.a, Rank.one): Piece.fromSymbol(
+          Position.a1: Piece.fromSymbol(
             PieceSymbol.rook,
             Team.white,
           ),
-          Position._(File.h, Rank.one): Piece.fromSymbol(
+          Position.h1: Piece.fromSymbol(
             PieceSymbol.rook,
             Team.black,
           ),

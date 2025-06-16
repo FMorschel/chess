@@ -18,8 +18,8 @@ void main() {
     test('should format regular move', () {
       final move = PawnInitialMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('e2'),
-        to: Position.fromAlgebraic('e4'),
+        from: Position.e2,
+        to: Position.e4,
         check: Check.none,
       );
       expect(formatter.visit(move), 'e4');
@@ -28,8 +28,8 @@ void main() {
     test('should format regular capture move', () {
       final move = PawnCaptureMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('e4'),
-        to: Position.fromAlgebraic('d5'),
+        from: Position.e4,
+        to: Position.d5,
         captured: Pawn(Team.black),
         check: Check.none,
       );
@@ -38,12 +38,12 @@ void main() {
 
     test('should format kingside castling', () {
       final move = KingsideCastling(
-        from: Position.fromAlgebraic('e1'),
-        to: Position.fromAlgebraic('g1'),
+        from: Position.e1,
+        to: Position.g1,
         moving: King(Team.white),
         rook: RookMove(
-          from: Position.fromAlgebraic('h1'),
-          to: Position.fromAlgebraic('f1'),
+          from: Position.h1,
+          to: Position.f1,
           moving: Rook(Team.white),
         ),
         check: Check.none,
@@ -53,12 +53,12 @@ void main() {
 
     test('should format queenside castling', () {
       final move = QueensideCastling(
-        from: Position.fromAlgebraic('e1'),
-        to: Position.fromAlgebraic('c1'),
+        from: Position.e1,
+        to: Position.c1,
         moving: King(Team.white),
         rook: RookMove(
-          from: Position.fromAlgebraic('a1'),
-          to: Position.fromAlgebraic('d1'),
+          from: Position.a1,
+          to: Position.d1,
           moving: Rook(Team.white),
         ),
         check: Check.none,
@@ -69,8 +69,8 @@ void main() {
     test('should format en passant move', () {
       final move = EnPassantMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('e5'),
-        to: Position.fromAlgebraic('d6'),
+        from: Position.e5,
+        to: Position.d6,
         captured: Pawn(Team.black),
         check: Check.none,
       );
@@ -80,8 +80,8 @@ void main() {
     test('should format promotion move', () {
       final move = PromotionMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('e7'),
-        to: Position.fromAlgebraic('e8'),
+        from: Position.e7,
+        to: Position.e8,
         promotion: PieceSymbol.queen,
         check: Check.none,
       );
@@ -91,8 +91,8 @@ void main() {
     test('should format promotion capture move', () {
       final move = PromotionCaptureMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('d7'),
-        to: Position.fromAlgebraic('e8'),
+        from: Position.d7,
+        to: Position.e8,
         captured: Rook(Team.black),
         promotion: PieceSymbol.queen,
         check: Check.none,
@@ -103,8 +103,8 @@ void main() {
     test('should format move with check', () {
       final move = QueenMove(
         moving: Queen(Team.white),
-        from: Position.fromAlgebraic('d1'),
-        to: Position.fromAlgebraic('h5'),
+        from: Position.d1,
+        to: Position.h5,
         check: Check.check,
       );
       expect(formatter.visit(move), 'Qh5+');
@@ -113,8 +113,8 @@ void main() {
     test('should format move with checkmate', () {
       final move = QueenMove(
         moving: Queen(Team.white),
-        from: Position.fromAlgebraic('h5'),
-        to: Position.fromAlgebraic('f7'),
+        from: Position.h5,
+        to: Position.f7,
         check: Check.checkmate,
       );
       expect(formatter.visit(move), 'Qf7#');
@@ -123,8 +123,8 @@ void main() {
     test('should format ambiguous move (file)', () {
       final move = RookMove(
         moving: Rook(Team.white),
-        from: Position.fromAlgebraic('a1'),
-        to: Position.fromAlgebraic('d1'),
+        from: Position.a1,
+        to: Position.d1,
         ambiguous: AmbiguousMovementType.file,
         check: Check.none,
       );
@@ -134,8 +134,8 @@ void main() {
     test('should format ambiguous move (rank)', () {
       final move = RookMove(
         moving: Rook(Team.white),
-        from: Position.fromAlgebraic('a1'),
-        to: Position.fromAlgebraic('a4'),
+        from: Position.a1,
+        to: Position.a4,
         ambiguous: AmbiguousMovementType.rank,
         check: Check.none,
       );
@@ -145,8 +145,8 @@ void main() {
     test('should format ambiguous move (both)', () {
       final move = QueenMove(
         moving: Queen(Team.white),
-        from: Position.fromAlgebraic('a1'),
-        to: Position.fromAlgebraic('d4'),
+        from: Position.a1,
+        to: Position.d4,
         ambiguous: AmbiguousMovementType.both,
         check: Check.none,
       );
@@ -156,8 +156,8 @@ void main() {
     test('should format pawn move with check', () {
       final move = PawnMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('e6'),
-        to: Position.fromAlgebraic('e7'),
+        from: Position.e6,
+        to: Position.e7,
         check: Check.check,
       );
       expect(formatter.visit(move), 'e7+');
@@ -166,8 +166,8 @@ void main() {
     test('should format pawn capture with checkmate', () {
       final move = PawnCaptureMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('f6'),
-        to: Position.fromAlgebraic('g7'),
+        from: Position.f6,
+        to: Position.g7,
         captured: Pawn(Team.black),
         check: Check.checkmate,
       );
@@ -177,8 +177,8 @@ void main() {
     test('should format rook move with check', () {
       final move = RookMove(
         moving: Rook(Team.white),
-        from: Position.fromAlgebraic('a1'),
-        to: Position.fromAlgebraic('a8'),
+        from: Position.a1,
+        to: Position.a8,
         check: Check.check,
       );
       expect(formatter.visit(move), 'Ra8+');
@@ -187,8 +187,8 @@ void main() {
     test('should format rook capture with checkmate', () {
       final move = RookCaptureMove(
         moving: Rook(Team.white),
-        from: Position.fromAlgebraic('h1'),
-        to: Position.fromAlgebraic('h8'),
+        from: Position.h1,
+        to: Position.h8,
         captured: Queen(Team.black),
         check: Check.checkmate,
       );
@@ -198,8 +198,8 @@ void main() {
     test('should format bishop move with check', () {
       final move = BishopMove(
         moving: Bishop(Team.white),
-        from: Position.fromAlgebraic('c1'),
-        to: Position.fromAlgebraic('h6'),
+        from: Position.c1,
+        to: Position.h6,
         check: Check.check,
       );
       expect(formatter.visit(move), 'Bh6+');
@@ -208,8 +208,8 @@ void main() {
     test('should format bishop capture with checkmate', () {
       final move = BishopCaptureMove(
         moving: Bishop(Team.white),
-        from: Position.fromAlgebraic('f1'),
-        to: Position.fromAlgebraic('b5'),
+        from: Position.f1,
+        to: Position.b5,
         captured: Knight(Team.black),
         check: Check.checkmate,
       );
@@ -219,8 +219,8 @@ void main() {
     test('should format knight move with check', () {
       final move = KnightMove(
         moving: Knight(Team.white),
-        from: Position.fromAlgebraic('g1'),
-        to: Position.fromAlgebraic('f3'),
+        from: Position.g1,
+        to: Position.f3,
         check: Check.check,
       );
       expect(formatter.visit(move), 'Nf3+');
@@ -229,8 +229,8 @@ void main() {
     test('should format knight capture with checkmate', () {
       final move = KnightCaptureMove(
         moving: Knight(Team.white),
-        from: Position.fromAlgebraic('c3'),
-        to: Position.fromAlgebraic('d5'),
+        from: Position.c3,
+        to: Position.d5,
         captured: Bishop(Team.black),
         check: Check.checkmate,
       );
@@ -240,8 +240,8 @@ void main() {
     test('should format king move with check', () {
       final move = KingMove(
         moving: King(Team.white),
-        from: Position.fromAlgebraic('e1'),
-        to: Position.fromAlgebraic('f1'),
+        from: Position.e1,
+        to: Position.f1,
         check: Check.check,
       );
       expect(formatter.visit(move), 'Kf1+');
@@ -250,8 +250,8 @@ void main() {
     test('should format king capture with checkmate', () {
       final move = KingCaptureMove(
         moving: King(Team.white),
-        from: Position.fromAlgebraic('e6'),
-        to: Position.fromAlgebraic('d7'),
+        from: Position.e6,
+        to: Position.d7,
         captured: Pawn(Team.black),
         check: Check.checkmate,
       );
@@ -260,12 +260,12 @@ void main() {
 
     test('should format kingside castling with check', () {
       final move = KingsideCastling(
-        from: Position.fromAlgebraic('e1'),
-        to: Position.fromAlgebraic('g1'),
+        from: Position.e1,
+        to: Position.g1,
         moving: King(Team.white),
         rook: RookMove(
-          from: Position.fromAlgebraic('h1'),
-          to: Position.fromAlgebraic('f1'),
+          from: Position.h1,
+          to: Position.f1,
           moving: Rook(Team.white),
           check: Check.check,
         ),
@@ -276,12 +276,12 @@ void main() {
 
     test('should format queenside castling with checkmate', () {
       final move = QueensideCastling(
-        from: Position.fromAlgebraic('e8'),
-        to: Position.fromAlgebraic('c8'),
+        from: Position.e8,
+        to: Position.c8,
         moving: King(Team.black),
         rook: RookMove(
-          from: Position.fromAlgebraic('a8'),
-          to: Position.fromAlgebraic('d8'),
+          from: Position.a8,
+          to: Position.d8,
           moving: Rook(Team.black),
           check: Check.checkmate,
         ),
@@ -293,8 +293,8 @@ void main() {
     test('should format en passant with check', () {
       final move = EnPassantMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('e5'),
-        to: Position.fromAlgebraic('f6'),
+        from: Position.e5,
+        to: Position.f6,
         captured: Pawn(Team.black),
         check: Check.check,
       );
@@ -304,8 +304,8 @@ void main() {
     test('should format promotion with check', () {
       final move = PromotionMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('a7'),
-        to: Position.fromAlgebraic('a8'),
+        from: Position.a7,
+        to: Position.a8,
         promotion: PieceSymbol.knight,
         check: Check.check,
       );
@@ -315,8 +315,8 @@ void main() {
     test('should format promotion capture with checkmate', () {
       final move = PromotionCaptureMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('g7'),
-        to: Position.fromAlgebraic('h8'),
+        from: Position.g7,
+        to: Position.h8,
         captured: Rook(Team.black),
         promotion: PieceSymbol.queen,
         check: Check.checkmate,
@@ -327,8 +327,8 @@ void main() {
     test('should format ambiguous rook move with check', () {
       final move = RookMove(
         moving: Rook(Team.white),
-        from: Position.fromAlgebraic('a1'),
-        to: Position.fromAlgebraic('a7'),
+        from: Position.a1,
+        to: Position.a7,
         ambiguous: AmbiguousMovementType.file,
         check: Check.check,
       );
@@ -338,8 +338,8 @@ void main() {
     test('should format ambiguous queen capture with checkmate', () {
       final move = QueenCaptureMove(
         moving: Queen(Team.white),
-        from: Position.fromAlgebraic('d1'),
-        to: Position.fromAlgebraic('d8'),
+        from: Position.d1,
+        to: Position.d8,
         captured: Queen(Team.black),
         ambiguous: AmbiguousMovementType.both,
         check: Check.checkmate,
@@ -351,8 +351,8 @@ void main() {
     test('should format pawn initial move with checkmate', () {
       final move = PawnInitialMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('e2'),
-        to: Position.fromAlgebraic('e4'),
+        from: Position.e2,
+        to: Position.e4,
         check: Check.checkmate,
       );
       expect(formatter.visit(move), 'e4#');
@@ -361,8 +361,8 @@ void main() {
     test('should format pawn move with ambiguous file', () {
       final move = PawnMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('e6'),
-        to: Position.fromAlgebraic('e7'),
+        from: Position.e6,
+        to: Position.e7,
         ambiguous: AmbiguousMovementType.file,
         check: Check.none,
       );
@@ -372,8 +372,8 @@ void main() {
     test('should format promotion with ambiguous file', () {
       final move = PromotionMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('e7'),
-        to: Position.fromAlgebraic('e8'),
+        from: Position.e7,
+        to: Position.e8,
         promotion: PieceSymbol.rook,
         ambiguous: AmbiguousMovementType.file,
         check: Check.none,
@@ -384,8 +384,8 @@ void main() {
     test('should format promotion capture with ambiguous file', () {
       final move = PromotionCaptureMove(
         moving: Pawn(Team.white),
-        from: Position.fromAlgebraic('e7'),
-        to: Position.fromAlgebraic('d8'),
+        from: Position.e7,
+        to: Position.d8,
         captured: Rook(Team.black),
         promotion: PieceSymbol.bishop,
         check: Check.none,
@@ -404,8 +404,8 @@ void main() {
       for (final (piece, symbol) in promotionPieces) {
         final move = PromotionMove(
           moving: Pawn(Team.white),
-          from: Position.fromAlgebraic('a7'),
-          to: Position.fromAlgebraic('a8'),
+          from: Position.a7,
+          to: Position.a8,
           promotion: piece,
           check: Check.none,
         );
@@ -417,8 +417,8 @@ void main() {
       // Test ambiguous rook capture by rank
       final rookMove = RookCaptureMove(
         moving: Rook(Team.white),
-        from: Position.fromAlgebraic('a1'),
-        to: Position.fromAlgebraic('a4'),
+        from: Position.a1,
+        to: Position.a4,
         captured: Pawn(Team.black),
         ambiguous: AmbiguousMovementType.rank,
         check: Check.none,
@@ -428,8 +428,8 @@ void main() {
       // Test ambiguous bishop capture by both
       final bishopMove = BishopCaptureMove(
         moving: Bishop(Team.white),
-        from: Position.fromAlgebraic('c1'),
-        to: Position.fromAlgebraic('f4'),
+        from: Position.c1,
+        to: Position.f4,
         captured: Knight(Team.black),
         ambiguous: AmbiguousMovementType.both,
         check: Check.none,
@@ -439,8 +439,8 @@ void main() {
       // Test ambiguous knight capture by file
       final knightMove = KnightCaptureMove(
         moving: Knight(Team.white),
-        from: Position.fromAlgebraic('b1'),
-        to: Position.fromAlgebraic('c3'),
+        from: Position.b1,
+        to: Position.c3,
         captured: Pawn(Team.black),
         ambiguous: AmbiguousMovementType.file,
         check: Check.none,
@@ -459,8 +459,8 @@ void main() {
       for (final (piece, symbol) in promotionCaptures) {
         final move = PromotionCaptureMove(
           moving: Pawn(Team.white),
-          from: Position.fromAlgebraic('f7'),
-          to: Position.fromAlgebraic('g8'),
+          from: Position.f7,
+          to: Position.g8,
           captured: Bishop(Team.black),
           promotion: piece,
           check: Check.check,

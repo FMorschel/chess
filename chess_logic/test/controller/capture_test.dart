@@ -33,7 +33,7 @@ void main() {
       );
 
       expect(capture.position, isA<Position>());
-      expect(capture.position, equals(Position.fromAlgebraic('d8')));
+      expect(capture.position, equals(Position.d8));
     });
 
     test('should expose the team that performed the capture', () {
@@ -260,8 +260,8 @@ void main() {
       test('should maintain consistency with move algebraic notation', () {
         final captured = Rook(Team.black);
         final captor = Queen(Team.white);
-        final from = Position.fromAlgebraic('d1');
-        final to = Position.fromAlgebraic('d8');
+        final from = Position.d1;
+        final to = Position.d8;
 
         final move = CaptureMove<Queen, Rook>.create(
           from: from,
@@ -316,24 +316,24 @@ Capture _createCapture<P extends Piece, C extends Piece>({
   Position from, to;
 
   if (captor is Rook) {
-    from = Position.fromAlgebraic('a1');
-    to = Position.fromAlgebraic('a8'); // Vertical move for rook
+    from = Position.a1;
+    to = Position.a8; // Vertical move for rook
   } else if (captor is Bishop) {
-    from = Position.fromAlgebraic('a1');
-    to = Position.fromAlgebraic('h8'); // Diagonal move for bishop
+    from = Position.a1;
+    to = Position.h8; // Diagonal move for bishop
   } else if (captor is Knight) {
-    from = Position.fromAlgebraic('b1');
-    to = Position.fromAlgebraic('c3'); // L-shaped move for knight
+    from = Position.b1;
+    to = Position.c3; // L-shaped move for knight
   } else if (captor is Queen) {
-    from = Position.fromAlgebraic('d1');
-    to = Position.fromAlgebraic('d8'); // Vertical move for queen
+    from = Position.d1;
+    to = Position.d8; // Vertical move for queen
   } else if (captor is King) {
-    from = Position.fromAlgebraic('e1');
-    to = Position.fromAlgebraic('e2'); // One square move for king
+    from = Position.e1;
+    to = Position.e2; // One square move for king
   } else {
     // Default for pawns and other pieces - diagonal capture for pawn
-    from = Position.fromAlgebraic('e2');
-    to = Position.fromAlgebraic('d3'); // Diagonal capture move
+    from = Position.e2;
+    to = Position.d3; // Diagonal capture move
   }
 
   final move = CaptureMove<P, C>.create(

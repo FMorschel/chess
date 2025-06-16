@@ -13,8 +13,8 @@ void main() {
     group('Basic capture moves', () {
       test('should return a Capture for PawnCaptureMove', () {
         final move = PawnCaptureMove<Rook>(
-          from: Position.fromAlgebraic('e5'),
-          to: Position.fromAlgebraic('d6'),
+          from: Position.e5,
+          to: Position.d6,
           moving: Pawn(Team.white),
           captured: Rook(Team.black),
         );
@@ -32,8 +32,8 @@ void main() {
 
       test('should return a Capture for QueenCaptureMove', () {
         final move = QueenCaptureMove<Bishop>(
-          from: Position.fromAlgebraic('d1'),
-          to: Position.fromAlgebraic('h5'),
+          from: Position.d1,
+          to: Position.h5,
           moving: Queen(Team.white),
           captured: Bishop(Team.black),
         );
@@ -51,8 +51,8 @@ void main() {
 
       test('should return a Capture for RookCaptureMove', () {
         final move = RookCaptureMove<Knight>(
-          from: Position.fromAlgebraic('a1'),
-          to: Position.fromAlgebraic('a8'),
+          from: Position.a1,
+          to: Position.a8,
           moving: Rook(Team.black),
           captured: Knight(Team.white),
         );
@@ -70,8 +70,8 @@ void main() {
 
       test('should return a Capture for BishopCaptureMove', () {
         final move = BishopCaptureMove<Queen>(
-          from: Position.fromAlgebraic('c1'),
-          to: Position.fromAlgebraic('f4'),
+          from: Position.c1,
+          to: Position.f4,
           moving: Bishop(Team.white),
           captured: Queen(Team.black),
         );
@@ -89,8 +89,8 @@ void main() {
 
       test('should return a Capture for KnightCaptureMove', () {
         final move = KnightCaptureMove<Pawn>(
-          from: Position.fromAlgebraic('b1'),
-          to: Position.fromAlgebraic('c3'),
+          from: Position.b1,
+          to: Position.c3,
           moving: Knight(Team.black),
           captured: Pawn(Team.white),
         );
@@ -108,8 +108,8 @@ void main() {
 
       test('should return a Capture for KingCaptureMove', () {
         final move = KingCaptureMove<Pawn>(
-          from: Position.fromAlgebraic('e1'),
-          to: Position.fromAlgebraic('e2'),
+          from: Position.e1,
+          to: Position.e2,
           moving: King(Team.white),
           captured: Pawn(Team.black),
         );
@@ -129,8 +129,8 @@ void main() {
     group('Special capture moves', () {
       test('should return a Capture for EnPassantMove', () {
         final move = EnPassantMove(
-          from: Position.fromAlgebraic('e5'),
-          to: Position.fromAlgebraic('d6'),
+          from: Position.e5,
+          to: Position.d6,
           moving: Pawn(Team.white),
           captured: Pawn(Team.black),
         );
@@ -148,8 +148,8 @@ void main() {
 
       test('should return a Capture for PromotionCaptureMove', () {
         final move = PromotionCaptureMove<Rook>(
-          from: Position.fromAlgebraic('e7'),
-          to: Position.fromAlgebraic('d8'),
+          from: Position.e7,
+          to: Position.d8,
           moving: Pawn(Team.white),
           captured: Rook(Team.black),
           promotion: PieceSymbol.queen,
@@ -170,8 +170,8 @@ void main() {
     group('Captures with different piece values', () {
       test('should return correct value for King capture (value 0)', () {
         final move = QueenCaptureMove<King>(
-          from: Position.fromAlgebraic('d1'),
-          to: Position.fromAlgebraic('e2'),
+          from: Position.d1,
+          to: Position.e2,
           moving: Queen(Team.white),
           captured: King(Team.black),
         );
@@ -185,43 +185,43 @@ void main() {
         final captures = [
           // Pawn (1)
           PawnCaptureMove<Pawn>(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Pawn(Team.black),
           ).asCapture(),
           // Knight (3)
           QueenCaptureMove<Knight>(
-            from: Position.fromAlgebraic('d1'),
-            to: Position.fromAlgebraic('b1'),
+            from: Position.d1,
+            to: Position.b1,
             moving: Queen(Team.white),
             captured: Knight(Team.black),
           ).asCapture(),
           // Bishop (3)
           RookCaptureMove<Bishop>(
-            from: Position.fromAlgebraic('a1'),
-            to: Position.fromAlgebraic('c1'),
+            from: Position.a1,
+            to: Position.c1,
             moving: Rook(Team.white),
             captured: Bishop(Team.black),
           ).asCapture(),
           // Rook (5)
           BishopCaptureMove<Rook>(
-            from: Position.fromAlgebraic('c1'),
-            to: Position.fromAlgebraic('a3'),
+            from: Position.c1,
+            to: Position.a3,
             moving: Bishop(Team.white),
             captured: Rook(Team.black),
           ).asCapture(),
           // Queen (9)
           KnightCaptureMove<Queen>(
-            from: Position.fromAlgebraic('b1'),
-            to: Position.fromAlgebraic('d2'),
+            from: Position.b1,
+            to: Position.d2,
             moving: Knight(Team.white),
             captured: Queen(Team.black),
           ).asCapture(),
           // King (0)
           PawnCaptureMove<King>(
-            from: Position.fromAlgebraic('e7'),
-            to: Position.fromAlgebraic('d8'),
+            from: Position.e7,
+            to: Position.d8,
             moving: Pawn(Team.white),
             captured: King(Team.black),
           ).asCapture(),
@@ -241,8 +241,8 @@ void main() {
     group('Captures with check and checkmate', () {
       test('should preserve check status in capture notation', () {
         final move = QueenCaptureMove<Rook>(
-          from: Position.fromAlgebraic('d1'),
-          to: Position.fromAlgebraic('d8'),
+          from: Position.d1,
+          to: Position.d8,
           moving: Queen(Team.white),
           captured: Rook(Team.black),
           check: Check.check,
@@ -256,8 +256,8 @@ void main() {
 
       test('should preserve checkmate status in capture notation', () {
         final move = RookCaptureMove<Bishop>(
-          from: Position.fromAlgebraic('a1'),
-          to: Position.fromAlgebraic('a8'),
+          from: Position.a1,
+          to: Position.a8,
           moving: Rook(Team.white),
           captured: Bishop(Team.black),
           check: Check.checkmate,
@@ -273,8 +273,8 @@ void main() {
     group('Captures with ambiguous movements', () {
       test('should preserve file ambiguity in capture notation', () {
         final move = RookCaptureMove<Pawn>(
-          from: Position.fromAlgebraic('a1'),
-          to: Position.fromAlgebraic('a4'),
+          from: Position.a1,
+          to: Position.a4,
           moving: Rook(Team.white),
           captured: Pawn(Team.black),
           ambiguous: AmbiguousMovementType.file,
@@ -287,8 +287,8 @@ void main() {
 
       test('should preserve rank ambiguity in capture notation', () {
         final move = QueenCaptureMove<Knight>(
-          from: Position.fromAlgebraic('d1'),
-          to: Position.fromAlgebraic('d4'),
+          from: Position.d1,
+          to: Position.d4,
           moving: Queen(Team.white),
           captured: Knight(Team.black),
           ambiguous: AmbiguousMovementType.rank,
@@ -303,8 +303,8 @@ void main() {
         'should preserve both file and rank ambiguity in capture notation',
         () {
           final move = QueenCaptureMove<Bishop>(
-            from: Position.fromAlgebraic('a1'),
-            to: Position.fromAlgebraic('d4'),
+            from: Position.a1,
+            to: Position.d4,
             moving: Queen(Team.white),
             captured: Bishop(Team.black),
             ambiguous: AmbiguousMovementType.both,
@@ -320,8 +320,8 @@ void main() {
     group('Capture object identity and caching', () {
       test('should return the same Capture object on multiple calls', () {
         final move = PawnCaptureMove<Rook>(
-          from: Position.fromAlgebraic('e5'),
-          to: Position.fromAlgebraic('d6'),
+          from: Position.e5,
+          to: Position.d6,
           moving: Pawn(Team.white),
           captured: Rook(Team.black),
         );
@@ -338,15 +338,15 @@ void main() {
 
       test('should create different Capture objects for different moves', () {
         final move1 = PawnCaptureMove<Rook>(
-          from: Position.fromAlgebraic('e5'),
-          to: Position.fromAlgebraic('d6'),
+          from: Position.e5,
+          to: Position.d6,
           moving: Pawn(Team.white),
           captured: Rook(Team.black),
         );
 
         final move2 = PawnCaptureMove<Rook>(
-          from: Position.fromAlgebraic('e5'),
-          to: Position.fromAlgebraic('f6'),
+          from: Position.e5,
+          to: Position.f6,
           moving: Pawn(Team.white),
           captured: Rook(Team.black),
         );
@@ -366,20 +366,20 @@ void main() {
       test('should have correct team for white pieces', () {
         final moves = <CaptureMove>[
           PawnCaptureMove<Pawn>(
-            from: Position.fromAlgebraic('e5'),
-            to: Position.fromAlgebraic('d6'),
+            from: Position.e5,
+            to: Position.d6,
             moving: Pawn(Team.white),
             captured: Pawn(Team.black),
           ),
           QueenCaptureMove<Rook>(
-            from: Position.fromAlgebraic('d1'),
-            to: Position.fromAlgebraic('d8'),
+            from: Position.d1,
+            to: Position.d8,
             moving: Queen(Team.white),
             captured: Rook(Team.black),
           ),
           KingCaptureMove<Knight>(
-            from: Position.fromAlgebraic('e1'),
-            to: Position.fromAlgebraic('e2'),
+            from: Position.e1,
+            to: Position.e2,
             moving: King(Team.white),
             captured: Knight(Team.black),
           ),
@@ -395,20 +395,20 @@ void main() {
       test('should have correct team for black pieces', () {
         final moves = <CaptureMove>[
           PawnCaptureMove<Pawn>(
-            from: Position.fromAlgebraic('d4'),
-            to: Position.fromAlgebraic('e3'),
+            from: Position.d4,
+            to: Position.e3,
             moving: Pawn(Team.black),
             captured: Pawn(Team.white),
           ),
           RookCaptureMove<Bishop>(
-            from: Position.fromAlgebraic('a8'),
-            to: Position.fromAlgebraic('a1'),
+            from: Position.a8,
+            to: Position.a1,
             moving: Rook(Team.black),
             captured: Bishop(Team.white),
           ),
           BishopCaptureMove<Queen>(
-            from: Position.fromAlgebraic('f8'),
-            to: Position.fromAlgebraic('c5'),
+            from: Position.f8,
+            to: Position.c5,
             moving: Bishop(Team.black),
             captured: Queen(Team.white),
           ),
@@ -425,16 +425,16 @@ void main() {
     group('Position consistency', () {
       test('should have capture position equal to move destination', () {
         final positions = [
-          Position.fromAlgebraic('d6'),
-          Position.fromAlgebraic('h5'),
-          Position.fromAlgebraic('b8'),
-          Position.fromAlgebraic('f4'),
-          Position.fromAlgebraic('c3'),
+          Position.d6,
+          Position.h5,
+          Position.b8,
+          Position.f4,
+          Position.c3,
         ];
 
         for (final position in positions) {
           final move = QueenCaptureMove<Rook>(
-            from: Position.fromAlgebraic('e5'),
+            from: Position.e5,
             to: position,
             moving: Queen(Team.white),
             captured: Rook(Team.black),
@@ -450,8 +450,8 @@ void main() {
     group('Complex scenarios', () {
       test('should handle promotion capture with check', () {
         final move = PromotionCaptureMove<Knight>(
-          from: Position.fromAlgebraic('e7'),
-          to: Position.fromAlgebraic('d8'),
+          from: Position.e7,
+          to: Position.d8,
           moving: Pawn(Team.white),
           captured: Knight(Team.black),
           promotion: PieceSymbol.queen,
@@ -464,14 +464,14 @@ void main() {
         expect(capture.piece, isA<Knight>());
         expect(capture.value, equals(3)); // Knight value
         expect(capture.team, equals(Team.white));
-        expect(capture.position, equals(Position.fromAlgebraic('d8')));
+        expect(capture.position, equals(Position.d8));
         expect(capture.toAlgebraic(), equals('exd8=Q+'));
       });
 
       test('should handle en passant with check', () {
         final move = EnPassantMove(
-          from: Position.fromAlgebraic('e5'),
-          to: Position.fromAlgebraic('d6'),
+          from: Position.e5,
+          to: Position.d6,
           moving: Pawn(Team.white),
           captured: Pawn(Team.black),
           check: Check.check,
@@ -483,14 +483,14 @@ void main() {
         expect(capture.piece, isA<Pawn>());
         expect(capture.value, equals(1)); // Pawn value
         expect(capture.team, equals(Team.white));
-        expect(capture.position, equals(Position.fromAlgebraic('d6')));
+        expect(capture.position, equals(Position.d6));
         expect(capture.toAlgebraic(), equals('exd6+'));
       });
 
       test('should handle ambiguous promotion capture with checkmate', () {
         final move = PromotionCaptureMove<Rook>(
-          from: Position.fromAlgebraic('e7'),
-          to: Position.fromAlgebraic('d8'),
+          from: Position.e7,
+          to: Position.d8,
           moving: Pawn(Team.white),
           captured: Rook(Team.black),
           promotion: PieceSymbol.knight,
@@ -503,7 +503,7 @@ void main() {
         expect(capture.piece, isA<Rook>());
         expect(capture.value, equals(5)); // Rook value
         expect(capture.team, equals(Team.white));
-        expect(capture.position, equals(Position.fromAlgebraic('d8')));
+        expect(capture.position, equals(Position.d8));
         expect(capture.toAlgebraic(), equals('exd8=N#'));
       });
     });

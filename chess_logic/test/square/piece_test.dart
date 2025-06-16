@@ -625,15 +625,15 @@ void main() {
         const whiteKing = King(Team.white);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4'); // Center position
-        final c5 = Position.fromAlgebraic('c5'); // up-left
-        final d5 = Position.fromAlgebraic('d5'); // up
-        final e5 = Position.fromAlgebraic('e5'); // up-right
-        final c4 = Position.fromAlgebraic('c4'); // left
-        final e4 = Position.fromAlgebraic('e4'); // right
-        final c3 = Position.fromAlgebraic('c3'); // down-left
-        final d3 = Position.fromAlgebraic('d3'); // down
-        final e3 = Position.fromAlgebraic('e3'); // down-right
+        final d4 = Position.d4; // Center position
+        final c5 = Position.c5; // up-left
+        final d5 = Position.d5; // up
+        final e5 = Position.e5; // up-right
+        final c4 = Position.c4; // left
+        final e4 = Position.e4; // right
+        final c3 = Position.c3; // down-left
+        final d3 = Position.d3; // down
+        final e3 = Position.e3; // down-right
 
         final validPositions = whiteKing.validPositions(boardState, d4);
 
@@ -652,11 +652,11 @@ void main() {
         const whiteKnight = Knight(Team.white);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final c5 = Position.fromAlgebraic('c5');
-        final e4 = Position.fromAlgebraic('e4');
-        final d5 = Position.fromAlgebraic('d5');
-        final e5 = Position.fromAlgebraic('e5');
+        final d4 = Position.d4;
+        final c5 = Position.c5;
+        final e4 = Position.e4;
+        final d5 = Position.d5;
+        final e5 = Position.e5;
 
         // Place same team pieces in some adjacent squares
         boardState.squares.replace(OccupiedSquare(c5, whitePawn));
@@ -677,11 +677,11 @@ void main() {
         const blackKnight = Knight(Team.black);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final c5 = Position.fromAlgebraic('c5');
-        final e4 = Position.fromAlgebraic('e4');
-        final d5 = Position.fromAlgebraic('d5');
-        final e5 = Position.fromAlgebraic('e5');
+        final d4 = Position.d4;
+        final c5 = Position.c5;
+        final e4 = Position.e4;
+        final d5 = Position.d5;
+        final e5 = Position.e5;
 
         // Place enemy pieces in some adjacent squares
         boardState.squares.replace(c5 < blackPawn);
@@ -700,10 +700,10 @@ void main() {
         const whiteKing = King(Team.white);
 
         // Define position instances once
-        final a1 = Position.fromAlgebraic('a1'); // Corner position
-        final a2 = Position.fromAlgebraic('a2'); // up
-        final b1 = Position.fromAlgebraic('b1'); // right
-        final b2 = Position.fromAlgebraic('b2'); // up-right
+        final a1 = Position.a1; // Corner position
+        final a2 = Position.a2; // up
+        final b1 = Position.b1; // right
+        final b2 = Position.b2; // up-right
 
         final validPositions = whiteKing.validPositions(boardState, a1);
 
@@ -721,13 +721,13 @@ void main() {
         const whiteQueen = Queen(Team.white);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final d8 = Position.fromAlgebraic('d8'); // vertical up
-        final d1 = Position.fromAlgebraic('d1'); // vertical down
-        final a4 = Position.fromAlgebraic('a4'); // horizontal left
-        final h4 = Position.fromAlgebraic('h4'); // horizontal right
-        final a1 = Position.fromAlgebraic('a1'); // diagonal down-left
-        final h8 = Position.fromAlgebraic('h8'); // diagonal up-right
+        final d4 = Position.d4;
+        final d8 = Position.d8; // vertical up
+        final d1 = Position.d1; // vertical down
+        final a4 = Position.a4; // horizontal left
+        final h4 = Position.h4; // horizontal right
+        final a1 = Position.a1; // diagonal down-left
+        final h8 = Position.h8; // diagonal up-right
 
         final validPositions = whiteQueen.validPositions(boardState, d4);
 
@@ -753,15 +753,15 @@ void main() {
         const whiteBishop = Bishop(Team.white);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final d6 = Position.fromAlgebraic('d6');
-        final f4 = Position.fromAlgebraic('f4');
-        final d7 = Position.fromAlgebraic('d7');
-        final d8 = Position.fromAlgebraic('d8');
-        final g4 = Position.fromAlgebraic('g4');
-        final h4 = Position.fromAlgebraic('h4');
-        final d5 = Position.fromAlgebraic('d5');
-        final e4 = Position.fromAlgebraic('e4');
+        final d4 = Position.d4;
+        final d6 = Position.d6;
+        final f4 = Position.f4;
+        final d7 = Position.d7;
+        final d8 = Position.d8;
+        final g4 = Position.g4;
+        final h4 = Position.h4;
+        final d5 = Position.d5;
+        final e4 = Position.e4;
 
         // Place same team piece on the queen's path
         boardState.squares.replace(d6 < whiteRook);
@@ -789,15 +789,15 @@ void main() {
         const blackBishop = Bishop(Team.black);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final d6 = Position.fromAlgebraic('d6');
-        final f4 = Position.fromAlgebraic('f4');
-        final d7 = Position.fromAlgebraic('d7');
-        final d8 = Position.fromAlgebraic('d8');
-        final g4 = Position.fromAlgebraic('g4');
-        final h4 = Position.fromAlgebraic('h4');
-        final d5 = Position.fromAlgebraic('d5');
-        final e4 = Position.fromAlgebraic('e4');
+        final d4 = Position.d4;
+        final d6 = Position.d6;
+        final f4 = Position.f4;
+        final d7 = Position.d7;
+        final d8 = Position.d8;
+        final g4 = Position.g4;
+        final h4 = Position.h4;
+        final d5 = Position.d5;
+        final e4 = Position.e4;
 
         // Place enemy pieces on the queen's path
         boardState.squares.replace(d6 < blackRook);
@@ -828,13 +828,13 @@ void main() {
           const whiteRook = Rook(Team.white);
 
           // Define position instances once
-          final d4 = Position.fromAlgebraic('d4');
-          final d8 = Position.fromAlgebraic('d8'); // vertical up
-          final d1 = Position.fromAlgebraic('d1'); // vertical down
-          final a4 = Position.fromAlgebraic('a4'); // horizontal left
-          final h4 = Position.fromAlgebraic('h4'); // horizontal right
-          final e5 = Position.fromAlgebraic('e5');
-          final c3 = Position.fromAlgebraic('c3');
+          final d4 = Position.d4;
+          final d8 = Position.d8; // vertical up
+          final d1 = Position.d1; // vertical down
+          final a4 = Position.a4; // horizontal left
+          final h4 = Position.h4; // horizontal right
+          final e5 = Position.e5;
+          final c3 = Position.c3;
 
           final validPositions = whiteRook.validPositions(boardState, d4);
 
@@ -862,11 +862,11 @@ void main() {
         const whitePawn = Pawn(Team.white);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final d6 = Position.fromAlgebraic('d6');
-        final d7 = Position.fromAlgebraic('d7');
-        final d8 = Position.fromAlgebraic('d8');
-        final d5 = Position.fromAlgebraic('d5');
+        final d4 = Position.d4;
+        final d6 = Position.d6;
+        final d7 = Position.d7;
+        final d8 = Position.d8;
+        final d5 = Position.d5;
 
         // Place same team piece blocking vertical movement
         boardState.squares.replace(d6 < whitePawn);
@@ -888,10 +888,10 @@ void main() {
         const blackPawn = Pawn(Team.black);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final d6 = Position.fromAlgebraic('d6');
-        final d7 = Position.fromAlgebraic('d7');
-        final d8 = Position.fromAlgebraic('d8');
+        final d4 = Position.d4;
+        final d6 = Position.d6;
+        final d7 = Position.d7;
+        final d8 = Position.d8;
 
         // Place enemy piece on the rook's path
         boardState.squares.replace(d6 < blackPawn);
@@ -912,13 +912,13 @@ void main() {
         const whiteBishop = Bishop(Team.white);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final a1 = Position.fromAlgebraic('a1'); // down-left
-        final g7 = Position.fromAlgebraic('g7'); // up-right
-        final a7 = Position.fromAlgebraic('a7'); // up-left
-        final h8 = Position.fromAlgebraic('h8'); // up-right extended
-        final d5 = Position.fromAlgebraic('d5');
-        final e4 = Position.fromAlgebraic('e4');
+        final d4 = Position.d4;
+        final a1 = Position.a1; // down-left
+        final g7 = Position.g7; // up-right
+        final a7 = Position.a7; // up-left
+        final h8 = Position.h8; // up-right extended
+        final d5 = Position.d5;
+        final e4 = Position.e4;
 
         final validPositions = whiteBishop.validPositions(boardState, d4);
 
@@ -945,11 +945,11 @@ void main() {
         const whiteKnight = Knight(Team.white);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final f6 = Position.fromAlgebraic('f6');
-        final g7 = Position.fromAlgebraic('g7');
-        final h8 = Position.fromAlgebraic('h8');
-        final e5 = Position.fromAlgebraic('e5');
+        final d4 = Position.d4;
+        final f6 = Position.f6;
+        final g7 = Position.g7;
+        final h8 = Position.h8;
+        final e5 = Position.e5;
 
         // Place same team piece on diagonal
         boardState.squares.replace(f6 < whiteKnight);
@@ -971,10 +971,10 @@ void main() {
         const blackKnight = Knight(Team.black);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final f6 = Position.fromAlgebraic('f6');
-        final g7 = Position.fromAlgebraic('g7');
-        final h8 = Position.fromAlgebraic('h8');
+        final d4 = Position.d4;
+        final f6 = Position.f6;
+        final g7 = Position.g7;
+        final h8 = Position.h8;
 
         // Place enemy piece on diagonal
         boardState.squares.replace(f6 < blackKnight);
@@ -995,15 +995,15 @@ void main() {
         const whiteKnight = Knight(Team.white);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final b5 = Position.fromAlgebraic('b5'); // up-up-left
-        final b3 = Position.fromAlgebraic('b3'); // down-down-left
-        final c6 = Position.fromAlgebraic('c6'); // up-left-left
-        final c2 = Position.fromAlgebraic('c2'); // down-left-left
-        final e6 = Position.fromAlgebraic('e6'); // up-right-right
-        final e2 = Position.fromAlgebraic('e2'); // down-right-right
-        final f5 = Position.fromAlgebraic('f5'); // up-up-right
-        final f3 = Position.fromAlgebraic('f3'); // down-down-right
+        final d4 = Position.d4;
+        final b5 = Position.b5; // up-up-left
+        final b3 = Position.b3; // down-down-left
+        final c6 = Position.c6; // up-left-left
+        final c2 = Position.c2; // down-left-left
+        final e6 = Position.e6; // up-right-right
+        final e2 = Position.e2; // down-right-right
+        final f5 = Position.f5; // up-up-right
+        final f3 = Position.f3; // down-down-right
 
         final validPositions = whiteKnight.validPositions(boardState, d4);
 
@@ -1022,11 +1022,11 @@ void main() {
         const whiteRook = Rook(Team.white);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final b5 = Position.fromAlgebraic('b5');
-        final f3 = Position.fromAlgebraic('f3');
-        final c6 = Position.fromAlgebraic('c6');
-        final e6 = Position.fromAlgebraic('e6');
+        final d4 = Position.d4;
+        final b5 = Position.b5;
+        final f3 = Position.f3;
+        final c6 = Position.c6;
+        final e6 = Position.e6;
 
         // Place same team pieces at some knight move destinations
         boardState.squares.replace(b5 < whitePawn);
@@ -1047,11 +1047,11 @@ void main() {
         const blackRook = Rook(Team.black);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final b5 = Position.fromAlgebraic('b5');
-        final f3 = Position.fromAlgebraic('f3');
-        final c6 = Position.fromAlgebraic('c6');
-        final e6 = Position.fromAlgebraic('e6');
+        final d4 = Position.d4;
+        final b5 = Position.b5;
+        final f3 = Position.f3;
+        final c6 = Position.c6;
+        final e6 = Position.e6;
 
         // Place enemy pieces at some knight move destinations
         boardState.squares.replace(b5 < blackPawn);
@@ -1070,9 +1070,9 @@ void main() {
         const whiteKnight = Knight(Team.white);
 
         // Define position instances once
-        final a1 = Position.fromAlgebraic('a1'); // Corner position
-        final b3 = Position.fromAlgebraic('b3');
-        final c2 = Position.fromAlgebraic('c2');
+        final a1 = Position.a1; // Corner position
+        final b3 = Position.b3;
+        final c2 = Position.c2;
 
         final validPositions = whiteKnight.validPositions(boardState, a1);
 
@@ -1092,11 +1092,9 @@ void main() {
           const whitePawn = Pawn(Team.white);
 
           // Define position instances once
-          final e2 = Position.fromAlgebraic(
-            'e2',
-          ); // Initial position for white pawn
-          final e3 = Position.fromAlgebraic('e3');
-          final e4 = Position.fromAlgebraic('e4');
+          final e2 = Position.e2; // Initial position for white pawn
+          final e3 = Position.e3;
+          final e4 = Position.e4;
 
           final validPositions = whitePawn.validPositions(boardState, e2);
 
@@ -1111,8 +1109,8 @@ void main() {
         const whitePawn = Pawn(Team.white);
 
         // Define position instances once
-        final e3 = Position.fromAlgebraic('e3'); // Non-initial position
-        final e4 = Position.fromAlgebraic('e4');
+        final e3 = Position.e3; // Non-initial position
+        final e4 = Position.e4;
 
         final validPositions = whitePawn.validPositions(boardState, e3);
 
@@ -1126,8 +1124,8 @@ void main() {
         const blackPawn = Pawn(Team.black);
 
         // Define position instances once
-        final e2 = Position.fromAlgebraic('e2');
-        final e3 = Position.fromAlgebraic('e3');
+        final e2 = Position.e2;
+        final e3 = Position.e3;
 
         // Block the square in front
         boardState.squares.replace(e3 < blackPawn);
@@ -1144,10 +1142,10 @@ void main() {
         const blackKnight = Knight(Team.black);
 
         // Define position instances once
-        final e4 = Position.fromAlgebraic('e4');
-        final d5 = Position.fromAlgebraic('d5');
-        final f5 = Position.fromAlgebraic('f5');
-        final e5 = Position.fromAlgebraic('e5');
+        final e4 = Position.e4;
+        final d5 = Position.d5;
+        final f5 = Position.f5;
+        final e5 = Position.e5;
 
         // Place enemy pieces diagonally
         boardState.squares.replace(d5 < blackPawn);
@@ -1169,10 +1167,10 @@ void main() {
         const whiteKnight = Knight(Team.white);
 
         // Define position instances once
-        final e4 = Position.fromAlgebraic('e4');
-        final d5 = Position.fromAlgebraic('d5');
-        final f5 = Position.fromAlgebraic('f5');
-        final e5 = Position.fromAlgebraic('e5');
+        final e4 = Position.e4;
+        final d5 = Position.d5;
+        final f5 = Position.f5;
+        final e5 = Position.e5;
 
         // Place same team pieces diagonally
         boardState.squares.replace(d5 < whitePawn2);
@@ -1192,11 +1190,9 @@ void main() {
         const blackPawn = Pawn(Team.black);
 
         // Define position instances once
-        final e7 = Position.fromAlgebraic(
-          'e7',
-        ); // Initial position for black pawn
-        final e6 = Position.fromAlgebraic('e6');
-        final e5 = Position.fromAlgebraic('e5');
+        final e7 = Position.e7; // Initial position for black pawn
+        final e6 = Position.e6;
+        final e5 = Position.e5;
 
         final validPositions = blackPawn.validPositions(boardState, e7);
 
@@ -1213,10 +1209,10 @@ void main() {
         const whiteKnight = Knight(Team.white);
 
         // Define position instances once
-        final e5 = Position.fromAlgebraic('e5');
-        final d4 = Position.fromAlgebraic('d4');
-        final f4 = Position.fromAlgebraic('f4');
-        final e4 = Position.fromAlgebraic('e4');
+        final e5 = Position.e5;
+        final d4 = Position.d4;
+        final f4 = Position.f4;
+        final e4 = Position.e4;
 
         // Place white pieces diagonally down from black pawn
         boardState.squares.replace(d4 < whitePawn);
@@ -1239,9 +1235,9 @@ void main() {
           const blackPawn = Pawn(Team.black);
 
           // Define position instances once
-          final e2 = Position.fromAlgebraic('e2');
-          final e4 = Position.fromAlgebraic('e4');
-          final e3 = Position.fromAlgebraic('e3');
+          final e2 = Position.e2;
+          final e4 = Position.e4;
+          final e3 = Position.e3;
 
           // Block the second square ahead
           boardState.squares.replace(e4 < blackPawn);
@@ -1264,10 +1260,10 @@ void main() {
           const whitePawn = Pawn(Team.white);
           const blackPawn = Pawn(Team.black);
 
-          final e5 = Position.fromAlgebraic('e5');
-          final d5 = Position.fromAlgebraic('d5');
-          final d7 = Position.fromAlgebraic('d7');
-          final d6 = Position.fromAlgebraic('d6');
+          final e5 = Position.e5;
+          final d5 = Position.d5;
+          final d7 = Position.d7;
+          final d6 = Position.d6;
 
           // Place pawns on board
           boardState.squares.replace(e5 < whitePawn);
@@ -1298,10 +1294,10 @@ void main() {
           const whitePawn = Pawn(Team.white);
           const blackPawn = Pawn(Team.black);
 
-          final d4 = Position.fromAlgebraic('d4');
-          final e4 = Position.fromAlgebraic('e4');
-          final e2 = Position.fromAlgebraic('e2');
-          final e3 = Position.fromAlgebraic('e3');
+          final d4 = Position.d4;
+          final e4 = Position.e4;
+          final e2 = Position.e2;
+          final e3 = Position.e3;
 
           // Place pawns on board
           boardState.squares.replace(d4 < blackPawn);
@@ -1332,10 +1328,10 @@ void main() {
           const whitePawn = Pawn(Team.white);
           const blackPawn = Pawn(Team.black);
 
-          final e5 = Position.fromAlgebraic('e5');
-          final d5 = Position.fromAlgebraic('d5');
-          final d6 = Position.fromAlgebraic('d6');
-          final e6 = Position.fromAlgebraic('e6');
+          final e5 = Position.e5;
+          final d5 = Position.d5;
+          final d6 = Position.d6;
+          final e6 = Position.e6;
 
           // Place pawns on board
           boardState.squares.replace(e5 < whitePawn);
@@ -1365,12 +1361,12 @@ void main() {
           const whitePawn = Pawn(Team.white);
           const blackPawn = Pawn(Team.black);
 
-          final e5 = Position.fromAlgebraic('e5');
-          final g5 = Position.fromAlgebraic('g5');
-          final g7 = Position.fromAlgebraic('g7');
-          final f6 = Position.fromAlgebraic('f6');
-          final e6 = Position.fromAlgebraic('e6');
-          final d6 = Position.fromAlgebraic('d6');
+          final e5 = Position.e5;
+          final g5 = Position.g5;
+          final g7 = Position.g7;
+          final f6 = Position.f6;
+          final e6 = Position.e6;
+          final d6 = Position.d6;
 
           // Place pawns on board
           boardState.squares.replace(e5 < whitePawn);
@@ -1399,11 +1395,11 @@ void main() {
         const blackPawn1 = Pawn(Team.black);
         const blackKnight = Knight(Team.black);
 
-        final e5 = Position.fromAlgebraic('e5');
-        final d5 = Position.fromAlgebraic('d5');
-        final f6 = Position.fromAlgebraic('f6');
-        final d6 = Position.fromAlgebraic('d6');
-        final e6 = Position.fromAlgebraic('e6');
+        final e5 = Position.e5;
+        final d5 = Position.d5;
+        final f6 = Position.f6;
+        final d6 = Position.d6;
+        final e6 = Position.e6;
 
         // Place pieces on board
         boardState.squares.replace(e5 < whitePawn);
@@ -1412,7 +1408,7 @@ void main() {
 
         // Create PawnInitialMove for en passant
         final lastMove = PawnInitialMove(
-          from: Position.fromAlgebraic('d7'),
+          from: Position.d7,
           to: d5,
           moving: blackPawn1,
         );
@@ -1435,10 +1431,10 @@ void main() {
         const whitePawn = Pawn(Team.white);
         const blackPawn = Pawn(Team.black);
 
-        final e5 = Position.fromAlgebraic('e5');
-        final d5 = Position.fromAlgebraic('d5');
-        final d6 = Position.fromAlgebraic('d6');
-        final e6 = Position.fromAlgebraic('e6');
+        final e5 = Position.e5;
+        final d5 = Position.d5;
+        final d6 = Position.d6;
+        final e6 = Position.e6;
 
         // Place pawns on board
         boardState.squares.replace(e5 < whitePawn);
@@ -1460,12 +1456,12 @@ void main() {
         const blackPawn1 = Pawn(Team.black);
         const blackPawn2 = Pawn(Team.black);
 
-        final e5 = Position.fromAlgebraic('e5');
-        final d5 = Position.fromAlgebraic('d5');
-        final f5 = Position.fromAlgebraic('f5');
-        final d6 = Position.fromAlgebraic('d6');
-        final f6 = Position.fromAlgebraic('f6');
-        final e6 = Position.fromAlgebraic('e6');
+        final e5 = Position.e5;
+        final d5 = Position.d5;
+        final f5 = Position.f5;
+        final d6 = Position.d6;
+        final f6 = Position.f6;
+        final e6 = Position.e6;
 
         // Place pawns on board
         boardState.squares.replace(e5 < whitePawn);
@@ -1474,7 +1470,7 @@ void main() {
 
         // Create PawnInitialMove for left side en passant
         final lastMove = PawnInitialMove(
-          from: Position.fromAlgebraic('d7'),
+          from: Position.d7,
           to: d5,
           moving: blackPawn1,
         );
@@ -1501,12 +1497,12 @@ void main() {
         const whitePawn1 = Pawn(Team.white);
         const whitePawn2 = Pawn(Team.white);
 
-        final d4 = Position.fromAlgebraic('d4');
-        final c4 = Position.fromAlgebraic('c4');
-        final e4 = Position.fromAlgebraic('e4');
-        final c3 = Position.fromAlgebraic('c3');
-        final e3 = Position.fromAlgebraic('e3');
-        final d3 = Position.fromAlgebraic('d3');
+        final d4 = Position.d4;
+        final c4 = Position.c4;
+        final e4 = Position.e4;
+        final c3 = Position.c3;
+        final e3 = Position.e3;
+        final d3 = Position.d3;
 
         // Place pawns on board
         boardState.squares.replace(d4 < blackPawn);
@@ -1515,7 +1511,7 @@ void main() {
 
         // Create PawnInitialMove for en passant on e-file
         final lastMove = PawnInitialMove(
-          from: Position.fromAlgebraic('e2'),
+          from: Position.e2,
           to: e4,
           moving: whitePawn2,
         );
@@ -1542,10 +1538,10 @@ void main() {
         const blackPawn1 = Pawn(Team.black);
         const blackPawn2 = Pawn(Team.black);
 
-        final e5 = Position.fromAlgebraic('e5');
-        final d5 = Position.fromAlgebraic('d5');
-        final d6 = Position.fromAlgebraic('d6');
-        final e6 = Position.fromAlgebraic('e6');
+        final e5 = Position.e5;
+        final d5 = Position.d5;
+        final d6 = Position.d6;
+        final e6 = Position.e6;
 
         // Place pawns on board
         boardState.squares.replace(e5 < whitePawn);
@@ -1556,7 +1552,7 @@ void main() {
 
         // Create PawnInitialMove
         final lastMove = PawnInitialMove(
-          from: Position.fromAlgebraic('d7'),
+          from: Position.d7,
           to: d5,
           moving: blackPawn1,
         );
@@ -1584,13 +1580,13 @@ void main() {
         const whiteKing = King(Team.white);
 
         // Define position instances once
-        final d4 = Position.fromAlgebraic('d4');
-        final d6 = Position.fromAlgebraic('d6'); // Enemy piece
-        final f4 = Position.fromAlgebraic('f4'); // Same team piece
-        final b2 = Position.fromAlgebraic('b2'); // Enemy piece on diagonal
-        final a1 = Position.fromAlgebraic('a1'); // Same team piece on diagonal
-        final d7 = Position.fromAlgebraic('d7');
-        final g4 = Position.fromAlgebraic('g4');
+        final d4 = Position.d4;
+        final d6 = Position.d6; // Enemy piece
+        final f4 = Position.f4; // Same team piece
+        final b2 = Position.b2; // Enemy piece on diagonal
+        final a1 = Position.a1; // Same team piece on diagonal
+        final d7 = Position.d7;
+        final g4 = Position.g4;
 
         // Set up a complex board scenario
         boardState.squares.replace(d6 < blackRook);
@@ -1615,9 +1611,9 @@ void main() {
           validPositions,
           isNot(contains(a1)),
         ); // Should include squares before blocking pieces
-        expect(validPositions, contains(Position.fromAlgebraic('d5')));
-        expect(validPositions, contains(Position.fromAlgebraic('e4')));
-        expect(validPositions, contains(Position.fromAlgebraic('c3')));
+        expect(validPositions, contains(Position.d5));
+        expect(validPositions, contains(Position.e4));
+        expect(validPositions, contains(Position.c3));
       });
 
       test('should handle edge cases with pieces at board boundaries', () {
@@ -1627,12 +1623,12 @@ void main() {
         const blackQueen = Queen(Team.black);
 
         // Define position instances once
-        final a1 = Position.fromAlgebraic('a1'); // Corner position
-        final a3 = Position.fromAlgebraic('a3');
-        final c1 = Position.fromAlgebraic('c1');
-        final a2 = Position.fromAlgebraic('a2');
-        final b1 = Position.fromAlgebraic('b1');
-        final d1 = Position.fromAlgebraic('d1');
+        final a1 = Position.a1; // Corner position
+        final a3 = Position.a3;
+        final c1 = Position.c1;
+        final a2 = Position.a2;
+        final b1 = Position.b1;
+        final d1 = Position.d1;
 
         // Place pieces limiting movement
         boardState.squares.replace(a3 < whitePawn);
@@ -1661,15 +1657,15 @@ void main() {
           const whiteKing = King(Team.white);
 
           // Define position instances once
-          final e4 = Position.fromAlgebraic('e4');
-          final d3 = Position.fromAlgebraic('d3');
-          final d4 = Position.fromAlgebraic('d4');
-          final d5 = Position.fromAlgebraic('d5');
-          final e3 = Position.fromAlgebraic('e3');
-          final e5 = Position.fromAlgebraic('e5');
-          final f3 = Position.fromAlgebraic('f3');
-          final f4 = Position.fromAlgebraic('f4');
-          final f5 = Position.fromAlgebraic('f5');
+          final e4 = Position.e4;
+          final d3 = Position.d3;
+          final d4 = Position.d4;
+          final d5 = Position.d5;
+          final e3 = Position.e3;
+          final e5 = Position.e5;
+          final f3 = Position.f3;
+          final f4 = Position.f4;
+          final f5 = Position.f5;
 
           final validPositions = whiteKing.validPositions(state, e4);
 
@@ -1688,15 +1684,15 @@ void main() {
           const whiteQueen = Queen(Team.white);
 
           // Define position instances once
-          final d4 = Position.fromAlgebraic('d4');
-          final a4 = Position.fromAlgebraic('a4');
-          final h4 = Position.fromAlgebraic('h4');
-          final d1 = Position.fromAlgebraic('d1');
-          final d8 = Position.fromAlgebraic('d8');
-          final a1 = Position.fromAlgebraic('a1');
-          final g7 = Position.fromAlgebraic('g7');
-          final a7 = Position.fromAlgebraic('a7');
-          final g1 = Position.fromAlgebraic('g1');
+          final d4 = Position.d4;
+          final a4 = Position.a4;
+          final h4 = Position.h4;
+          final d1 = Position.d1;
+          final d8 = Position.d8;
+          final a1 = Position.a1;
+          final g7 = Position.g7;
+          final a7 = Position.a7;
+          final g1 = Position.g1;
 
           final validPositions = whiteQueen.validPositions(state, d4);
 
@@ -1726,7 +1722,7 @@ void main() {
           const blackRook = Rook(Team.black);
 
           // Define position instances once
-          final e5 = Position.fromAlgebraic('e5');
+          final e5 = Position.e5;
 
           final validPositions = blackRook.validPositions(state, e5);
 
@@ -1735,9 +1731,9 @@ void main() {
             validPositions,
             containsAll([
               // Horizontal
-              Position.fromAlgebraic('a5'), Position.fromAlgebraic('h5'),
+              Position.a5, Position.h5,
               // Vertical
-              Position.fromAlgebraic('e1'), Position.fromAlgebraic('e8'),
+              Position.e1, Position.e8,
             ]),
           );
           expect(
@@ -1749,7 +1745,7 @@ void main() {
         test('Bishop in center of empty board', () {
           final state = BoardState.empty();
           const bishop = Bishop(Team.white);
-          final position = Position.fromAlgebraic('d4');
+          final position = Position.d4;
 
           final validPositions = bishop.validPositions(state, position);
 
@@ -1757,10 +1753,10 @@ void main() {
           expect(
             validPositions,
             containsAll([
-              Position.fromAlgebraic('a1'),
-              Position.fromAlgebraic('g7'),
-              Position.fromAlgebraic('a7'),
-              Position.fromAlgebraic('g1'),
+              Position.a1,
+              Position.g7,
+              Position.a7,
+              Position.g1,
             ]),
           );
           expect(validPositions.length, equals(13)); // 3+3+6+1 diagonal moves
@@ -1769,7 +1765,7 @@ void main() {
         test('Knight in center of empty board', () {
           final state = BoardState.empty();
           const knight = Knight(Team.black);
-          final position = Position.fromAlgebraic('e4');
+          final position = Position.e4;
 
           final validPositions = knight.validPositions(state, position);
 
@@ -1777,14 +1773,14 @@ void main() {
           expect(
             validPositions,
             containsAll([
-              Position.fromAlgebraic('d2'),
-              Position.fromAlgebraic('f2'),
-              Position.fromAlgebraic('c3'),
-              Position.fromAlgebraic('g3'),
-              Position.fromAlgebraic('c5'),
-              Position.fromAlgebraic('g5'),
-              Position.fromAlgebraic('d6'),
-              Position.fromAlgebraic('f6'),
+              Position.d2,
+              Position.f2,
+              Position.c3,
+              Position.g3,
+              Position.c5,
+              Position.g5,
+              Position.d6,
+              Position.f6,
             ]),
           );
           expect(validPositions.length, equals(8));
@@ -1793,31 +1789,31 @@ void main() {
         test('White pawn in center of empty board', () {
           final state = BoardState.empty();
           const pawn = Pawn(Team.white);
-          final position = Position.fromAlgebraic('e4');
+          final position = Position.e4;
 
           final validPositions = pawn.validPositions(state, position);
 
           // White pawn should only move forward one square
-          expect(validPositions, contains(Position.fromAlgebraic('e5')));
+          expect(validPositions, contains(Position.e5));
           expect(validPositions.length, equals(1));
         });
 
         test('Black pawn in center of empty board', () {
           final state = BoardState.empty();
           const pawn = Pawn(Team.black);
-          final position = Position.fromAlgebraic('e5');
+          final position = Position.e5;
 
           final validPositions = pawn.validPositions(state, position);
 
           // Black pawn should only move forward one square (down)
-          expect(validPositions, contains(Position.fromAlgebraic('e4')));
+          expect(validPositions, contains(Position.e4));
           expect(validPositions.length, equals(1));
         });
 
         test('White pawn on starting rank', () {
           final state = BoardState.empty();
           const pawn = Pawn(Team.white);
-          final position = Position.fromAlgebraic('e2');
+          final position = Position.e2;
 
           final validPositions = pawn.validPositions(state, position);
 
@@ -1825,8 +1821,8 @@ void main() {
           expect(
             validPositions,
             containsAll([
-              Position.fromAlgebraic('e3'),
-              Position.fromAlgebraic('e4'),
+              Position.e3,
+              Position.e4,
             ]),
           );
           expect(validPositions.length, equals(2));
@@ -1835,7 +1831,7 @@ void main() {
         test('Black pawn on starting rank', () {
           final state = BoardState.empty();
           const pawn = Pawn(Team.black);
-          final position = Position.fromAlgebraic('d7');
+          final position = Position.d7;
 
           final validPositions = pawn.validPositions(state, position);
 
@@ -1843,8 +1839,8 @@ void main() {
           expect(
             validPositions,
             containsAll([
-              Position.fromAlgebraic('d6'),
-              Position.fromAlgebraic('d5'),
+              Position.d6,
+              Position.d5,
             ]),
           );
           expect(validPositions.length, equals(2));
@@ -1856,107 +1852,107 @@ void main() {
           final state = BoardState.empty();
           // Place white queen at d4
           state.squares.replace(
-            const Queen(Team.white) > Position.fromAlgebraic('d4'),
+            const Queen(Team.white) > Position.d4,
           );
           // Place white pieces blocking some directions
           state.squares.replace(
-            const Pawn(Team.white) > Position.fromAlgebraic('d5'),
+            const Pawn(Team.white) > Position.d5,
           ); // Block north
           state.squares.replace(
-            const Rook(Team.white) > Position.fromAlgebraic('f4'),
+            const Rook(Team.white) > Position.f4,
           ); // Block east
           state.squares.replace(
-            const Bishop(Team.white) > Position.fromAlgebraic('e5'),
+            const Bishop(Team.white) > Position.e5,
           ); // Block northeast
 
           const queen = Queen(Team.white);
-          final position = Position.fromAlgebraic('d4');
+          final position = Position.d4;
           final validPositions = queen.validPositions(state, position);
 
           // Should not be able to move to or past blocked squares
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('d5'))));
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('d6'))));
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('f4'))));
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('g4'))));
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('e5'))));
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('f6'))));
+          expect(validPositions, isNot(contains(Position.d5)));
+          expect(validPositions, isNot(contains(Position.d6)));
+          expect(validPositions, isNot(contains(Position.f4)));
+          expect(validPositions, isNot(contains(Position.g4)));
+          expect(validPositions, isNot(contains(Position.e5)));
+          expect(validPositions, isNot(contains(Position.f6)));
 
           // Should still be able to move in unblocked directions
-          expect(validPositions, contains(Position.fromAlgebraic('d3')));
-          expect(validPositions, contains(Position.fromAlgebraic('c4')));
-          expect(validPositions, contains(Position.fromAlgebraic('e4')));
+          expect(validPositions, contains(Position.d3));
+          expect(validPositions, contains(Position.c4));
+          expect(validPositions, contains(Position.e4));
         });
 
         test('Rook blocked by same team piece', () {
           final state = BoardState.empty();
           // Place black rook at a1
           state.squares.replace(
-            const Rook(Team.black) > Position.fromAlgebraic('a1'),
+            const Rook(Team.black) > Position.a1,
           );
           // Place black piece blocking horizontal movement
           state.squares.replace(
-            const Knight(Team.black) > Position.fromAlgebraic('d1'),
+            const Knight(Team.black) > Position.d1,
           );
 
           const rook = Rook(Team.black);
-          final position = Position.fromAlgebraic('a1');
+          final position = Position.a1;
           final validPositions = rook.validPositions(state, position);
 
           // Should not be able to move to or past blocking piece
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('d1'))));
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('e1'))));
+          expect(validPositions, isNot(contains(Position.d1)));
+          expect(validPositions, isNot(contains(Position.e1)));
 
           // Should still be able to move before blocking piece and vertically
-          expect(validPositions, contains(Position.fromAlgebraic('b1')));
-          expect(validPositions, contains(Position.fromAlgebraic('c1')));
-          expect(validPositions, contains(Position.fromAlgebraic('a8')));
+          expect(validPositions, contains(Position.b1));
+          expect(validPositions, contains(Position.c1));
+          expect(validPositions, contains(Position.a8));
         });
 
         test('Bishop blocked by same team piece', () {
           final state = BoardState.empty();
           // Place white bishop at c1
           state.squares.replace(
-            const Bishop(Team.white) > Position.fromAlgebraic('c1'),
+            const Bishop(Team.white) > Position.c1,
           );
           // Place white piece blocking diagonal
           state.squares.replace(
-            const Pawn(Team.white) > Position.fromAlgebraic('e3'),
+            const Pawn(Team.white) > Position.e3,
           );
 
           const bishop = Bishop(Team.white);
-          final position = Position.fromAlgebraic('c1');
+          final position = Position.c1;
           final validPositions = bishop.validPositions(state, position);
 
           // Should not be able to move to or past blocking piece
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('e3'))));
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('f4'))));
+          expect(validPositions, isNot(contains(Position.e3)));
+          expect(validPositions, isNot(contains(Position.f4)));
 
           // Should still be able to move before blocking piece
-          expect(validPositions, contains(Position.fromAlgebraic('d2')));
+          expect(validPositions, contains(Position.d2));
         });
 
         test('Knight not blocked by same team piece (jumps over)', () {
           final state = BoardState.empty();
           // Place black knight at e4
           state.squares.replace(
-            const Knight(Team.black) > Position.fromAlgebraic('e4'),
+            const Knight(Team.black) > Position.e4,
           );
           // Place black pieces around it
           state.squares.replace(
-            const Pawn(Team.black) > Position.fromAlgebraic('d4'),
+            const Pawn(Team.black) > Position.d4,
           );
           state.squares.replace(
-            const Rook(Team.black) > Position.fromAlgebraic('e3'),
+            const Rook(Team.black) > Position.e3,
           );
 
           const knight = Knight(Team.black);
-          final position = Position.fromAlgebraic('e4');
+          final position = Position.e4;
           final validPositions = knight.validPositions(state, position);
 
           // Knight should still be able to jump to most L-shaped positions
           // But not where same team pieces are already placed
-          expect(validPositions, contains(Position.fromAlgebraic('f6')));
-          expect(validPositions, contains(Position.fromAlgebraic('g5')));
+          expect(validPositions, contains(Position.f6));
+          expect(validPositions, contains(Position.g5));
 
           // Should not be able to land on squares with same team pieces
           if (validPositions.any(
@@ -1973,15 +1969,15 @@ void main() {
           final state = BoardState.empty();
           // Place white pawn at e2
           state.squares.replace(
-            const Pawn(Team.white) > Position.fromAlgebraic('e2'),
+            const Pawn(Team.white) > Position.e2,
           );
           // Place white piece blocking forward movement
           state.squares.replace(
-            const Bishop(Team.white) > Position.fromAlgebraic('e3'),
+            const Bishop(Team.white) > Position.e3,
           );
 
           const pawn = Pawn(Team.white);
-          final position = Position.fromAlgebraic('e2');
+          final position = Position.e2;
           final validPositions = pawn.validPositions(state, position);
 
           // Should not be able to move forward when blocked
@@ -1994,49 +1990,49 @@ void main() {
           final state = BoardState.empty();
           // Place white queen at d4
           state.squares.replace(
-            const Queen(Team.white) > Position.fromAlgebraic('d4'),
+            const Queen(Team.white) > Position.d4,
           );
           // Place black pieces in various directions
           state.squares.replace(
-            const Pawn(Team.black) > Position.fromAlgebraic('d7'),
+            const Pawn(Team.black) > Position.d7,
           ); // North
           state.squares.replace(
-            const Rook(Team.black) > Position.fromAlgebraic('g4'),
+            const Rook(Team.black) > Position.g4,
           ); // East
           state.squares.replace(
-            const Knight(Team.black) > Position.fromAlgebraic('f6'),
+            const Knight(Team.black) > Position.f6,
           ); // Northeast
 
           const queen = Queen(Team.white);
-          final position = Position.fromAlgebraic('d4');
+          final position = Position.d4;
           final validPositions = queen.validPositions(state, position);
 
           // Should be able to capture enemy pieces
-          expect(validPositions, contains(Position.fromAlgebraic('d7')));
-          expect(validPositions, contains(Position.fromAlgebraic('g4')));
-          expect(validPositions, contains(Position.fromAlgebraic('f6')));
+          expect(validPositions, contains(Position.d7));
+          expect(validPositions, contains(Position.g4));
+          expect(validPositions, contains(Position.f6));
 
           // Should not be able to move past captured pieces
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('d8'))));
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('h4'))));
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('g7'))));
+          expect(validPositions, isNot(contains(Position.d8)));
+          expect(validPositions, isNot(contains(Position.h4)));
+          expect(validPositions, isNot(contains(Position.g7)));
 
           // Should still be able to move in unblocked directions
-          expect(validPositions, contains(Position.fromAlgebraic('d1')));
-          expect(validPositions, contains(Position.fromAlgebraic('a4')));
+          expect(validPositions, contains(Position.d1));
+          expect(validPositions, contains(Position.a4));
         });
 
         test('Rook can capture enemy pieces', () {
           final state = BoardState.empty();
           const rook = Rook(Team.black);
-          final rookPosition = Position.fromAlgebraic('h8');
+          final rookPosition = Position.h8;
           // Place black rook at h8
           state.squares.replace(rook > rookPosition);
 
           // Place white pieces to capture
-          final bishopPosition = Position.fromAlgebraic('h3');
+          final bishopPosition = Position.h3;
           state.squares.replace(const Bishop(Team.white) > bishopPosition);
-          final queenPosition = Position.fromAlgebraic('c8');
+          final queenPosition = Position.c8;
           state.squares.replace(const Queen(Team.white) > queenPosition);
 
           final validPositions = rook.validPositions(state, rookPosition);
@@ -2046,154 +2042,154 @@ void main() {
           expect(validPositions, contains(queenPosition));
 
           // Should not be able to move past captured pieces
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('h2'))));
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('b8'))));
+          expect(validPositions, isNot(contains(Position.h2)));
+          expect(validPositions, isNot(contains(Position.b8)));
         });
 
         test('Bishop can capture enemy pieces', () {
           final state = BoardState.empty();
           // Place white bishop at f1
           state.squares.replace(
-            const Bishop(Team.white) > Position.fromAlgebraic('f1'),
+            const Bishop(Team.white) > Position.f1,
           );
           // Place black pieces on diagonals
           state.squares.replace(
-            const Pawn(Team.black) > Position.fromAlgebraic('h3'),
+            const Pawn(Team.black) > Position.h3,
           );
           state.squares.replace(
-            const Rook(Team.black) > Position.fromAlgebraic('c4'),
+            const Rook(Team.black) > Position.c4,
           );
 
           const bishop = Bishop(Team.white);
-          final position = Position.fromAlgebraic('f1');
+          final position = Position.f1;
           final validPositions = bishop.validPositions(state, position);
 
           // Should be able to capture enemy pieces
-          expect(validPositions, contains(Position.fromAlgebraic('h3')));
-          expect(validPositions, contains(Position.fromAlgebraic('c4')));
+          expect(validPositions, contains(Position.h3));
+          expect(validPositions, contains(Position.c4));
 
           // Should not be able to move past captured pieces
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('b5'))));
+          expect(validPositions, isNot(contains(Position.b5)));
         });
 
         test('Knight can capture enemy pieces', () {
           final state = BoardState.empty();
           // Place black knight at e4
           state.squares.replace(
-            const Knight(Team.black) > Position.fromAlgebraic('e4'),
+            const Knight(Team.black) > Position.e4,
           );
           // Place white pieces at knight's target squares
           state.squares.replace(
-            const Pawn(Team.white) > Position.fromAlgebraic('f6'),
+            const Pawn(Team.white) > Position.f6,
           );
           state.squares.replace(
-            const Bishop(Team.white) > Position.fromAlgebraic('c3'),
+            const Bishop(Team.white) > Position.c3,
           );
           // Place black piece at another target square
           state.squares.replace(
-            const Rook(Team.black) > Position.fromAlgebraic('g5'),
+            const Rook(Team.black) > Position.g5,
           );
 
           const knight = Knight(Team.black);
-          final position = Position.fromAlgebraic('e4');
+          final position = Position.e4;
           final validPositions = knight.validPositions(state, position);
 
           // Should be able to capture enemy pieces
-          expect(validPositions, contains(Position.fromAlgebraic('f6')));
-          expect(validPositions, contains(Position.fromAlgebraic('c3')));
+          expect(validPositions, contains(Position.f6));
+          expect(validPositions, contains(Position.c3));
 
           // Should not be able to move to squares with same team pieces
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('g5'))));
+          expect(validPositions, isNot(contains(Position.g5)));
         });
 
         test('King can capture enemy pieces', () {
           final state = BoardState.empty();
           // Place white king at e4
           state.squares.replace(
-            const King(Team.white) > Position.fromAlgebraic('e4'),
+            const King(Team.white) > Position.e4,
           );
           // Place black pieces around
           state.squares.replace(
-            const Pawn(Team.black) > Position.fromAlgebraic('e5'),
+            const Pawn(Team.black) > Position.e5,
           );
           state.squares.replace(
-            const Rook(Team.black) > Position.fromAlgebraic('f4'),
+            const Rook(Team.black) > Position.f4,
           );
           // Place white piece
           state.squares.replace(
-            const Bishop(Team.white) > Position.fromAlgebraic('d4'),
+            const Bishop(Team.white) > Position.d4,
           );
 
           const king = King(Team.white);
-          final position = Position.fromAlgebraic('e4');
+          final position = Position.e4;
           final validPositions = king.validPositions(state, position);
 
           // Should be able to capture enemy pieces
-          expect(validPositions, contains(Position.fromAlgebraic('e5')));
-          expect(validPositions, contains(Position.fromAlgebraic('f4')));
+          expect(validPositions, contains(Position.e5));
+          expect(validPositions, contains(Position.f4));
 
           // Should not be able to move to squares with same team pieces
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('d4'))));
+          expect(validPositions, isNot(contains(Position.d4)));
         });
 
         test('Pawn capture behavior', () {
           final state = BoardState.empty();
           // Place white pawn at e4
           state.squares.replace(
-            const Pawn(Team.white) > Position.fromAlgebraic('e4'),
+            const Pawn(Team.white) > Position.e4,
           );
           // Place black pieces diagonally (for capture)
           state.squares.replace(
-            const Knight(Team.black) > Position.fromAlgebraic('d5'),
+            const Knight(Team.black) > Position.d5,
           );
           state.squares.replace(
-            const Bishop(Team.black) > Position.fromAlgebraic('f5'),
+            const Bishop(Team.black) > Position.f5,
           );
           // Place black piece directly ahead (blocks forward movement)
           state.squares.replace(
-            const Rook(Team.black) > Position.fromAlgebraic('e5'),
+            const Rook(Team.black) > Position.e5,
           );
 
           const pawn = Pawn(Team.white);
-          final position = Position.fromAlgebraic('e4');
+          final position = Position.e4;
           final validPositions = pawn.validPositions(state, position);
 
           // White pawn should be able to capture diagonally
-          expect(validPositions, contains(Position.fromAlgebraic('d5')));
-          expect(validPositions, contains(Position.fromAlgebraic('f5')));
+          expect(validPositions, contains(Position.d5));
+          expect(validPositions, contains(Position.f5));
 
           // Should not be able to move forward when blocked
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('e5'))));
+          expect(validPositions, isNot(contains(Position.e5)));
         });
 
         test('Black pawn capture behavior', () {
           final state = BoardState.empty();
           // Place black pawn at d5
           state.squares.replace(
-            const Pawn(Team.black) > Position.fromAlgebraic('d5'),
+            const Pawn(Team.black) > Position.d5,
           );
           // Place white pieces diagonally (for capture)
           state.squares.replace(
-            const Knight(Team.white) > Position.fromAlgebraic('c4'),
+            const Knight(Team.white) > Position.c4,
           );
           state.squares.replace(
-            const Queen(Team.white) > Position.fromAlgebraic('e4'),
+            const Queen(Team.white) > Position.e4,
           );
           // Place white piece directly ahead (blocks forward movement)
           state.squares.replace(
-            const Pawn(Team.white) > Position.fromAlgebraic('d4'),
+            const Pawn(Team.white) > Position.d4,
           );
 
           const pawn = Pawn(Team.black);
-          final position = Position.fromAlgebraic('d5');
+          final position = Position.d5;
           final validPositions = pawn.validPositions(state, position);
 
           // Black pawn should be able to capture diagonally
-          expect(validPositions, contains(Position.fromAlgebraic('c4')));
-          expect(validPositions, contains(Position.fromAlgebraic('e4')));
+          expect(validPositions, contains(Position.c4));
+          expect(validPositions, contains(Position.e4));
 
           // Should not be able to move forward when blocked
-          expect(validPositions, isNot(contains(Position.fromAlgebraic('d4'))));
+          expect(validPositions, isNot(contains(Position.d4)));
         });
       });
 
@@ -2206,14 +2202,14 @@ void main() {
           const whiteRook = Rook(Team.white);
 
           // Define position instances once
-          final e1 = Position.fromAlgebraic('e1');
-          final a1 = Position.fromAlgebraic('a1');
-          final h1 = Position.fromAlgebraic('h1');
-          final c1 = Position.fromAlgebraic('c1');
-          final g1 = Position.fromAlgebraic('g1');
-          final d1 = Position.fromAlgebraic('d1');
-          final f1 = Position.fromAlgebraic('f1');
-          final e2 = Position.fromAlgebraic('e2');
+          final e1 = Position.e1;
+          final a1 = Position.a1;
+          final h1 = Position.h1;
+          final c1 = Position.c1;
+          final g1 = Position.g1;
+          final d1 = Position.d1;
+          final f1 = Position.f1;
+          final e2 = Position.e2;
 
           // Place white king at starting position
           state.squares.replace(whiteKing > e1);
@@ -2241,12 +2237,12 @@ void main() {
           const whiteBishop = Bishop(Team.white);
 
           // Define position instances once
-          final e1 = Position.fromAlgebraic('e1');
-          final a1 = Position.fromAlgebraic('a1');
-          final h1 = Position.fromAlgebraic('h1');
-          final f1 = Position.fromAlgebraic('f1');
-          final g1 = Position.fromAlgebraic('g1');
-          final c1 = Position.fromAlgebraic('c1');
+          final e1 = Position.e1;
+          final a1 = Position.a1;
+          final h1 = Position.h1;
+          final f1 = Position.f1;
+          final g1 = Position.g1;
+          final c1 = Position.c1;
 
           // Place white king at starting position
           state.squares.replace(whiteKing > e1);
@@ -2271,10 +2267,10 @@ void main() {
           const blackQueen = Queen(Team.black);
 
           // Define position instances once
-          final a1 = Position.fromAlgebraic('a1');
-          final h1 = Position.fromAlgebraic('h1');
-          final a8 = Position.fromAlgebraic('a8');
-          final h8 = Position.fromAlgebraic('h8');
+          final a1 = Position.a1;
+          final h1 = Position.h1;
+          final a8 = Position.a8;
+          final h8 = Position.h8;
 
           // Place queen at corner
           state.squares.replace(blackQueen > a1);
@@ -2296,9 +2292,9 @@ void main() {
           const whiteKnight = Knight(Team.white);
 
           // Define position instances once
-          final a1 = Position.fromAlgebraic('a1');
-          final b3 = Position.fromAlgebraic('b3');
-          final c2 = Position.fromAlgebraic('c2');
+          final a1 = Position.a1;
+          final b3 = Position.b3;
+          final c2 = Position.c2;
 
           // Place knight at edge
           state.squares.replace(whiteKnight > a1);
@@ -2320,15 +2316,15 @@ void main() {
           const blackKnight = Knight(Team.black);
 
           // Define position instances once
-          final d4 = Position.fromAlgebraic('d4');
-          final d6 = Position.fromAlgebraic('d6');
-          final f4 = Position.fromAlgebraic('f4');
-          final b4 = Position.fromAlgebraic('b4');
-          final f6 = Position.fromAlgebraic('f6');
-          final g4 = Position.fromAlgebraic('g4');
-          final g7 = Position.fromAlgebraic('g7');
-          final a4 = Position.fromAlgebraic('a4');
-          final d1 = Position.fromAlgebraic('d1');
+          final d4 = Position.d4;
+          final d6 = Position.d6;
+          final f4 = Position.f4;
+          final b4 = Position.b4;
+          final f6 = Position.f6;
+          final g4 = Position.g4;
+          final g7 = Position.g7;
+          final a4 = Position.a4;
+          final d1 = Position.d1;
 
           // Place white queen at center
           state.squares.replace(whiteQueen > d4);

@@ -10,8 +10,8 @@ import 'package:test/test.dart';
 void main() {
   group('PromotionMove', () {
     final whitePawn = Pawn(Team.white);
-    final from = Position.fromAlgebraic('e7');
-    final to = Position.fromAlgebraic('e8');
+    final from = Position.e7;
+    final to = Position.e8;
 
     test('stores all fields correctly', () {
       final move = PromotionMove(
@@ -43,7 +43,7 @@ void main() {
       test('from position is not the correct pawn position', () {
         expect(
           () => PromotionMove(
-            from: Position.fromAlgebraic('e6'),
+            from: Position.e6,
             to: to,
             moving: whitePawn,
             promotion: PieceSymbol.queen,
@@ -124,8 +124,8 @@ void main() {
 
   group('PromotionCaptureMove', () {
     final whitePawn = Pawn(Team.white);
-    final from = Position.fromAlgebraic('e7');
-    final to = Position.fromAlgebraic('d8');
+    final from = Position.e7;
+    final to = Position.d8;
     final captured = Rook(Team.black);
 
     test('stores all fields correctly', () {
@@ -148,7 +148,7 @@ void main() {
       expect(
         () => PromotionCaptureMove(
           from: from,
-          to: Position.fromAlgebraic('e8'),
+          to: Position.e8,
           moving: whitePawn,
           captured: captured,
           promotion: PieceSymbol.queen,

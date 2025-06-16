@@ -318,7 +318,7 @@ class CheckDetector {
         currentRankIndex != kingPosition.rank.index) {
       final currentFile = File.values[currentFileIndex];
       final currentRank = Rank.values[currentRankIndex];
-      blockingPositions.add(Position._(currentFile, currentRank));
+      blockingPositions.add(Position(currentFile, currentRank));
 
       currentFileIndex += fileDirection;
       currentRankIndex += rankDirection;

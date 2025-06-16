@@ -9,8 +9,8 @@ import 'package:test/test.dart';
 void main() {
   group('PawnMove', () {
     final whitePawn = Pawn(Team.white);
-    final from = Position.fromAlgebraic('e1');
-    final to = Position.fromAlgebraic('e2');
+    final from = Position.e1;
+    final to = Position.e2;
     test('stores all fields correctly', () {
       final move = PawnMove(from: from, to: to, moving: whitePawn);
 
@@ -24,7 +24,7 @@ void main() {
         expect(
           () => PawnMove(
             from: from,
-            to: Position.fromAlgebraic('e3'),
+            to: Position.e3,
             moving: whitePawn,
           ),
           throwsA(isA<AssertionError>()),
@@ -86,8 +86,8 @@ void main() {
   });
   group('PawnCaptureMove', () {
     final whitePawn = Pawn(Team.white);
-    final from = Position.fromAlgebraic('e1');
-    final to = Position.fromAlgebraic('f2');
+    final from = Position.e1;
+    final to = Position.f2;
     final captured = Pawn(Team.black);
 
     test('stores all fields correctly', () {
@@ -109,7 +109,7 @@ void main() {
         expect(
           () => PawnCaptureMove(
             from: from,
-            to: Position.fromAlgebraic('e3'),
+            to: Position.e3,
             moving: whitePawn,
             captured: captured,
           ),
