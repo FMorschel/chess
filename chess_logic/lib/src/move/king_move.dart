@@ -6,7 +6,7 @@ final class KingMove extends Move<King> {
     required super.from,
     required super.to,
     super.check,
-    void ambiguous,
+    AmbiguousMovementType? ambiguous,
   }) : assert(
          from.file.distanceTo(to.file) <= 1 &&
              from.rank.distanceTo(to.rank) <= 1,
@@ -114,7 +114,36 @@ sealed class CastlingMove extends Move<King> implements KingMove {
          rook.ambiguous == null,
          'Rook move in castling cannot be ambiguous',
        ),
+       assert(
+         check == rook.check,
+         'Castling move must have the same check status as the rook move',
+       ),
+       assert(
+         rook.from.rank == from.rank && rook.to.rank == to.rank,
+         'Rook must move on the same rank as the king for castling',
+       ),
        super.base();
+
+  factory CastlingMove.create({
+    required Position from,
+    required Position to,
+    required King moving,
+    required Move<Rook> rook,
+    Check check = Check.none,
+  }) {
+    final constructor = switch (to.file) {
+      File.g => KingsideCastling.new,
+      File.c => QueensideCastling.new,
+      _ => throw ArgumentError('Invalid castling destination: $to'),
+    };
+    return constructor(
+      from: from,
+      to: to,
+      moving: moving,
+      rook: rook,
+      check: check,
+    );
+  }
 
   final Move<Rook> rook;
 
@@ -137,14 +166,6 @@ final class KingsideCastling extends CastlingMove {
        assert(
          rook.from.file == File.h && rook.to.file == File.f,
          'Kingside castling must move the rook from h to f',
-       ),
-       assert(
-         rook.from.rank == from.rank && rook.to.rank == to.rank,
-         'Rook must move on the same rank as the king for castling',
-       ),
-       assert(
-         check == rook.check,
-         'Castling move must have the same check status as the rook move',
        );
 
   @override

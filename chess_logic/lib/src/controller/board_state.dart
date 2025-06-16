@@ -6,6 +6,7 @@ import 'package:chess_logic/src/square/piece.dart';
 import 'package:chess_logic/src/square/piece_symbol.dart';
 import 'package:chess_logic/src/square/square.dart';
 import 'package:chess_logic/src/team/team.dart';
+import 'package:chess_logic/src/utility/board_printer.dart';
 import 'package:chess_logic/src/utility/extensions.dart';
 
 class BoardState {
@@ -18,7 +19,7 @@ class BoardState {
     }
   }
 
-  BoardState.clear() : squares = _emptySquares;
+  BoardState.empty() : squares = _emptySquares;
 
   BoardState.custom(Map<Position, Piece> customPieces)
     : squares = _emptySquares {
@@ -28,12 +29,37 @@ class BoardState {
       squares.replace(newSquare);
     }
   }
+
+  /// Private constructor for copying an existing board state
+  BoardState._copy(BoardState other) : squares = _emptySquares {
+    // Copy all squares from the other board state
+    for (var square in other.squares) {
+      final newSquare = square.piece != null
+          ? this[square.position].replacePiece(square.piece!)
+          : this[square.position].removePiece();
+      squares.replace(newSquare);
+    }
+  }
+
   static List<Square> get _emptySquares => [
     for (var file in File.values)
-      for (var rank in Rank.values) EmptySquare(Position(file, rank)),
+      for (var rank in Rank.values) EmptySquare(Position._(file, rank)),
   ];
 
+  static final BoardPrinter _printer = BoardPrinter.instance;
+
   final List<Square> squares;
+
+  List<OccupiedSquare> get occupiedSquares =>
+      squares.whereType<OccupiedSquare>().toList();
+
+  /// Creates a new BoardState with the given move applied, without modifying the current state.
+  /// This allows you to preview what the board would look like after a move.
+  BoardState move(Move move) {
+    final newState = BoardState._copy(this);
+    newState.actOn(move);
+    return newState;
+  }
 
   void actOn(Move move) {
     if (this[move.from].piece != move.moving) {
@@ -41,6 +67,10 @@ class BoardState {
         'The piece at ${move.from} does not match the moving piece: '
         '${this[move.from].piece?.symbol.lexeme} != ${move.moving.symbol.lexeme}',
       );
+    }
+    if (this[move.to].isOccupied && move is! CaptureMove) {
+      // The destination square is occupied and it's not a capture
+      throw ArgumentError('Cannot move to an occupied square: ${move.to}');
     }
     Square newSquare = this[move.from].removePiece();
     squares.replace(newSquare);
@@ -129,7 +159,7 @@ class BoardState {
     clear();
     for (var file in File.values) {
       for (var rank in Rank.values) {
-        final position = Position(file, rank);
+        final position = Position._(file, rank);
         final (team, symbol) = switch (rank) {
           Rank.one => (Team.white, file.defaultSymbol),
           Rank.two => (Team.white, PieceSymbol.pawn),
@@ -151,6 +181,11 @@ class BoardState {
       squares.replace(newSquare);
     }
   }
+
+  @override
+  String toString({bool complete = false}) => complete
+      ? _printer.getBoardString(this)
+      : _printer.getCompactBoardString(this);
 }
 
 extension on File {

@@ -49,7 +49,7 @@ void main() {
 
         // Test white pawns
         for (final file in File.values) {
-          final position = Position(file, Rank.two);
+          final position = Position._(file, Rank.two);
           expect(board[position].piece, isA<Pawn>());
           expect(board[position].piece!.team, equals(Team.white));
         } // Test black pieces
@@ -79,7 +79,7 @@ void main() {
 
         // Test black pawns
         for (final file in File.values) {
-          final position = Position(file, Rank.seven);
+          final position = Position._(file, Rank.seven);
           expect(board[position].piece, isA<Pawn>());
           expect(board[position].piece!.team, equals(Team.black));
         }
@@ -87,7 +87,7 @@ void main() {
         // Test empty squares
         for (final file in File.values) {
           for (final rank in [Rank.three, Rank.four, Rank.five, Rank.six]) {
-            final position = Position(file, rank);
+            final position = Position._(file, rank);
             expect(board[position].isEmpty, isTrue);
           }
         }
@@ -118,11 +118,11 @@ void main() {
 
     group('BoardState.clear', () {
       test('should create empty board', () {
-        final board = BoardState.clear();
+        final board = BoardState.empty();
 
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position(file, rank);
+            final position = Position._(file, rank);
             expect(board[position].isEmpty, isTrue);
           }
         }
@@ -156,7 +156,7 @@ void main() {
         // All other squares should be empty
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position(file, rank);
+            final position = Position._(file, rank);
             if (!customPieces.containsKey(position)) {
               expect(board[position].isEmpty, isTrue);
             }
@@ -169,7 +169,7 @@ void main() {
 
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position(file, rank);
+            final position = Position._(file, rank);
             expect(board[position].isEmpty, isTrue);
           }
         }
@@ -186,7 +186,7 @@ void main() {
       test('should return correct square for all positions', () {
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position(file, rank);
+            final position = Position._(file, rank);
             final square = boardState[position];
 
             expect(square.position, equals(position));
@@ -325,6 +325,69 @@ void main() {
         expect(boardState[d5].piece, isA<Pawn>());
         expect(boardState[g1].isEmpty, isTrue);
         expect(boardState[f3].piece, isA<Knight>());
+      });
+      test(
+        'should throw ArgumentError when moving to occupied square with non-capture move',
+        () {
+          // Setup: place pieces on board
+          final e4 = Position.fromAlgebraic('e4');
+          final e5 = Position.fromAlgebraic('e5');
+
+          final whitePawn = Pawn(Team.white);
+          final blackPawn = Pawn(Team.black);
+
+          // Place white pawn at e4 and black pawn at e5
+          boardState.squares.replace(OccupiedSquare(e4, whitePawn));
+          boardState.squares.replace(OccupiedSquare(e5, blackPawn));
+
+          // Try to move white pawn from e4 to e5 (occupied by black pawn)
+          // using a regular PawnMove (not PawnCaptureMove)
+          final invalidMove = PawnMove(from: e4, to: e5, moving: whitePawn);
+
+          expect(
+            () => boardState.actOn(invalidMove),
+            throwsA(
+              isA<ArgumentError>().having(
+                (e) => e.message,
+                'message',
+                contains('Cannot move to an occupied square: e5'),
+              ),
+            ),
+          );
+
+          // Verify board state is unchanged
+          expect(boardState[e4].piece, equals(whitePawn));
+          expect(boardState[e5].piece, equals(blackPawn));
+        },
+      );
+
+      test('should allow moving to occupied square with capture move', () {
+        // Setup: place pieces on board
+        final e4 = Position.fromAlgebraic('e4');
+        final d5 = Position.fromAlgebraic('d5');
+
+        final whitePawn = Pawn(Team.white);
+        final blackPawn = Pawn(Team.black);
+
+        // Place white pawn at e4 and black pawn at d5
+        boardState.squares.replace(OccupiedSquare(e4, whitePawn));
+        boardState.squares.replace(OccupiedSquare(d5, blackPawn));
+
+        // Move white pawn from e4 to d5 (capturing black pawn)
+        // using PawnCaptureMove - this should work
+        final captureMove = PawnCaptureMove(
+          from: e4,
+          to: d5,
+          moving: whitePawn,
+          captured: blackPawn,
+        );
+
+        // This should not throw an error
+        expect(() => boardState.actOn(captureMove), returnsNormally);
+
+        // Verify the capture was successful
+        expect(boardState[e4].isEmpty, isTrue);
+        expect(boardState[d5].piece, equals(whitePawn));
       });
     });
 
@@ -503,7 +566,7 @@ void main() {
         final e1 = Position.fromAlgebraic('e1');
         final e8 = Position.fromAlgebraic('e8');
 
-        final emptyBoard = BoardState.clear();
+        final emptyBoard = BoardState.empty();
 
         emptyBoard.reset();
 
@@ -521,7 +584,7 @@ void main() {
 
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position(file, rank);
+            final position = Position._(file, rank);
             expect(boardState[position].isEmpty, isTrue);
           }
         }
@@ -537,7 +600,7 @@ void main() {
 
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position(file, rank);
+            final position = Position._(file, rank);
             expect(customBoard[position].isEmpty, isTrue);
           }
         }
@@ -626,7 +689,7 @@ void main() {
         var pieceCount = 0;
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position(file, rank);
+            final position = Position._(file, rank);
             if (boardState[position].isOccupied) {
               pieceCount++;
             }
@@ -675,7 +738,7 @@ void main() {
         final e4 = Position.fromAlgebraic('e4');
         final e5 = Position.fromAlgebraic('e5');
 
-        final emptyBoard = BoardState.clear();
+        final emptyBoard = BoardState.empty();
 
         // Place a piece manually
         emptyBoard.squares.replace(OccupiedSquare(e4, Pawn(Team.white)));
@@ -694,6 +757,7 @@ void main() {
         final e8 = Position.fromAlgebraic('e8');
 
         // Setup: white pawn at e7
+        boardState.squares.replace(EmptySquare(e8));
         boardState.squares.replace(EmptySquare(e7));
         boardState.squares.replace(OccupiedSquare(e7, Pawn(Team.white)));
 
@@ -736,7 +800,7 @@ void main() {
         // Record all original pieces
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final position = Position(file, rank);
+            final position = Position._(file, rank);
             final piece = boardState[position].piece;
             if (piece != null) {
               originalPieces[position] = piece;

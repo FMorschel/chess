@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:chess_logic/src/controller/direction.dart';
+import 'package:chess_logic/src/position/direction.dart';
 
-enum File {
+enum File implements Comparable<File> {
   a('a'),
   b('b'),
   c('c'),
@@ -52,4 +52,7 @@ enum File {
         ? other.index - index
         : index - other.index;
   }
+  
+  @override
+  int compareTo(File other) => index.compareTo(other.index);
 }

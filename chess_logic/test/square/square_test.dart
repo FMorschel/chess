@@ -13,7 +13,7 @@ void main() {
     late Piece piece;
 
     setUp(() {
-      position = Position(File.e, Rank.four);
+      position = Position._(File.e, Rank.four);
       piece = Piece.fromSymbol(PieceSymbol.king, Team.white);
     });
 
@@ -89,7 +89,7 @@ void main() {
       });
 
       test('should not be equal for different positions', () {
-        final position2 = Position(File.a, Rank.one);
+        final position2 = Position._(File.a, Rank.one);
         final square1 = Square(position, piece);
         final square2 = Square(position2, piece);
 
@@ -121,34 +121,34 @@ void main() {
       test('should include position and piece symbol for occupied square', () {
         final square = Square(position, piece);
         final result = square.toString();
-        expect(result, equals('Square(e4, K)'));
+        expect(result, equals('e4, K'));
       });
 
       test('should include position and empty for unoccupied square', () {
         final square = Square(position);
         final result = square.toString();
-        expect(result, equals('Square(e4, empty)'));
+        expect(result, equals('e4, empty'));
       });
 
       test('should handle different positions correctly', () {
-        final pos = Position(File.a, Rank.eight);
+        final pos = Position._(File.a, Rank.eight);
         final square = Square(pos);
         final result = square.toString();
-        expect(result, equals('Square(a8, empty)'));
+        expect(result, equals('a8, empty'));
       });
 
       test('should handle different piece symbols correctly', () {
         final queen = Piece.fromSymbol(PieceSymbol.queen, Team.black);
         final square = Square(position, queen);
         final result = square.toString();
-        expect(result, equals('Square(e4, Q)'));
+        expect(result, equals('e4, Q'));
       });
 
       test('should handle pawn correctly', () {
         final pawn = Piece.fromSymbol(PieceSymbol.pawn, Team.white);
         final square = Square(position, pawn);
         final result = square.toString();
-        expect(result, equals('Square(e4, P)'));
+        expect(result, equals('e4, P'));
       });
     });
 
@@ -253,7 +253,10 @@ void main() {
 
         expect(result.position, equals(original.position));
         expect(result.piece, equals(original.piece));
-        expect(result == original, isTrue); // Should be equal but different instances
+        expect(
+          result == original,
+          isTrue,
+        ); // Should be equal but different instances
       });
     });
 
@@ -279,7 +282,7 @@ void main() {
       test('should work with all board positions', () {
         for (final file in File.values) {
           for (final rank in Rank.values) {
-            final pos = Position(file, rank);
+            final pos = Position._(file, rank);
             final square = Square(pos);
             expect(square.position, equals(pos));
             expect(square.isEmpty, isTrue);
@@ -290,31 +293,31 @@ void main() {
       test('should support chess starting position squares', () {
         // Test some typical starting position squares
         final e1 = Square(
-          Position(File.e, Rank.one),
+          Position._(File.e, Rank.one),
           Piece.fromSymbol(PieceSymbol.king, Team.white),
         );
         final e8 = Square(
-          Position(File.e, Rank.eight),
+          Position._(File.e, Rank.eight),
           Piece.fromSymbol(PieceSymbol.king, Team.black),
         );
-        final e4 = Square(Position(File.e, Rank.four)); // Empty center
+        final e4 = Square(Position._(File.e, Rank.four)); // Empty center
 
         expect(e1.isOccupied, isTrue);
         expect(e8.isOccupied, isTrue);
         expect(e4.isEmpty, isTrue);
 
-        expect(e1.toString(), equals('Square(e1, K)'));
-        expect(e8.toString(), equals('Square(e8, K)'));
-        expect(e4.toString(), equals('Square(e4, empty)'));
+        expect(e1.toString(), equals('e1, K'));
+        expect(e8.toString(), equals('e8, K'));
+        expect(e4.toString(), equals('e4, empty'));
       });
 
       test('should support piece movement simulation with replace/remove', () {
         // Simulate moving a piece from one square to another
         final fromSquare = Square(
-          Position(File.e, Rank.two),
+          Position._(File.e, Rank.two),
           Piece.fromSymbol(PieceSymbol.pawn, Team.white),
         );
-        final toSquare = Square(Position(File.e, Rank.four));
+        final toSquare = Square(Position._(File.e, Rank.four));
 
         expect(fromSquare.isOccupied, isTrue);
         expect(toSquare.isEmpty, isTrue);
@@ -331,11 +334,11 @@ void main() {
       test('should support piece capture simulation', () {
         // Simulate capturing a piece
         final attackerSquare = Square(
-          Position(File.d, Rank.four),
+          Position._(File.d, Rank.four),
           Piece.fromSymbol(PieceSymbol.queen, Team.white),
         );
         final targetSquare = Square(
-          Position(File.e, Rank.five),
+          Position._(File.e, Rank.five),
           Piece.fromSymbol(PieceSymbol.pawn, Team.black),
         );
 
@@ -344,7 +347,9 @@ void main() {
 
         // Simulate the capture
         final newAttackerSquare = attackerSquare.removePiece();
-        final newTargetSquare = targetSquare.replacePiece(attackerSquare.piece!);
+        final newTargetSquare = targetSquare.replacePiece(
+          attackerSquare.piece!,
+        );
 
         expect(newAttackerSquare.isEmpty, isTrue);
         expect(newTargetSquare.isOccupied, isTrue);
@@ -353,7 +358,7 @@ void main() {
 
       test('should demonstrate method chaining possibilities', () {
         final original = Square(position, piece);
-        
+
         // Chain operations: remove piece, then add a different piece
         final queen = Piece.fromSymbol(PieceSymbol.queen, Team.black);
         final result = original.removePiece().replacePiece(queen);

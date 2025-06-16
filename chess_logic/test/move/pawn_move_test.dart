@@ -116,18 +116,6 @@ void main() {
           throwsA(isA<AssertionError>()),
         );
       });
-
-      test('ambiguous movement rank', () {
-        expect(
-          () => PawnCaptureMove(
-            from: from,
-            to: to,
-            moving: whitePawn,
-            captured: captured,
-          ),
-          throwsA(isA<AssertionError>()),
-        );
-      });
     });
 
     group('toAlgebraic()', () {
@@ -139,7 +127,7 @@ void main() {
           captured: captured,
         );
 
-        expect(move.toAlgebraic(), equals('xf2'));
+        expect(move.toAlgebraic(), equals('exf2'));
       });
       test('returns correct notation with check', () {
         final move = PawnCaptureMove(
@@ -150,7 +138,7 @@ void main() {
           captured: captured,
         );
 
-        expect(move.toAlgebraic(), equals('xf2+'));
+        expect(move.toAlgebraic(), equals('exf2+'));
       });
 
       test('returns correct notation with checkmate', () {
@@ -162,7 +150,7 @@ void main() {
           captured: captured,
         );
 
-        expect(move.toAlgebraic(), equals('xf2#'));
+        expect(move.toAlgebraic(), equals('exf2#'));
       });
 
       test('returns correct notation for ambiguous movement', () {

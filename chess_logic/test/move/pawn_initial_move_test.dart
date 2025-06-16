@@ -8,8 +8,8 @@ import 'package:test/test.dart';
 void main() {
   group('PawnInitialMove', () {
     final whitePawn = Pawn(Team.white);
-    final from = Position.fromAlgebraic('e1');
-    final to = Position.fromAlgebraic('e3');
+    final from = Position.fromAlgebraic('e2');
+    final to = Position.fromAlgebraic('e4');
     test('stores all fields correctly', () {
       final move = PawnInitialMove(from: from, to: to, moving: whitePawn);
 
@@ -22,7 +22,7 @@ void main() {
       expect(
         () => PawnInitialMove(
           from: from,
-          to: Position.fromAlgebraic('e4'),
+          to: Position.fromAlgebraic('e5'),
           moving: whitePawn,
         ),
         throwsA(isA<AssertionError>()),
@@ -33,7 +33,7 @@ void main() {
       test('returns correct notation', () {
         final move = PawnInitialMove(from: from, to: to, moving: whitePawn);
 
-        expect(move.toAlgebraic(), equals('e3'));
+        expect(move.toAlgebraic(), equals('e4'));
       });
       test('returns correct notation with check', () {
         final move = PawnInitialMove(
@@ -43,7 +43,7 @@ void main() {
           check: Check.check,
         );
 
-        expect(move.toAlgebraic(), equals('e3+'));
+        expect(move.toAlgebraic(), equals('e4+'));
       });
 
       test('returns correct notation with checkmate', () {
@@ -54,7 +54,7 @@ void main() {
           check: Check.checkmate,
         );
 
-        expect(move.toAlgebraic(), equals('e3#'));
+        expect(move.toAlgebraic(), equals('e4#'));
       });
     });
   });

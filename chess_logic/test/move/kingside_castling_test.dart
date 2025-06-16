@@ -81,7 +81,7 @@ void main() {
           from: kingFrom,
           to: kingTo,
           moving: whiteKing,
-          rook: rookMove,
+          rook: rookMove.copyWith(check: Check.check),
           check: Check.check,
         );
 
@@ -93,7 +93,7 @@ void main() {
           from: kingFrom,
           to: kingTo,
           moving: whiteKing,
-          rook: rookMove,
+          rook: rookMove.copyWith(check: Check.checkmate),
           check: Check.checkmate,
         );
 

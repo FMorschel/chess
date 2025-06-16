@@ -1,4 +1,4 @@
-import 'package:chess_logic/src/controller/direction.dart';
+import 'package:chess_logic/src/position/direction.dart';
 import 'package:chess_logic/src/position/rank.dart';
 import 'package:test/test.dart';
 
@@ -107,6 +107,121 @@ void main() {
       ); // Rank.two - 2 = null (off board)
       expect(Rank.one.next(Direction.downDownLeft), isNull);
       expect(Rank.one.next(Direction.downDownRight), isNull);
+    });
+  });
+
+  group('compareTo', () {
+    test('should return 0 for same rank', () {
+      expect(Rank.one.compareTo(Rank.one), equals(0));
+      expect(Rank.four.compareTo(Rank.four), equals(0));
+      expect(Rank.eight.compareTo(Rank.eight), equals(0));
+    });
+
+    test('should return negative for lower ranks', () {
+      expect(Rank.one.compareTo(Rank.two), lessThan(0));
+      expect(Rank.one.compareTo(Rank.eight), lessThan(0));
+      expect(Rank.three.compareTo(Rank.six), lessThan(0));
+      expect(Rank.four.compareTo(Rank.five), lessThan(0));
+    });
+
+    test('should return positive for higher ranks', () {
+      expect(Rank.two.compareTo(Rank.one), greaterThan(0));
+      expect(Rank.eight.compareTo(Rank.one), greaterThan(0));
+      expect(Rank.six.compareTo(Rank.three), greaterThan(0));
+      expect(Rank.five.compareTo(Rank.four), greaterThan(0));
+    });
+
+    test('should be consistent with numerical order', () {
+      final ranks = [
+        Rank.eight,
+        Rank.one,
+        Rank.five,
+        Rank.three,
+        Rank.two,
+        Rank.seven,
+        Rank.six,
+        Rank.four,
+      ];
+      final sorted = [...ranks]..sort();
+
+      expect(
+        sorted,
+        containsAllInOrder([
+          Rank.one,
+          Rank.two,
+          Rank.three,
+          Rank.four,
+          Rank.five,
+          Rank.six,
+          Rank.seven,
+          Rank.eight,
+        ]),
+      );
+    });
+
+    test('should satisfy compareTo contract - antisymmetric', () {
+      expect(
+        Rank.one.compareTo(Rank.eight),
+        equals(-Rank.eight.compareTo(Rank.one)),
+      );
+      expect(
+        Rank.three.compareTo(Rank.six),
+        equals(-Rank.six.compareTo(Rank.three)),
+      );
+    });
+
+    test('should satisfy compareTo contract - transitive', () {
+      // one < four < eight
+      expect(Rank.one.compareTo(Rank.four), lessThan(0));
+      expect(Rank.four.compareTo(Rank.eight), lessThan(0));
+      expect(Rank.one.compareTo(Rank.eight), lessThan(0));
+    });
+
+    test('should handle all adjacent comparisons', () {
+      expect(Rank.one.compareTo(Rank.two), lessThan(0));
+      expect(Rank.two.compareTo(Rank.three), lessThan(0));
+      expect(Rank.three.compareTo(Rank.four), lessThan(0));
+      expect(Rank.four.compareTo(Rank.five), lessThan(0));
+      expect(Rank.five.compareTo(Rank.six), lessThan(0));
+      expect(Rank.six.compareTo(Rank.seven), lessThan(0));
+      expect(Rank.seven.compareTo(Rank.eight), lessThan(0));
+    });
+
+    test('should be consistent with index ordering', () {
+      for (int i = 0; i < Rank.values.length; i++) {
+        for (int j = 0; j < Rank.values.length; j++) {
+          final rank1 = Rank.values[i];
+          final rank2 = Rank.values[j];
+          final comparison = rank1.compareTo(rank2);
+
+          if (i < j) {
+            expect(
+              comparison,
+              lessThan(0),
+              reason: '$rank1 should be less than $rank2',
+            );
+          } else if (i > j) {
+            expect(
+              comparison,
+              greaterThan(0),
+              reason: '$rank1 should be greater than $rank2',
+            );
+          } else {
+            expect(comparison, equals(0), reason: '$rank1 should equal $rank2');
+          }
+        }
+      }
+    });
+
+    test('should be consistent with value ordering', () {
+      expect(Rank.one.value < Rank.two.value, isTrue);
+      expect(Rank.one.compareTo(Rank.two) < 0, isTrue);
+
+      expect(Rank.four.value < Rank.seven.value, isTrue);
+      expect(Rank.four.compareTo(Rank.seven) < 0, isTrue);
+
+      expect(Rank.eight.value > Rank.three.value, isTrue);
+      expect(Rank.eight.compareTo(Rank.three) > 0, isTrue);
     });
   });
 }

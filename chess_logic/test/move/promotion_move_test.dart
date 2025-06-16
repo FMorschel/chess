@@ -170,32 +170,6 @@ void main() {
           throwsA(isA<AssertionError>()),
         );
       });
-
-      test('ambiguous movement rank', () {
-        expect(
-          () => PromotionCaptureMove(
-            from: from,
-            to: to,
-            moving: whitePawn,
-            captured: captured,
-            promotion: PieceSymbol.queen,
-          ),
-          throwsA(isA<AssertionError>()),
-        );
-      });
-
-      test('ambiguous movement both', () {
-        expect(
-          () => PromotionCaptureMove(
-            from: from,
-            to: to,
-            moving: whitePawn,
-            captured: captured,
-            promotion: PieceSymbol.queen,
-          ),
-          throwsA(isA<AssertionError>()),
-        );
-      });
     });
 
     group('toAlgebraic()', () {

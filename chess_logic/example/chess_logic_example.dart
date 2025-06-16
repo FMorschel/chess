@@ -1,4 +1,79 @@
 import 'package:chess_logic/chess_logic.dart';
 
+/// Demonstrates the Scholar's Mate - the fastest possible checkmate in chess.
+///
+/// Scholar's Mate is a four-move checkmate pattern where White targets
+/// the weak f7 square in Black's position. This example shows how to use
+/// the chess_logic library to create and execute moves programmatically.
 void main() {
+  print('🔥 Scholar\'s Mate Example 🔥\n');
+
+  // Initialize a new chess game with standard teams
+  final game = GameController([Team.white, Team.black]);
+
+  print('Initial board position:');
+  print(game.state.toString(complete: true));
+
+  final moves = <Move>[
+    PawnInitialMove(
+      from: Position._(File.e, Rank.two),
+      to: Position._(File.e, Rank.four),
+      moving: Pawn(Team.white),
+    ),
+    PawnInitialMove(
+      from: Position._(File.e, Rank.seven),
+      to: Position._(File.e, Rank.five),
+      moving: Pawn(Team.black),
+    ),
+    BishopMove(
+      from: Position._(File.f, Rank.one),
+      to: Position._(File.c, Rank.four),
+      moving: Bishop(Team.white),
+    ),
+    KnightMove(
+      from: Position._(File.b, Rank.eight),
+      to: Position._(File.c, Rank.six),
+      moving: Knight(Team.black),
+    ),
+    QueenMove(
+      from: Position._(File.d, Rank.one),
+      to: Position._(File.h, Rank.five),
+      moving: Queen(Team.white),
+    ),
+    KnightMove(
+      from: Position._(File.g, Rank.eight),
+      to: Position._(File.f, Rank.six),
+      moving: Knight(Team.black),
+    ),
+    QueenCaptureMove(
+      from: Position._(File.h, Rank.five),
+      to: Position._(File.f, Rank.seven),
+      moving: Queen(Team.white),
+      captured: Pawn(Team.black),
+    ),
+  ];
+
+  for (final move in moves) {
+    print('\nExecuting move: ${move.toString()}');
+    game.move(move);
+    print(game.state.toString(complete: true));
+  }
+
+  print(game.gameState.name);
+
+  print('\n📚 What is Scholar\'s Mate?');
+  print(
+    'Scholar\'s Mate is a chess opening trap that leads to checkmate in 4 '
+    'moves.',
+  );
+  print('It targets the weak f7 square in Black\'s starting position.');
+  print(
+    'While effective against beginners, experienced players can easily defend '
+    'against it.',
+  );
+  print('\n🛡️  How to defend:');
+  print('- Develop knights before bishops');
+  print('- Don\'t move the same piece twice in the opening');
+  print('- Castle early to protect your king');
+  print('- Be aware of early queen attacks');
 }

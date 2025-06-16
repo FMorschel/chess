@@ -1,8 +1,8 @@
 import 'dart:math';
 
-import 'package:chess_logic/src/controller/direction.dart';
+import 'package:chess_logic/src/position/direction.dart';
 
-enum Rank {
+enum Rank implements Comparable<Rank> {
   one(1),
   two(2),
   three(3),
@@ -51,4 +51,7 @@ enum Rank {
         ? other.index - index
         : index - other.index;
   }
+
+  @override
+  int compareTo(Rank other) => index.compareTo(other.index);
 }

@@ -23,12 +23,15 @@ sealed class Square<P extends Piece> with EquatableMixin {
   /// Returns true if this square is empty.
   bool get isEmpty => piece == null;
 
+  bool get lightSquare =>
+      (position.file.index + position.rank.index).isEven;
+
   OccupiedSquare<O> replacePiece<O extends Piece>(O piece) =>
       OccupiedSquare(position, piece);
   EmptySquare removePiece() => EmptySquare(position);
 
   @override
-  String toString() => ' $position, ${piece?.symbol.lexeme ?? 'empty'}';
+  String toString() => '$position, ${piece?.symbol.lexeme ?? 'empty'}';
 
   @override
   List<Object?> get props => [position, piece];

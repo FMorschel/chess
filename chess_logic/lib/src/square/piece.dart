@@ -1,5 +1,6 @@
 import 'package:chess_logic/src/controller/board_state.dart';
-import 'package:chess_logic/src/controller/direction.dart';
+import 'package:chess_logic/src/move/move.dart';
+import 'package:chess_logic/src/position/direction.dart';
 import 'package:chess_logic/src/position/file.dart';
 import 'package:chess_logic/src/position/position.dart';
 import 'package:chess_logic/src/position/rank.dart';
@@ -14,7 +15,11 @@ sealed class PromotionPiece extends Piece {
   const PromotionPiece(super.team);
 }
 
-final class Bishop extends PromotionPiece {
+sealed class SlidingPiece extends Piece {
+  const SlidingPiece(super.team);
+}
+
+final class Bishop extends PromotionPiece implements SlidingPiece {
   const Bishop(super.team);
 
   @override
@@ -35,7 +40,7 @@ final class King extends Piece {
   @override
   PieceSymbol get symbol => PieceSymbol.king;
 
-  static const _directions = Direction.all;
+  static const _directions = Direction.orthogonal;
 
   @override
   List<Direction> get _validDirections => _directions;
@@ -44,29 +49,34 @@ final class King extends Piece {
   bool get _shouldIteratePositions => false;
 
   Position get _startPosition => switch (team) {
-    Team.white => Position(File.e, Rank.one),
-    Team.black => Position(File.e, Rank.eight),
+    Team.white => Position._(File.e, Rank.one),
+    Team.black => Position._(File.e, Rank.eight),
   };
 
   List<(Position, Direction)> get rookPositions => switch (team) {
     Team.white => [
-      (Position(File.a, Rank.one), Direction.left),
-      (Position(File.h, Rank.one), Direction.right),
+      (Position._(File.a, Rank.one), Direction.left),
+      (Position._(File.h, Rank.one), Direction.right),
     ],
     Team.black => [
-      (Position(File.a, Rank.eight), Direction.left),
-      (Position(File.h, Rank.eight), Direction.right),
+      (Position._(File.a, Rank.eight), Direction.left),
+      (Position._(File.h, Rank.eight), Direction.right),
     ],
   };
 
   @override
   List<Position> validPositions(BoardState state, Position position) {
     final list = super.validPositions(state, position);
+    for (final position in [...list]) {
+      if (state[position] case OccupiedSquare(piece: King _)) {
+        list.remove(position); // Remove positions occupied by kings
+      }
+    }
     if (position == _startPosition) {
-      for (final (position, direction) in rookPositions) {
-        final rookSquare = state[position];
-        if (rookSquare.isEmpty ||
-            rookSquare.piece!.symbol != PieceSymbol.rook) {
+      for (final (rookPosition, direction) in rookPositions) {
+        final rookSquare = state[rookPosition];
+        if (rookSquare is! OccupiedSquare ||
+            rookSquare.piece.symbol != PieceSymbol.rook) {
           continue;
         }
 
@@ -75,8 +85,16 @@ final class King extends Piece {
           continue;
         }
 
-        if (next.next(direction) case final castelling?) {
-          if (state[castelling].isEmpty) {
+        if (next.next(direction) case final castelling?
+            when state[castelling] is EmptySquare) {
+          next = castelling.next(direction);
+          if (next == rookPosition) {
+            // king-side castling
+            list.add(castelling);
+          } else if (next != null &&
+              state[next].isEmpty &&
+              next.next(direction) == rookPosition) {
+            // queen-side castling
             list.add(castelling);
           }
         }
@@ -135,18 +153,35 @@ final class Pawn extends Piece {
   };
 
   @override
-  List<Position> validPositions(BoardState state, Position position) {
+  List<Position> validPositions(
+    BoardState state,
+    Position position, {
+    Move? lastMove,
+  }) {
     final list = super.validPositions(state, position);
+    for (final direction in captureDirections) {
+      final nextPosition = position.next(direction);
+      if (nextPosition == null || !list.contains(nextPosition)) continue;
+      final nextSquare = state[nextPosition];
+      if (nextSquare is EmptySquare) {
+        if (lastMove case PawnInitialMove(
+          :var to,
+        ) when to == Position._(nextPosition.file, position.rank)) {
+          continue; // Skip if the last move was a pawn initial move
+        }
+        list.remove(nextPosition);
+      }
+    }
     if (position.next(forward) case final nextPosition?) {
       final nextSquare = state[nextPosition];
       if (nextSquare.isEmpty) {
         list.add(nextPosition);
-      }
-      if (nextPosition.next(forward) case final initial?
-          when position.rank != initialRank) {
-        final initialSquare = state[initial];
-        if (initialSquare.isEmpty) {
-          list.add(initial);
+        if (nextPosition.next(forward) case final initial?
+            when position.rank == initialRank) {
+          final initialSquare = state[initial];
+          if (initialSquare.isEmpty) {
+            list.add(initial);
+          }
         }
       }
     }
@@ -184,7 +219,7 @@ sealed class Piece extends Equatable {
     };
   }
 
-  static final _importRegex = RegExp('^(w+|b+) - ([KQRBNP])\$');
+  static final _importRegex = RegExp('^(White|Black) - ([KQRBNP])\$');
 
   final Team team;
 
@@ -198,6 +233,7 @@ sealed class Piece extends Equatable {
   String toAlgebraic() => this is Pawn ? '' : symbol.lexeme;
 
   List<Direction> get _validDirections;
+
   bool get _shouldIteratePositions => true;
 
   @override
@@ -211,13 +247,13 @@ sealed class Piece extends Equatable {
       if (current == null) continue;
       do {
         final square = state[current!];
-        if (square.isOccupied) {
-          // Allow capture
-          if (square.piece!.team == team) {
-            break; // Stop at the first occupied square
+        if (square case OccupiedSquare(:var piece)) {
+          if (piece.team != team) {
+            positions.add(current); // Allow capture
           }
+          break; // Stop at the first occupied square
         }
-        positions.add(position);
+        positions.add(current);
         current = current.next(direction);
       } while (current != null && _shouldIteratePositions);
     }
@@ -230,13 +266,13 @@ sealed class Piece extends Equatable {
   String toString() => symbol.name;
 }
 
-final class Queen extends PromotionPiece {
+final class Queen extends PromotionPiece implements SlidingPiece {
   const Queen(super.team);
 
   @override
   PieceSymbol get symbol => PieceSymbol.queen;
 
-  static const _directions = Direction.all;
+  static const _directions = Direction.orthogonal;
 
   @override
   List<Direction> get _validDirections => _directions;
@@ -245,7 +281,7 @@ final class Queen extends PromotionPiece {
   int get value => PieceValue.queen.points;
 }
 
-final class Rook extends PromotionPiece {
+final class Rook extends PromotionPiece implements SlidingPiece {
   const Rook(super.team);
 
   @override

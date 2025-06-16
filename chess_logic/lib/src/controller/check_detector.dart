@@ -1,156 +1,329 @@
 import 'package:chess_logic/src/controller/board_state.dart';
+import 'package:chess_logic/src/controller/movement_manager.dart';
+import 'package:chess_logic/src/controller/threat_detector.dart';
 import 'package:chess_logic/src/move/check.dart';
 import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/position.dart';
+import 'package:chess_logic/src/position/file.dart';
+import 'package:chess_logic/src/position/rank.dart';
 import 'package:chess_logic/src/square/piece.dart';
+import 'package:chess_logic/src/square/square.dart';
 import 'package:chess_logic/src/team/team.dart';
 
 /// Service for detecting check and checkmate states in chess.
+///
+/// This is typically used inside a [MovementManager] to evaluate moves
+/// and determine if they would result in check or checkmate for any team.
 class CheckDetector {
-  const CheckDetector(this.state);
+  CheckDetector(BoardState state) : threatDetector = ThreatDetector(state);
 
-  final BoardState state;
+  final ThreatDetector threatDetector;
 
-  /// Detects if making the given move results in check or checkmate.
+  late MovementManager _movementManager;
+
+  /// The movement manager used to evaluate possible moves.
   ///
-  /// This method:
-  /// 1. Temporarily applies the move to the board
-  /// 2. Checks if the opponent's king is in check
-  /// 3. If in check, determines if it's checkmate by testing all possible escape moves
-  /// 4. Restores the original board state
+  /// Must operate on the same [BoardState] as [state].
   ///
-  /// Returns [Check.none] if no check, [Check.check] if check, or [Check.checkmate] if checkmate.
-  Check detectCheckAfterMove(Move move) {
+  /// This is intended to be set after the [CheckDetector] is created,
+  /// typically by the [MovementManager] itself.
+  set movementManager(MovementManager manager) {
+    if (manager.state != state) {
+      throw ArgumentError(
+        'MovementManager must operate on the same BoardState as ThreatDetector',
+      );
+    }
+    _movementManager = manager;
+  }
+
+  BoardState get state => threatDetector.state;
+
+  /// Evaluates if a move would create check or checkmate for any team.
+  ///
+  /// [move] - The move to evaluate
+  ///
+  /// Returns a map with teams as keys and their check status as values.
+  /// Only includes teams that would be in check or checkmate.
+  Map<Team, Check> moveWouldCreateCheck(Move<Piece> move) {
+    final result = <Team, Check>{};
+
     // Apply the move temporarily
     state.actOn(move);
 
-    try {
-      // Determine the opponent's team
-      final opponentTeam = move.moving.team == Team.white
-          ? Team.black
-          : Team.white;
-
-      // Check if the opponent's king is in check
-      final kingPosition = _findKingPosition(opponentTeam);
-      if (kingPosition == null) {
-        // No king found (shouldn't happen in a valid game)
-        return Check.none;
+    // Check all teams for check/checkmate
+    for (final team in Team.values) {
+      final checkStatus = _evaluateCheckStatusForTeam(team, move);
+      if (checkStatus != Check.none) {
+        result[team] = checkStatus;
       }
-
-      final isInCheck = _isPositionUnderAttack(kingPosition, move.moving.team);
-
-      if (!isInCheck) {
-        return Check.none;
-      }
-
-      // King is in check, now determine if it's checkmate
-      final isCheckmate = _isCheckmate(opponentTeam);
-
-      return isCheckmate ? Check.checkmate : Check.check;
-    } finally {
-      // Always restore the original board state
-      state.undo(move);
     }
+
+    // Undo the move to restore the original state
+    state.undo(move);
+
+    return result;
   }
 
-  /// Finds the position of the king for the given team.
-  Position? _findKingPosition(Team team) {
-    for (final square in state.squares) {
-      if (square.piece case King(
-        team: final pieceTeam,
-      ) when pieceTeam == team) {
-        return square.position;
+  bool isTeamInCheck(Team team) {
+    final kingSquare = _findKing(team);
+    if (kingSquare == null) {
+      return false; // No king found (shouldn't happen in normal chess)
+    }
+    return threatDetector.isPieceUnderThreat(kingSquare);
+  }
+
+  /// Evaluates the check status for a specific team.
+  ///
+  /// [team] - The team to evaluate
+  /// [move] - The move that has been made
+  ///
+  /// Returns the check status (none, check, or checkmate).
+  Check _evaluateCheckStatusForTeam(Team team, Move move) {
+    final kingSquare = _findKing(team);
+    if (kingSquare == null) {
+      return Check.none; // No king found (shouldn't happen in normal chess)
+    }
+
+    final isInCheck = threatDetector.isPieceUnderThreat(kingSquare);
+    if (!isInCheck) {
+      return Check.none;
+    }
+
+    // King is in check, determine if it's checkmate
+    final isCheckmate = _isCheckmate(team, kingSquare, move);
+    return isCheckmate ? Check.checkmate : Check.check;
+  }
+
+  /// Finds the king for the specified team.
+  ///
+  /// [team] - The team whose king to find
+  ///
+  /// Returns the occupied square containing the king, or null if not found.
+  OccupiedSquare? _findKing(Team team) {
+    for (final square in state.occupiedSquares) {
+      if (square.piece is King && square.piece.team == team) {
+        return square;
       }
     }
     return null;
   }
 
-  /// Checks if a position is under attack by any piece from the attacking team.
-  bool _isPositionUnderAttack(Position position, Team attackingTeam) {
-    for (final square in state.squares) {
-      if (square.piece?.team == attackingTeam) {
-        final piece = square.piece!;
-        final attackPositions = piece.validPositions(state, square.position);
-        if (attackPositions.contains(position)) {
+  /// Determines if a team is in checkmate.
+  ///
+  /// [team] - The team to check for checkmate
+  /// [kingSquare] - The square containing the king (must be in check)
+  /// [move] - The last move that has put the king in check
+  ///
+  /// Returns true if the team is in checkmate, false if they can escape check.
+  bool _isCheckmate(Team team, OccupiedSquare kingSquare, Move move) {
+    // Check if the king can move to safety
+    if (_canKingEscapeCheck(kingSquare)) {
+      return false;
+    }
+
+    // Check if any piece can block the check or capture the attacking piece
+    if (_canBlockOrCaptureCheck(team, kingSquare, move)) {
+      return false;
+    }
+
+    return true; // No escape possible - checkmate
+  }
+
+  /// Checks if the king can move to a safe square.
+  ///
+  /// [kingSquare] - The square containing the king
+  ///
+  /// Returns true if the king has at least one safe move.
+  bool _canKingEscapeCheck(OccupiedSquare kingSquare) {
+    final king = kingSquare.piece;
+    if (king is! King) {
+      throw ArgumentError('Square does not contain a king piece');
+    }
+
+    // Get all possible king moves using the movement manager
+    final possibleMoves = _movementManager.possibleMoves(kingSquare);
+
+    for (final testMove in possibleMoves) {
+      // Apply the move temporarily
+      state.actOn(testMove);
+
+      // Check if the king is safe at the new position
+      final newKingSquare = state[testMove.to];
+      final isSafe = !threatDetector.isPieceUnderThreat(newKingSquare);
+
+      // Undo the test move
+      state.undo(testMove);
+
+      if (isSafe) {
+        return true; // Found a safe escape
+      }
+    }
+
+    return false; // No safe moves available
+  }
+
+  /// Checks if any piece can block the check or capture the attacking piece.
+  ///
+  /// [team] - The team in check
+  /// [kingSquare] - The square containing the king in check
+  /// [move] - The last move that has put the king in check
+  ///
+  /// Returns true if check can be blocked or the attacking piece captured.
+  bool _canBlockOrCaptureCheck(
+    Team team,
+    OccupiedSquare kingSquare,
+    Move move,
+  ) {
+    final threateningPieces = threatDetector.getThreateningPieces(kingSquare);
+
+    // If multiple pieces are checking the king, only king moves can save
+    if (threateningPieces.length > 1) {
+      return false;
+    }
+
+    final threateningPieceSquare = threateningPieces.first;
+    final threateningPosition = threateningPieceSquare.position;
+
+    // Try all pieces of the defending team
+    for (final defenderSquare in state.occupiedSquares) {
+      if (defenderSquare.piece.team != team || defenderSquare.piece is King) {
+        continue; // Skip opponent pieces and the king (already checked)
+      }
+
+      // Check if this piece can capture the threatening piece
+      if (_canPieceSolveCheck(
+        defenderSquare,
+        threateningPosition,
+        kingSquare,
+        move,
+      )) {
+        return true;
+      }
+
+      // Check if this piece can block the attack (for sliding pieces)
+      // Find the threatening piece square to pass to the blocking method
+      final threateningSquare = state[threateningPosition];
+      if (threateningSquare is OccupiedSquare) {
+        if (_canPieceBlockCheck(
+          defenderSquare,
+          threateningSquare,
+          kingSquare,
+        )) {
           return true;
         }
       }
     }
+
     return false;
   }
 
-  /// Determines if the given team is in checkmate.
+  /// Checks if a piece can solve check by capturing the threatening piece.
   ///
-  /// A team is in checkmate if:
-  /// 1. Their king is in check
-  /// 2. No legal move can get the king out of check
-  bool _isCheckmate(Team team) {
-    // Get all pieces of the team
-    final teamSquares = state.squares.where((sq) => sq.piece?.team == team);
+  /// [defenderSquare] - The defending piece
+  /// [threateningPosition] - Position of the piece creating check
+  /// [kingSquare] - The square containing the king in check
+  /// [move] - The last move that has put the king in check
+  ///
+  /// Returns true if the defender can capture the threatening piece safely.
+  bool _canPieceSolveCheck(
+    OccupiedSquare defenderSquare,
+    Position threateningPosition,
+    OccupiedSquare kingSquare,
+    Move move,
+  ) {
+    // Get all possible moves for the defending piece
+    final possibleMoves = _movementManager.possibleMoves(
+      defenderSquare,
+      untracked: move,
+    );
 
-    for (final square in teamSquares) {
-      final piece = square.piece!;
-      final possiblePositions = piece.validPositions(state, square.position);
-
-      for (final position in possiblePositions) {
-        // Create a test move
-        final testMove = _createTestMove(piece, square.position, position);
-
-        if (testMove != null && _wouldMoveEscapeCheck(testMove, team)) {
-          return false; // Found a legal move that escapes check
+    // Check if any of these moves captures the threatening piece
+    for (final move in possibleMoves) {
+      if (move case CaptureMove(
+        :var capturedPosition,
+      ) when capturedPosition == threateningPosition) {
+        // Test if this move resolves the check
+        if (threatDetector.wouldMoveResolvePieceThreat(move, kingSquare)) {
+          return true;
         }
       }
     }
 
-    return true; // No legal moves found that escape check
+    return false;
   }
 
-  /// Creates a test move for checking if it would escape check.
-  Move? _createTestMove(Piece piece, Position from, Position to) {
-    final capturedPiece = state[to].piece;
-
-    try {
-      if (capturedPiece != null) {
-        // This is a capture move
-        return CaptureMove.create(
-          from: from,
-          to: to,
-          moving: piece,
-          captured: capturedPiece,
-        );
-      } else {
-        // This is a regular move
-        return Move.create(from: from, to: to, moving: piece);
-      }
-    } catch (e) {
-      // If move creation fails (e.g., invalid move), return null
-      return null;
+  /// Checks if a piece can block the check.
+  ///
+  /// [defenderSquare] - The defending piece
+  /// [threateningPiece] - The piece creating check
+  /// [kingSquare] - The square containing the king in check
+  ///
+  /// Returns true if the defender can block the attacking line.
+  bool _canPieceBlockCheck(
+    OccupiedSquare defenderSquare,
+    OccupiedSquare threateningPiece,
+    OccupiedSquare kingSquare,
+  ) {
+    // Only sliding pieces (Queen, Rook, Bishop) can be blocked
+    final piece = threateningPiece.piece;
+    if (piece is! SlidingPiece) {
+      return false; // Knights, pawns, and kings can't be blocked
     }
+
+    // Get the path between the threatening piece and the king
+    final blockingPositions = _getBlockingPositions(
+      threateningPiece.position,
+      kingSquare.position,
+    );
+
+    // Get all possible moves for the defending piece
+    final possibleMoves = _movementManager.possibleMoves(defenderSquare);
+
+    // Check if any move can block the attack
+    for (final move in possibleMoves) {
+      if (blockingPositions.contains(move.to)) {
+        // Test if this move resolves the check
+        if (threatDetector.wouldMoveResolvePieceThreat(move, kingSquare)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
-  /// Tests if making the given move would get the team out of check.
-  bool _wouldMoveEscapeCheck(Move move, Team team) {
-    try {
-      // Apply the test move
-      state.actOn(move);
+  /// Gets the positions between an attacking piece and the king that could
+  /// block the attack.
+  ///
+  /// [attackerPosition] - Position of the attacking piece
+  /// [kingPosition] - Position of the king
+  ///
+  /// Returns list of positions that would block the attack if occupied.
+  List<Position> _getBlockingPositions(
+    Position attackerPosition,
+    Position kingPosition,
+  ) {
+    final blockingPositions = <Position>[];
 
-      // Find the king position after the move
-      final kingPosition = _findKingPosition(team);
-      if (kingPosition == null) {
-        return false;
-      }
+    final fileDirection =
+        (kingPosition.file.index - attackerPosition.file.index).sign;
+    final rankDirection =
+        (kingPosition.rank.index - attackerPosition.rank.index).sign;
 
-      // Check if the king is still under attack
-      final opponentTeam = team == Team.white ? Team.black : Team.white;
-      final stillInCheck = _isPositionUnderAttack(kingPosition, opponentTeam);
+    var currentFileIndex = attackerPosition.file.index + fileDirection;
+    var currentRankIndex = attackerPosition.rank.index + rankDirection;
 
-      return !stillInCheck;
-    } catch (e) {
-      // If the move is invalid, it doesn't escape check
-      return false;
-    } finally {
-      // Restore the board state
-      state.undo(move);
+    // Walk from attacker towards king, collecting intermediate positions
+    while (currentFileIndex != kingPosition.file.index ||
+        currentRankIndex != kingPosition.rank.index) {
+      final currentFile = File.values[currentFileIndex];
+      final currentRank = Rank.values[currentRankIndex];
+      blockingPositions.add(Position._(currentFile, currentRank));
+
+      currentFileIndex += fileDirection;
+      currentRankIndex += rankDirection;
     }
+
+    return blockingPositions;
   }
 }

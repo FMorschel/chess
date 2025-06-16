@@ -1,5 +1,5 @@
 import 'package:chess_logic/src/controller/capture.dart';
-import 'package:chess_logic/src/controller/direction.dart';
+import 'package:chess_logic/src/position/direction.dart';
 import 'package:chess_logic/src/move/algebraic_notation_formatter.dart';
 import 'package:chess_logic/src/move/ambiguous_movement_type.dart';
 import 'package:chess_logic/src/move/check.dart';
@@ -17,25 +17,6 @@ part 'knight_move.dart';
 part 'pawn_move.dart';
 part 'queen_move.dart';
 part 'rook_move.dart';
-
-typedef _CaptureMoveConstructor<P extends Piece, C extends Piece> =
-    CaptureMove<P, C> Function({
-      required P moving,
-      required C captured,
-      required Position from,
-      required Position to,
-      Check check,
-      AmbiguousMovementType? ambiguous,
-    });
-
-typedef _MoveConstructor<P extends Piece> =
-    Move<P> Function({
-      required P moving,
-      required Position from,
-      required Position to,
-      Check check,
-      AmbiguousMovementType? ambiguous,
-    });
 
 /// Regular move of a piece from one square to another
 sealed class Move<P extends Piece> extends Equatable
@@ -84,11 +65,11 @@ sealed class Move<P extends Piece> extends Equatable
     if (queenCastling != null) {
       return KingMove.queensideCastling(
             king: King(team),
-            from: Position(File.e, team.homeRank),
-            to: Position(File.c, team.homeRank),
+            from: Position._(File.e, team.homeRank),
+            to: Position._(File.c, team.homeRank),
             rook: RookMove(
-              from: Position(File.a, team.homeRank),
-              to: Position(File.d, team.homeRank),
+              from: Position._(File.a, team.homeRank),
+              to: Position._(File.d, team.homeRank),
               moving: Rook(team),
               check: check,
             ),
@@ -100,11 +81,11 @@ sealed class Move<P extends Piece> extends Equatable
     if (kingCastling != null) {
       return KingMove.kingsideCastling(
             king: King(team),
-            from: Position(File.e, team.homeRank),
-            to: Position(File.g, team.homeRank),
+            from: Position._(File.e, team.homeRank),
+            to: Position._(File.g, team.homeRank),
             rook: RookMove(
-              from: Position(File.h, team.homeRank),
-              to: Position(File.f, team.homeRank),
+              from: Position._(File.h, team.homeRank),
+              to: Position._(File.f, team.homeRank),
               moving: Rook(team),
               check: check,
             ),
@@ -211,23 +192,51 @@ sealed class Move<P extends Piece> extends Equatable
     Check check = Check.none,
     AmbiguousMovementType? ambiguous,
   }) {
-    final constructor =
-        switch (moving) {
-              King() => KingMove.new,
-              Queen() => QueenMove.new,
-              Rook() => RookMove.new,
-              Bishop() => BishopMove.new,
-              Knight() => KnightMove.new,
-              Pawn() => PawnMove.new,
-            }
-            as _MoveConstructor<P>;
-    return constructor(
-      from: from,
-      to: to,
-      moving: moving,
-      check: check,
-      ambiguous: ambiguous,
-    );
+    return switch (moving) {
+          King() => KingMove(
+            from: from,
+            to: to,
+            moving: moving,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Queen() => QueenMove(
+            from: from,
+            to: to,
+            moving: moving,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Rook() => RookMove(
+            from: from,
+            to: to,
+            moving: moving,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Bishop() => BishopMove(
+            from: from,
+            to: to,
+            moving: moving,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Knight() => KnightMove(
+            from: from,
+            to: to,
+            moving: moving,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Pawn() => PawnMove(
+            from: from,
+            to: to,
+            moving: moving,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+        }
+        as Move<P>;
   }
 
   static CaptureMove<P, C> capture<P extends Piece, C extends Piece>({
@@ -291,7 +300,6 @@ sealed class CaptureMove<P extends Piece, C extends Piece> extends Move<P> {
          'Captured piece must be from a different team',
        ),
        super.base();
-
   factory CaptureMove.create({
     required P moving,
     required C captured,
@@ -300,24 +308,55 @@ sealed class CaptureMove<P extends Piece, C extends Piece> extends Move<P> {
     Check check = Check.none,
     AmbiguousMovementType? ambiguous,
   }) {
-    final constructor =
-        switch (moving) {
-              King() => KingMove.capture<C>,
-              Queen() => QueenMove.capture<C>,
-              Rook() => RookMove.capture<C>,
-              Bishop() => BishopMove.capture<C>,
-              Knight() => KnightMove.capture<C>,
-              Pawn() => PawnMove.capture<C>,
-            }
-            as _CaptureMoveConstructor<P, C>;
-    return constructor(
-      moving: moving,
-      captured: captured,
-      from: from,
-      to: to,
-      check: check,
-      ambiguous: ambiguous,
-    );
+    return switch (moving) {
+          King() => KingCaptureMove<C>(
+            moving: moving,
+            captured: captured,
+            from: from,
+            to: to,
+            check: check,
+          ),
+          Queen() => QueenCaptureMove<C>(
+            moving: moving,
+            captured: captured,
+            from: from,
+            to: to,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Rook() => RookCaptureMove<C>(
+            moving: moving,
+            captured: captured,
+            from: from,
+            to: to,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Bishop() => BishopCaptureMove<C>(
+            moving: moving,
+            captured: captured,
+            from: from,
+            to: to,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Knight() => KnightCaptureMove<C>(
+            moving: moving,
+            captured: captured,
+            from: from,
+            to: to,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Pawn() => PawnCaptureMove<C>(
+            moving: moving,
+            captured: captured,
+            from: from,
+            to: to,
+            check: check,
+          ),
+        }
+        as CaptureMove<P, C>;
   }
 
   final C captured;

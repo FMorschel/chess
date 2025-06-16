@@ -1,4 +1,4 @@
-enum Check {
+enum Check implements Comparable<Check> {
   none(''),
   check('+'),
   checkmate('#');
@@ -17,4 +17,7 @@ enum Check {
   }
 
   final String algebraic;
+
+  @override
+  int compareTo(Check other) => index.compareTo(other.index);
 }

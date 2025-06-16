@@ -210,7 +210,7 @@ final class EnPassantMove extends PawnCaptureMove<Pawn> {
 
   @override
   // ignore: overridden_fields, better performance
-  late final capturedPosition = Position(to.file, from.rank);
+  late final capturedPosition = Position._(to.file, from.rank);
 
   @override
   EnPassantMove copyWith({Check? check, void ambiguous}) => EnPassantMove(

@@ -212,7 +212,7 @@ void main() {
 
         test('should return empty list for moves without captures', () {
           final moves = <Move>[
-            PawnMove(
+            PawnInitialMove(
               from: Position.fromAlgebraic('e2'),
               to: Position.fromAlgebraic('e4'),
               moving: Pawn(Team.white),
@@ -301,7 +301,7 @@ void main() {
         });
 
         test('should handle mixed capture and non-capture moves', () {
-          final regularMove = PawnMove(
+          final regularMove = PawnInitialMove(
             from: Position.fromAlgebraic('e2'),
             to: Position.fromAlgebraic('e4'),
             moving: Pawn(Team.white),

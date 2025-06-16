@@ -1,8 +1,8 @@
 enum Direction {
-  up,
-  down,
-  left,
-  right,
+  up(ignoreFile: true),
+  down(ignoreFile: true),
+  left(ignoreRank: true),
+  right(ignoreRank: true),
   upLeft,
   upRight,
   downLeft,
@@ -16,7 +16,7 @@ enum Direction {
   downDownRight,
   downRightRight;
 
-  const Direction();
+  const Direction({this.ignoreFile = false, this.ignoreRank = false});
 
   static const all = values;
   static const cross = [
@@ -30,6 +30,11 @@ enum Direction {
     Direction.upRight,
     Direction.downLeft,
     Direction.downRight,
+  ];
+  /// Both [cross] and [diagonal] directions, excluding [knight] moves.
+  static const orthogonal = [
+    ...cross,
+    ...diagonal,
   ];
   static const knight = [
     Direction.upUpLeft,
@@ -63,4 +68,7 @@ enum Direction {
       Direction.downRightRight => Direction.upLeftLeft,
     };
   }
+
+  final bool ignoreFile;
+  final bool ignoreRank;
 }

@@ -1,4 +1,4 @@
-import 'package:chess_logic/src/controller/direction.dart';
+import 'package:chess_logic/src/position/direction.dart';
 import 'package:chess_logic/src/position/file.dart';
 import 'package:test/test.dart';
 
@@ -106,6 +106,104 @@ void main() {
       ); // File.g + 2 = null
       expect(File.h.next(Direction.upRightRight), isNull);
       expect(File.h.next(Direction.downRightRight), isNull);
+    });
+  });
+
+  group('compareTo', () {
+    test('should return 0 for same file', () {
+      expect(File.a.compareTo(File.a), equals(0));
+      expect(File.d.compareTo(File.d), equals(0));
+      expect(File.h.compareTo(File.h), equals(0));
+    });
+
+    test('should return negative for files to the left', () {
+      expect(File.a.compareTo(File.b), lessThan(0));
+      expect(File.a.compareTo(File.h), lessThan(0));
+      expect(File.c.compareTo(File.f), lessThan(0));
+      expect(File.d.compareTo(File.e), lessThan(0));
+    });
+
+    test('should return positive for files to the right', () {
+      expect(File.b.compareTo(File.a), greaterThan(0));
+      expect(File.h.compareTo(File.a), greaterThan(0));
+      expect(File.f.compareTo(File.c), greaterThan(0));
+      expect(File.e.compareTo(File.d), greaterThan(0));
+    });
+
+    test('should be consistent with alphabetical order', () {
+      final files = [
+        File.h,
+        File.a,
+        File.e,
+        File.c,
+        File.b,
+        File.g,
+        File.f,
+        File.d,
+      ];
+      final sorted = [...files]..sort();
+
+      expect(
+        sorted,
+        containsAllInOrder([
+          File.a,
+          File.b,
+          File.c,
+          File.d,
+          File.e,
+          File.f,
+          File.g,
+          File.h,
+        ]),
+      );
+    });
+
+    test('should satisfy compareTo contract - antisymmetric', () {
+      expect(File.a.compareTo(File.h), equals(-File.h.compareTo(File.a)));
+      expect(File.c.compareTo(File.f), equals(-File.f.compareTo(File.c)));
+    });
+
+    test('should satisfy compareTo contract - transitive', () {
+      // a < d < h
+      expect(File.a.compareTo(File.d), lessThan(0));
+      expect(File.d.compareTo(File.h), lessThan(0));
+      expect(File.a.compareTo(File.h), lessThan(0));
+    });
+
+    test('should handle all adjacent comparisons', () {
+      expect(File.a.compareTo(File.b), lessThan(0));
+      expect(File.b.compareTo(File.c), lessThan(0));
+      expect(File.c.compareTo(File.d), lessThan(0));
+      expect(File.d.compareTo(File.e), lessThan(0));
+      expect(File.e.compareTo(File.f), lessThan(0));
+      expect(File.f.compareTo(File.g), lessThan(0));
+      expect(File.g.compareTo(File.h), lessThan(0));
+    });
+
+    test('should be consistent with index ordering', () {
+      for (int i = 0; i < File.values.length; i++) {
+        for (int j = 0; j < File.values.length; j++) {
+          final file1 = File.values[i];
+          final file2 = File.values[j];
+          final comparison = file1.compareTo(file2);
+
+          if (i < j) {
+            expect(
+              comparison,
+              lessThan(0),
+              reason: '$file1 should be less than $file2',
+            );
+          } else if (i > j) {
+            expect(
+              comparison,
+              greaterThan(0),
+              reason: '$file1 should be greater than $file2',
+            );
+          } else {
+            expect(comparison, equals(0), reason: '$file1 should equal $file2');
+          }
+        }
+      }
     });
   });
 }
