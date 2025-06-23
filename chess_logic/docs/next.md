@@ -11,23 +11,13 @@ Split responsibilities into separate classes:
 - `ScoreManager` (handles scoring)
 - `GameRuleEngine` (handles special rules like 50-move rule)
 
-## **Medium Priority:**
-
-### 2. **Complete Documentation:**
-
-- Add examples to all public APIs
-- Document edge cases and expected behaviors
-- Add performance characteristics documentation
-
-## **Lower Priority:**
-
-### 3. **Thread Safety Issues:**
+### 2. **Thread Safety Issues:**
 
 - Add immutable state management patterns
 - Implement proper synchronization for shared mutable state
 - Consider using immutable data structures
 
-### 4. **Performance Optimizations:**
+### 3. **Performance Optimizations:**
 
 - Cache expensive move calculations
 - Optimize check detection algorithms

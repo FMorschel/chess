@@ -53,9 +53,9 @@ void main() {
       });
 
       test('orthogonal should contain cross and diagonal directions', () {
-        expect(Direction.orthogonal, hasLength(8));
+        expect(Direction.octagonal, hasLength(8));
         expect(
-          Direction.orthogonal,
+          Direction.octagonal,
           containsAll([
             // Cross directions
             Direction.up,
@@ -73,28 +73,28 @@ void main() {
 
       test('orthogonal should be combination of cross and diagonal', () {
         final expectedOrthogonal = [...Direction.cross, ...Direction.diagonal];
-        expect(Direction.orthogonal, equals(expectedOrthogonal));
+        expect(Direction.octagonal, equals(expectedOrthogonal));
         expect(
-          Direction.orthogonal.toSet(),
+          Direction.octagonal.toSet(),
           equals({...Direction.cross, ...Direction.diagonal}),
         );
       });
 
       test('orthogonal should not contain knight moves', () {
-        final orthogonalSet = Direction.orthogonal.toSet();
+        final orthogonalSet = Direction.octagonal.toSet();
         final knightSet = Direction.knight.toSet();
 
         expect(orthogonalSet.intersection(knightSet), isEmpty);
 
         for (final knightDirection in Direction.knight) {
-          expect(Direction.orthogonal, isNot(contains(knightDirection)));
+          expect(Direction.octagonal, isNot(contains(knightDirection)));
         }
       });
 
       test(
         'orthogonal should contain exactly cross and diagonal directions',
         () {
-          final orthogonalSet = Direction.orthogonal.toSet();
+          final orthogonalSet = Direction.octagonal.toSet();
           final crossAndDiagonalSet = {
             ...Direction.cross,
             ...Direction.diagonal,
@@ -108,7 +108,7 @@ void main() {
         'all directions should be covered by orthogonal and knight collections',
         () {
           final covered = <Direction>{
-            ...Direction.orthogonal,
+            ...Direction.octagonal,
             ...Direction.knight,
           };
           expect(covered, hasLength(Direction.all.length));
@@ -116,19 +116,16 @@ void main() {
         },
       );
 
-      test(
-        'all directions should be covered by cross, diagonal and knight '
-        'collections',
-        () {
-          final covered = <Direction>{
-            ...Direction.cross,
-            ...Direction.diagonal,
-            ...Direction.knight,
-          };
-          expect(covered, hasLength(Direction.all.length));
-          expect(covered, containsAll(Direction.all));
-        },
-      );
+      test('all directions should be covered by cross, diagonal and knight '
+          'collections', () {
+        final covered = <Direction>{
+          ...Direction.cross,
+          ...Direction.diagonal,
+          ...Direction.knight,
+        };
+        expect(covered, hasLength(Direction.all.length));
+        expect(covered, containsAll(Direction.all));
+      });
     });
 
     group('opposite getter', () {

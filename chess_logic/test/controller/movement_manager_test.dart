@@ -1,5 +1,6 @@
 import 'package:chess_logic/src/controller/board_state.dart';
 import 'package:chess_logic/src/controller/movement_manager.dart';
+import 'package:chess_logic/src/move/ambiguous_movement_type.dart';
 import 'package:chess_logic/src/move/check.dart';
 import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/position.dart';
@@ -248,12 +249,12 @@ void main() {
       });
     });
 
-    group('possibleMovesWithCheck', () {
+    group('possibleMovesWithCheckAndAmbiguous', () {
       test('should return empty list for empty square', () {
         const emptySquare = EmptySquare(Position.e4);
         final manager = MovementManager(boardState, [], teams);
 
-        final moves = manager.possibleMovesWithCheck(emptySquare);
+        final moves = manager.possibleMovesWithCheckAndAmbiguous(emptySquare);
         expect(moves, isEmpty);
       });
 
@@ -269,7 +270,9 @@ void main() {
         final manager = MovementManager(customBoard, [], teams);
 
         final allMoves = manager.possibleMoves(knightSquare);
-        final safeMoves = manager.possibleMovesWithCheck(knightSquare);
+        final safeMoves = manager.possibleMovesWithCheckAndAmbiguous(
+          knightSquare,
+        );
 
         // The knight is pinned and cannot move without exposing the king
         expect(allMoves.isNotEmpty, isTrue);
@@ -294,7 +297,7 @@ void main() {
           reason: 'Queen should have basic moves available',
         );
 
-        final moves = manager.possibleMovesWithCheck(queenSquare);
+        final moves = manager.possibleMovesWithCheckAndAmbiguous(queenSquare);
 
         // Queen should have at least some moves
         expect(
@@ -320,7 +323,9 @@ void main() {
           reason: 'Knight should have basic moves available',
         );
 
-        final safeMoves = manager.possibleMovesWithCheck(knightSquare);
+        final safeMoves = manager.possibleMovesWithCheckAndAmbiguous(
+          knightSquare,
+        );
 
         // Knight should have moves available
         expect(
@@ -328,6 +333,231 @@ void main() {
           isNotEmpty,
           reason: 'Knight should have safe moves available',
         );
+      });
+
+      group('ambiguous move detection', () {
+        test('should detect file ambiguity when pieces share same rank', () {
+          // Two rooks on same rank that can move to same destination
+          final customBoard = BoardState.custom({
+            Position.e2: King.white,
+            Position.a1: Rook.white,
+            Position.h1: Rook.white,
+            Position.e8: King.black,
+          });
+
+          final rookSquare = customBoard[Position.a1];
+          final manager = MovementManager(customBoard, [], teams);
+
+          final moves = manager.possibleMovesWithCheckAndAmbiguous(rookSquare);
+          final ambiguousMoves = moves.where((m) => m.ambiguous != null);
+
+          expect(ambiguousMoves, isNotEmpty);
+          expect(
+            ambiguousMoves.first.ambiguous,
+            equals(AmbiguousMovementType.file),
+          );
+        });
+
+        test('should detect rank ambiguity when pieces share same file', () {
+          // Two rooks on same file that can move to same destination
+          final customBoard = BoardState.custom({
+            Position.e1: King.white,
+            Position.a1: Rook.white,
+            Position.a8: Rook.white,
+            Position.e8: King.black,
+          });
+
+          final rookSquare = customBoard[Position.a1];
+          final manager = MovementManager(customBoard, [], teams);
+
+          final moves = manager.possibleMovesWithCheckAndAmbiguous(rookSquare);
+          final ambiguousMoves = moves.where((m) => m.ambiguous != null);
+
+          expect(ambiguousMoves, isNotEmpty);
+          expect(
+            ambiguousMoves.first.ambiguous,
+            equals(AmbiguousMovementType.rank),
+          );
+        });
+
+        test('should detect both file and rank ambiguity', () {
+          // Setup with multiple pieces creating both file and rank conflicts
+          final customBoard = BoardState.custom({
+            Position.e1: King.white,
+            Position.a1: Rook.white,
+            Position.a8: Rook.white,
+            Position.h1: Rook.white,
+            Position.e8: King.black,
+          });
+
+          final rookSquare = customBoard[Position.a1];
+          final manager = MovementManager(customBoard, [], teams);
+
+          final moves = manager.possibleMovesWithCheckAndAmbiguous(rookSquare);
+          final ambiguousMoves = moves.where(
+            (m) => m.ambiguous != AmbiguousMovementType.both,
+          );
+
+          // Should have some ambiguous moves
+          expect(ambiguousMoves, isNotEmpty);
+        });
+
+        test(
+          'should not mark moves as ambiguous when no other pieces can reach '
+          'destination',
+          () {
+            // Single rook with no other rooks
+            final customBoard = BoardState.custom({
+              Position.e1: King.white,
+              Position.a1: Rook.white,
+              Position.e8: King.black,
+            });
+
+            final rookSquare = customBoard[Position.a1];
+            final manager = MovementManager(customBoard, [], teams);
+
+            final moves = manager.possibleMovesWithCheckAndAmbiguous(
+              rookSquare,
+            );
+            final nonAmbiguousMoves = moves.where((m) => m.ambiguous == null);
+
+            expect(nonAmbiguousMoves, equals(moves));
+          },
+        );
+
+        test('should handle knight ambiguity correctly', () {
+          // Two knights that can move to same destination
+          final customBoard = BoardState.custom({
+            Position.e1: King.white,
+            Position.c3: Knight.white,
+            Position.g3: Knight.white,
+            Position.e8: King.black,
+          });
+
+          final knightSquare = customBoard[Position.c3];
+          final manager = MovementManager(customBoard, [], teams);
+
+          final moves = manager.possibleMovesWithCheckAndAmbiguous(
+            knightSquare,
+          );
+          final ambiguousMoves = moves.where((m) => m.ambiguous != null);
+
+          // Knights should have some ambiguous moves to shared destinations
+          expect(ambiguousMoves, isNotEmpty);
+          expect(
+            ambiguousMoves.first.ambiguous,
+            equals(AmbiguousMovementType.file),
+          );
+        });
+
+        test('should handle queen ambiguity with multiple queens', () {
+          // Two queens that can move to same destination
+          final customBoard = BoardState.custom({
+            Position.e1: King.white,
+            Position.d1: Queen.white,
+            Position.f1: Queen.white,
+            Position.e8: King.black,
+          });
+
+          final queenSquare = customBoard[Position.d1];
+          final manager = MovementManager(customBoard, [], teams);
+
+          final moves = manager.possibleMovesWithCheckAndAmbiguous(queenSquare);
+          final ambiguousMoves = moves.where((m) => m.ambiguous != null);
+
+          expect(ambiguousMoves, isNotEmpty);
+          expect(
+            ambiguousMoves.first.ambiguous,
+            equals(AmbiguousMovementType.file),
+          );
+        });
+
+        test('should not consider pieces of different teams for ambiguity', () {
+          // White and black rooks that could move to same destination
+          final customBoard = BoardState.custom({
+            Position.e2: King.white,
+            Position.a1: Rook.white,
+            Position.h1: Rook.black, // Different team
+            Position.e8: King.black,
+          });
+
+          final rookSquare = customBoard[Position.a1];
+          final manager = MovementManager(customBoard, [], teams);
+
+          final moves = manager.possibleMovesWithCheckAndAmbiguous(rookSquare);
+          final nonAmbiguousMoves = moves.where((m) => m.ambiguous == null);
+
+          // Should not be ambiguous since black rook is different team
+          expect(nonAmbiguousMoves, equals(moves));
+        });
+
+        test('should not consider pieces of different types for ambiguity', () {
+          // Rook and queen that could move to same destination
+          final customBoard = BoardState.custom({
+            Position.e2: King.white,
+            Position.a1: Rook.white,
+            Position.d1: Queen.white, // Different piece type
+            Position.e8: King.black,
+          });
+
+          final rookSquare = customBoard[Position.a1];
+          final manager = MovementManager(customBoard, [], teams);
+
+          final moves = manager.possibleMovesWithCheckAndAmbiguous(rookSquare);
+          final nonAmbiguousMoves = moves.where((m) => m.ambiguous == null);
+
+          // Should not be ambiguous since queen is different piece type
+          expect(nonAmbiguousMoves, equals(moves));
+        });
+
+        test('should handle bishop ambiguity on diagonals', () {
+          // Two bishops that can move to same destination
+          final customBoard = BoardState.custom({
+            Position.e1: King.white,
+            Position.c1: Bishop.white,
+            Position.g5: Bishop.white,
+            Position.e8: King.black,
+          });
+
+          final bishopSquare = customBoard[Position.c1];
+          final manager = MovementManager(customBoard, [], teams);
+
+          final moves = manager.possibleMovesWithCheckAndAmbiguous(
+            bishopSquare,
+          );
+          final ambiguousMoves = moves.where((m) => m.ambiguous != null);
+
+          expect(ambiguousMoves, isNotEmpty);
+          expect(
+            ambiguousMoves.first.ambiguous,
+            equals(AmbiguousMovementType.file),
+          );
+        });
+
+        test('should handle complex multi-piece ambiguity scenarios', () {
+          // Multiple pieces creating various ambiguity situations
+          final customBoard = BoardState.custom({
+            Position.e1: King.white,
+            Position.a1: Queen.white,
+            Position.a3: Queen.white,
+            Position.c1: Queen.white,
+            Position.e8: King.black,
+          });
+
+          final queenSquare = customBoard[Position.a1];
+          final manager = MovementManager(customBoard, [], teams);
+
+          final moves = manager.possibleMovesWithCheckAndAmbiguous(queenSquare);
+          final ambiguousMoves = moves.where((m) => m.ambiguous != null);
+
+          // Should detect various types of ambiguity
+          expect(ambiguousMoves, isNotEmpty);
+          final ambiguityTypes = ambiguousMoves
+              .map((m) => m.ambiguous)
+              .where((a) => a != null)
+              .toSet();
+          expect(ambiguityTypes.length, equals(3));
+        });
       });
     });
 
@@ -362,7 +592,7 @@ void main() {
         final kingSquare = customBoard[Position.e1];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMovesWithCheck(kingSquare);
+        final moves = manager.possibleMovesWithCheckAndAmbiguous(kingSquare);
         final castlingMoves = moves.where(
           (move) => move is KingsideCastling || move is QueensideCastling,
         );
@@ -387,7 +617,7 @@ void main() {
           final kingSquare = customBoard[Position.e1];
           final manager = MovementManager(customBoard, [], teams);
 
-          final moves = manager.possibleMovesWithCheck(kingSquare);
+          final moves = manager.possibleMovesWithCheckAndAmbiguous(kingSquare);
           final kingsideCastling = moves.whereType<KingsideCastling>();
           final queensideCastling = moves.whereType<QueensideCastling>();
 
@@ -419,7 +649,7 @@ void main() {
           final kingSquare = customBoard[Position.e1];
           final manager = MovementManager(customBoard, [], teams);
 
-          final moves = manager.possibleMovesWithCheck(kingSquare);
+          final moves = manager.possibleMovesWithCheckAndAmbiguous(kingSquare);
           final kingsideCastling = moves.whereType<KingsideCastling>();
           final queensideCastling = moves.whereType<QueensideCastling>();
 
@@ -452,7 +682,7 @@ void main() {
           final kingSquare = customBoard[Position.e1];
           final manager = MovementManager(customBoard, [], teams);
 
-          final moves = manager.possibleMovesWithCheck(kingSquare);
+          final moves = manager.possibleMovesWithCheckAndAmbiguous(kingSquare);
           final kingsideCastling = moves.whereType<KingsideCastling>();
           final queensideCastling = moves.whereType<QueensideCastling>();
 
@@ -480,7 +710,7 @@ void main() {
         final kingSquare = customBoard[Position.e8];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMovesWithCheck(kingSquare);
+        final moves = manager.possibleMovesWithCheckAndAmbiguous(kingSquare);
         final castlingMoves = moves.where(
           (move) => move is KingsideCastling || move is QueensideCastling,
         );
@@ -506,9 +736,10 @@ void main() {
 
         final moves = manager.possibleMoves(kingSquare);
 
-        // Since we're using possibleMoves instead of possibleMovesWithCheck,
-        // castling moves might still be generated. The check detection happens
-        // in possibleMovesWithCheck.
+        // Since we're using possibleMoves instead of
+        // possibleMovesWithCheckAndAmbiguous, castling moves might still be
+        // generated. The check detection happens in
+        // possibleMovesWithCheckAndAmbiguous.
         expect(moves, isNotEmpty);
       });
     });
@@ -591,7 +822,7 @@ void main() {
         final manager = MovementManager(customBoard, [lastMove], teams);
 
         // Get all possible moves for the white pawn with check consideration
-        final moves = manager.possibleMovesWithCheck(pawnSquare);
+        final moves = manager.possibleMovesWithCheckAndAmbiguous(pawnSquare);
 
         // Assert: Only the en passant move should be available to escape check
         expect(moves, hasLength(1));
@@ -632,7 +863,7 @@ void main() {
         final pawnSquare = customBoard[Position.e4];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMovesWithCheck(pawnSquare);
+        final moves = manager.possibleMovesWithCheckAndAmbiguous(pawnSquare);
         expect(moves, isEmpty);
       });
     });

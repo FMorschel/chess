@@ -33,7 +33,7 @@ enum Direction {
   ];
 
   /// Both [cross] and [diagonal] directions, excluding [knight] moves.
-  static const orthogonal = [...cross, ...diagonal];
+  static const octagonal = [...cross, ...diagonal];
   static const knight = [
     Direction.upUpLeft,
     Direction.upLeftLeft,

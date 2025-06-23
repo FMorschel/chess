@@ -164,7 +164,7 @@ class GameController {
             (team == null || square.piece.team == team) &&
             (position == null || square.position == position),
       )
-      .expand(_movementManager.possibleMovesWithCheck)
+      .expand(_movementManager.possibleMovesWithCheckAndAmbiguous)
       .toList();
 
   void move(Move move) {

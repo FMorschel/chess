@@ -1,1 +1,1 @@
-{"version":2,"entries":[{"package":"_","rootUri":"../","packageUri":"lib/"},{"package":"chess","rootUri":"../chess/","packageUri":"lib/"},{"package":"chess_logic","rootUri":"../chess_logic/","packageUri":"lib/"}]}
+{"version":2,"entries":[{"package":"_chess","rootUri":"../","packageUri":"lib/"},{"package":"chess","rootUri":"../chess/","packageUri":"lib/"},{"package":"chess_logic","rootUri":"../chess_logic/","packageUri":"lib/"}]}

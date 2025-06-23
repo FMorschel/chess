@@ -15,10 +15,15 @@ import 'square.dart';
 sealed class PromotionPiece extends Piece {}
 
 /// Base class for pieces that slide across the board (Bishop, Rook, Queen).
-sealed class SlidingPiece implements PromotionPiece {}
+abstract mixin class SlidingPiece implements PromotionPiece {
+  const SlidingPiece();
+  bool get cross => false;
+  bool get diagonal => false;
+  bool get octagonal => cross && diagonal;
+}
 
 /// Represents a bishop piece that moves diagonally.
-final class Bishop extends Piece implements SlidingPiece {
+final class Bishop extends Piece with SlidingPiece {
   const Bishop(this.team);
 
   static const white = Bishop(Team.white);
@@ -35,6 +40,9 @@ final class Bishop extends Piece implements SlidingPiece {
   int get value => PieceValue.bishop.points;
 
   @override
+  bool get diagonal => true;
+
+  @override
   List<Direction> get _validDirections => _directions;
 }
 
@@ -44,7 +52,7 @@ final class King extends Piece {
 
   static const white = King(Team.white);
   static const black = King(Team.black);
-  static const _directions = Direction.orthogonal;
+  static const _directions = Direction.octagonal;
 
   @override
   final Team team;
@@ -312,12 +320,12 @@ abstract class Piece with EquatableMixin {
 }
 
 /// Represents a queen piece that combines rook and bishop movement.
-final class Queen extends Piece implements SlidingPiece {
+final class Queen extends Piece with SlidingPiece {
   const Queen(this.team);
 
   static const white = Queen(Team.white);
   static const black = Queen(Team.black);
-  static const _directions = Direction.orthogonal;
+  static const _directions = Direction.octagonal;
 
   @override
   final Team team;
@@ -329,11 +337,17 @@ final class Queen extends Piece implements SlidingPiece {
   int get value => PieceValue.queen.points;
 
   @override
+  bool get cross => true;
+
+  @override
+  bool get diagonal => true;
+
+  @override
   List<Direction> get _validDirections => _directions;
 }
 
 /// Represents a rook piece that moves horizontally and vertically.
-final class Rook extends Piece implements SlidingPiece {
+final class Rook extends Piece with SlidingPiece {
   const Rook(this.team);
 
   static const white = Rook(Team.white);
@@ -348,6 +362,9 @@ final class Rook extends Piece implements SlidingPiece {
 
   @override
   int get value => PieceValue.rook.points;
+
+  @override
+  bool get cross => true;
 
   @override
   List<Direction> get _validDirections => _directions;

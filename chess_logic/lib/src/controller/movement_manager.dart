@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
+import '../move/ambiguous_movement_type.dart';
 import '../move/check.dart';
 import '../move/move.dart';
 import '../position/direction.dart';
@@ -64,14 +65,21 @@ class MovementManager {
 
   bool isTeamInCheck(Team team) => _checkDetector.isTeamInCheck(team);
 
-  /// Returns a list of all possible moves for the given square with check
-  /// detection.
-  List<Move> possibleMovesWithCheck(Square square) {
+  /// Returns a list of all legal moves for the given square with check
+  /// and ambiguous move detection.
+  ///
+  /// This method filters out moves that would put the player's own king
+  /// in check and enriches each valid [Move] with:
+  /// - Check status: whether the move puts the opponent in check
+  /// - Ambiguous type: whether multiple pieces can make the same move
+  ///
+  /// Returns an empty list if the square is not occupied.
+  List<Move> possibleMovesWithCheckAndAmbiguous(Square square) {
     if (square is! OccupiedSquare) {
       return const [];
     }
     final moves = possibleMoves(square);
-    final movesWithCheck = <Move>[];
+    final movesWithCheckAndAmbiguous = <Move>[];
 
     for (final move in [...moves]) {
       final results = _checkDetector.moveWouldCreateCheck(move);
@@ -82,11 +90,15 @@ class MovementManager {
         continue;
       }
       final checkStatus = results.values.maxOrNull ?? Check.none;
-      final moveWithCheck = move.copyWith(check: checkStatus);
-      movesWithCheck.add(moveWithCheck);
+      final ambiguousType = _detectAmbiguousMove(move);
+      final moveWithUpdatedFields = move.copyWith(
+        check: checkStatus,
+        ambiguous: ambiguousType,
+      );
+      movesWithCheckAndAmbiguous.add(moveWithUpdatedFields);
     }
 
-    return movesWithCheck;
+    return movesWithCheckAndAmbiguous;
   }
 
   /// Returns a list of all possible moves for the given square.
@@ -152,7 +164,7 @@ class MovementManager {
         }
         for (final position in positions) {
           var anotherKingSide = false;
-          for (final direction in Direction.orthogonal) {
+          for (final direction in Direction.octagonal) {
             if (position.next(direction) case final next?
                 when state[next].piece != piece &&
                     state[next].piece?.symbol == PieceSymbol.king) {
@@ -268,6 +280,69 @@ class MovementManager {
         }
     }
     return moves;
+  }
+
+  /// Detects if a move is ambiguous (multiple pieces of the same type
+  /// can move to the same destination).
+  ///
+  /// Returns the [AmbiguousMovementType] if the move is ambiguous,
+  /// or null if it's not ambiguous.
+  AmbiguousMovementType? _detectAmbiguousMove(Move move) {
+    final piece = move.moving;
+    final destination = move.to;
+
+    // Find all pieces of the same type and team that can move to the same
+    // destination
+    final samePieceSquares = <OccupiedSquare>[];
+    for (final square in state.occupiedSquares) {
+      if (square.piece.symbol == piece.symbol &&
+          square.piece.team == piece.team &&
+          square.position != move.from) {
+        final squareMoves = possibleMoves(square);
+        if (squareMoves.any((m) => m.to == destination)) {
+          samePieceSquares.add(square);
+        }
+      }
+    }
+
+    // If no other pieces can move to the same destination, not ambiguous
+    if (samePieceSquares.isEmpty) {
+      return null;
+    }
+
+    // Check if disambiguation is needed by file, rank, or both
+    final currentFile = move.from.file;
+    final currentRank = move.from.rank;
+
+    bool needsRankDisambiguation = false;
+    bool needsFileDisambiguation = false;
+
+    for (final square in samePieceSquares) {
+      if (square.position.file == currentFile) {
+        needsRankDisambiguation = true;
+      }
+      if (square.position.rank == currentRank) {
+        needsFileDisambiguation = true;
+      }
+      // If pieces are not aligned but two of the same type can get to the same
+      // destination, we are handling diagonals and such we need file
+      // disambiguation
+      if (!needsRankDisambiguation && !needsFileDisambiguation) {
+        needsFileDisambiguation = true;
+      }
+    }
+
+    // Determine the type of disambiguation needed
+    if (needsRankDisambiguation && needsFileDisambiguation) {
+      return AmbiguousMovementType.both;
+    }
+    if (needsFileDisambiguation) {
+      return AmbiguousMovementType.file;
+    }
+    if (needsRankDisambiguation) {
+      return AmbiguousMovementType.rank;
+    }
+    return null; // Default to file if unclear
   }
 
   @visibleForTesting
