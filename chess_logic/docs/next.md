@@ -8,7 +8,6 @@ Split responsibilities into separate classes:
 
 - `GameStateManager` (handles game state transitions)
 - `MoveValidator` (validates moves)
-- `ScoreManager` (handles scoring)
 - `GameRuleEngine` (handles special rules like 50-move rule)
 
 ### 2. **Thread Safety Issues:**

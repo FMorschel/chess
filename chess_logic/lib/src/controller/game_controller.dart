@@ -5,11 +5,10 @@ import '../move/move.dart';
 import '../position/position.dart';
 import '../square/piece.dart';
 import '../team/team.dart';
-import '../utility/extensions.dart';
 import 'board_state.dart';
-import 'capture.dart';
 import 'game_state.dart';
 import 'movement_manager.dart';
+import 'score_manager.dart';
 import 'team_score.dart';
 
 /// Main game controller that orchestrates chess game logic, moves, and scoring.
@@ -20,7 +19,7 @@ class GameController {
         'There must be at least two teams to start a game',
       ),
       _custom = null,
-      _scores = moveHistory.scores..addMissing(_teams),
+      _scoreManager = ScoreManager(_teams, moveHistory: moveHistory),
       _movementManager = MovementManager(
         BoardState(),
         moveHistory ?? [],
@@ -43,7 +42,7 @@ class GameController {
         'There must be at least two teams to start a game',
       ),
       _custom = null,
-      _scores = _teams.scores,
+      _scoreManager = ScoreManager.empty(_teams),
       _movementManager = MovementManager(BoardState.empty(), [], _teams),
       _currentTeamIndex = 0,
       _gameState = GameState.inProgress,
@@ -55,7 +54,7 @@ class GameController {
         'There must be at least two teams to start a game',
       ),
       _custom = customPieces,
-      _scores = _teams.scores,
+      _scoreManager = ScoreManager.empty(_teams),
       _movementManager = MovementManager(
         BoardState.custom(customPieces),
         [],
@@ -129,9 +128,8 @@ class GameController {
 
     return controller;
   }
-
   final Map<Position, Piece>? _custom;
-  final List<TeamScore> _scores;
+  final ScoreManager _scoreManager;
   final List<Team> _teams;
   final MovementManager _movementManager;
 
@@ -172,8 +170,7 @@ class GameController {
       throw StateError('Cannot move pieces when the game is not in progress');
     }
     if (move is CaptureMove) {
-      final teamScore = _scores.firstWhere((score) => score.team == move.team);
-      teamScore.capture(Capture(move));
+      _scoreManager.processCapture(move);
     }
     move = _movementManager.move(move);
     _updateHalfmoveClock(move);
@@ -246,7 +243,7 @@ class GameController {
   /// move or capture
   int get halfmoveClock => _halfmoveClock;
   List<Team> get teams => List.unmodifiable(_teams);
-  List<TeamScore> get scores => List.unmodifiable(_scores);
+  List<TeamScore> get scores => _scoreManager.scores;
   List<Move> get history => _movementManager.moveHistory;
   BoardState get state => _movementManager.state;
   Team get currentTeam => _teams[_currentTeamIndex];
