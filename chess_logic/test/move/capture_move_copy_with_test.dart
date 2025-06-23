@@ -1,5 +1,5 @@
-import 'package:chess_logic/src/move/check.dart';
 import 'package:chess_logic/src/move/ambiguous_movement_type.dart';
+import 'package:chess_logic/src/move/check.dart';
 import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/position.dart';
 import 'package:chess_logic/src/square/piece.dart';

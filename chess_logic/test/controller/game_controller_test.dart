@@ -557,7 +557,8 @@ void main() {
       });
 
       test(
-        'should not set draw when King+Bishop vs King+Bishop on different colors',
+        'should not set draw when King+Bishop vs King+Bishop on different '
+        'colors',
         () {
           final controller = GameController.custom(Team.values, {
             Position.e5: King.white,
@@ -683,8 +684,8 @@ void main() {
 
           expect(controller.gameState, equals(GameState.inProgress));
 
-          // Simulate 50 full moves (100 half-moves) without pawn moves or captures
-          // Kings moving back and forth
+          // Simulate 50 full moves (100 half-moves) without pawn moves or
+          // captures Kings moving back and forth
           for (int i = 0; i < 50; i++) {
             // White king moves
             final whiteFrom = switch (i % 4) {
@@ -706,7 +707,8 @@ void main() {
             );
             controller.move(whiteMove);
 
-            // Check that we haven't reached the limit yet (except on the last iteration)
+            // Check that we haven't reached the limit yet (except on the last
+            // iteration)
             if (controller.halfmoveClock < 100) {
               expect(controller.gameState, equals(GameState.inProgress));
             }

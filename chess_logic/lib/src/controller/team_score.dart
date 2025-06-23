@@ -1,8 +1,9 @@
-import 'package:chess_logic/src/controller/capture.dart';
-import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/team/team.dart';
-import 'package:chess_logic/src/utility/extensions.dart';
 import 'package:equatable/equatable.dart';
+
+import '../square/piece.dart';
+import '../team/team.dart';
+import '../utility/extensions.dart';
+import 'capture.dart';
 
 /// Tracks the score and captured pieces for a specific team
 final class TeamScore with EquatableMixin {
@@ -10,12 +11,6 @@ final class TeamScore with EquatableMixin {
 
   final Team team;
   final List<Capture> _captures;
-
-  /// List of pieces captured by this team (immutable)
-  List<Piece> get capturedPieces => _captures.map((c) => c.piece).toList();
-
-  /// Total point value of captured pieces
-  int get score => _captures.totalValue;
 
   /// Add a captured piece and return a new TeamScore instance
   void capture(Capture capture) {
@@ -37,6 +32,13 @@ final class TeamScore with EquatableMixin {
     return 'team: ${team.name}, captures: ${_captures.length}, score: '
         '$score';
   }
+
+  /// Immutable list of pieces captured by this team
+  List<Piece> get capturedPieces =>
+      List.unmodifiable(_captures.map((c) => c.piece));
+
+  /// Total point value of captured pieces
+  int get score => _captures.totalValue;
 
   @override
   List<Object?> get props => [team, _captures, score];

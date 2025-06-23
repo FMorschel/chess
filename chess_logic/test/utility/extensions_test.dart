@@ -83,10 +83,10 @@ void main() {
 
       setUp(() {
         squares = [
-          EmptySquare(Position.a1),
-          OccupiedSquare(Position.b1, Rook.white),
-          EmptySquare(Position.c1),
-          OccupiedSquare(Position.d1, Queen.white),
+          const EmptySquare(Position.a1),
+          const OccupiedSquare(Position.b1, Rook.white),
+          const EmptySquare(Position.c1),
+          const OccupiedSquare(Position.d1, Queen.white),
         ];
       });
 
@@ -135,7 +135,7 @@ void main() {
 
       group('replace', () {
         test('should replace square at existing position', () {
-          final newSquare = OccupiedSquare(Position.a1, Pawn.black);
+          const newSquare = OccupiedSquare(Position.a1, Pawn.black);
 
           squares.replace(newSquare);
 
@@ -145,7 +145,7 @@ void main() {
         });
 
         test('should replace occupied square with empty square', () {
-          final newSquare = EmptySquare(Position.b1);
+          const newSquare = EmptySquare(Position.b1);
 
           squares.replace(newSquare);
 
@@ -154,7 +154,7 @@ void main() {
         });
 
         test('should replace empty square with occupied square', () {
-          final newSquare = OccupiedSquare(Position.c1, Knight.black);
+          const newSquare = OccupiedSquare(Position.c1, Knight.black);
 
           squares.replace(newSquare);
 
@@ -164,7 +164,7 @@ void main() {
         });
 
         test('should throw ArgumentError when position not found', () {
-          final newSquare = EmptySquare(Position.e1);
+          const newSquare = EmptySquare(Position.e1);
 
           expect(
             () => squares.replace(newSquare),
@@ -174,7 +174,7 @@ void main() {
 
         test('should maintain list length after replacement', () {
           final originalLength = squares.length;
-          final newSquare = OccupiedSquare(Position.a1, Bishop.white);
+          const newSquare = OccupiedSquare(Position.a1, Bishop.white);
 
           squares.replace(newSquare);
 
@@ -359,7 +359,7 @@ void main() {
             teamScores.map((score) => score.team),
             containsAll([Team.white, Team.black]),
           );
-          for (var score in teamScores) {
+          for (final score in teamScores) {
             expect(score.capturedPieces, isEmpty);
             expect(score.score, equals(0));
           }
@@ -506,7 +506,7 @@ void main() {
             containsAll([Team.white, Team.black]),
           );
 
-          for (var score in result) {
+          for (final score in result) {
             expect(score.capturedPieces, isEmpty);
             expect(score.score, equals(0));
           }
@@ -577,7 +577,8 @@ Capture _createCapture<P extends Piece, C extends Piece>({
   required P captor,
 }) {
   // Use different positions based on piece type to ensure valid moves
-  Position from, to;
+  Position from;
+  Position to;
 
   if (captor is Rook) {
     from = Position.a1;

@@ -1,23 +1,29 @@
-import 'package:chess_logic/src/controller/board_state.dart';
-import 'package:chess_logic/src/move/move.dart';
-import 'package:chess_logic/src/position/direction.dart';
-import 'package:chess_logic/src/position/position.dart';
-import 'package:chess_logic/src/position/rank.dart';
-import 'package:chess_logic/src/square/piece_symbol.dart';
-import 'package:chess_logic/src/square/piece_value.dart';
-import 'package:chess_logic/src/square/square.dart';
-import 'package:chess_logic/src/team/team.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-sealed class PromotionPiece with Piece {}
+import '../controller/board_state.dart';
+import '../move/move.dart';
+import '../position/direction.dart';
+import '../position/position.dart';
+import '../position/rank.dart';
+import '../team/team.dart';
+import 'piece_symbol.dart';
+import 'piece_value.dart';
+import 'square.dart';
 
+/// Base class for pieces that can be promoted to during pawn promotion.
+sealed class PromotionPiece extends Piece {}
+
+/// Base class for pieces that slide across the board (Bishop, Rook, Queen).
 sealed class SlidingPiece implements PromotionPiece {}
 
-final class Bishop with Piece implements SlidingPiece {
+/// Represents a bishop piece that moves diagonally.
+final class Bishop extends Piece implements SlidingPiece {
+  const Bishop(this.team);
+
   static const white = Bishop(Team.white);
   static const black = Bishop(Team.black);
-
-  const Bishop(this.team);
+  static const _directions = Direction.diagonal;
 
   @override
   final Team team;
@@ -28,17 +34,17 @@ final class Bishop with Piece implements SlidingPiece {
   @override
   int get value => PieceValue.bishop.points;
 
-  static const _directions = Direction.diagonal;
-
   @override
   List<Direction> get _validDirections => _directions;
 }
 
-final class King with Piece {
+/// Represents the king piece that moves one square in any direction.
+final class King extends Piece {
+  const King(this.team);
+
   static const white = King(Team.white);
   static const black = King(Team.black);
-
-  const King(this.team);
+  static const _directions = Direction.orthogonal;
 
   @override
   final Team team;
@@ -46,7 +52,8 @@ final class King with Piece {
   @override
   PieceSymbol get symbol => PieceSymbol.king;
 
-  static const _directions = Direction.orthogonal;
+  @override
+  int get value => PieceValue.king.points;
 
   @override
   List<Direction> get _validDirections => _directions;
@@ -108,16 +115,15 @@ final class King with Piece {
     }
     return list;
   }
-
-  @override
-  int get value => PieceValue.king.points;
 }
 
-final class Knight with Piece implements PromotionPiece {
+/// Represents a knight piece that moves in an L-shape pattern.
+final class Knight extends Piece implements PromotionPiece {
+  const Knight(this.team);
+
   static const white = Knight(Team.white);
   static const black = Knight(Team.black);
-
-  const Knight(this.team);
+  static const _directions = Direction.knight;
 
   @override
   final Team team;
@@ -125,23 +131,22 @@ final class Knight with Piece implements PromotionPiece {
   @override
   PieceSymbol get symbol => PieceSymbol.knight;
 
-  static const _directions = Direction.knight;
+  @override
+  int get value => PieceValue.knight.points;
 
   @override
   List<Direction> get _validDirections => _directions;
 
   @override
   bool get _shouldIteratePositions => false;
-
-  @override
-  int get value => PieceValue.knight.points;
 }
 
-final class Pawn with Piece {
+/// Represents a pawn piece with special movement and promotion rules.
+final class Pawn extends Piece {
+  const Pawn(this.team);
+
   static const white = Pawn(Team.white);
   static const black = Pawn(Team.black);
-
-  const Pawn(this.team);
 
   @override
   final Team team;
@@ -149,21 +154,24 @@ final class Pawn with Piece {
   @override
   PieceSymbol get symbol => PieceSymbol.pawn;
 
+  @override
+  int get value => PieceValue.pawn.points;
+
+  @override
+  List<Direction> get _validDirections => captureDirections;
+
+  @override
+  bool get _shouldIteratePositions => false;
+
   Direction get forward => switch (team) {
     Team.white => Direction.up,
     Team.black => Direction.down,
   };
 
-  @override
-  List<Direction> get _validDirections => captureDirections;
-
   List<Direction> get captureDirections => switch (team) {
     Team.white => [Direction.upLeft, Direction.upRight],
     Team.black => [Direction.downLeft, Direction.downRight],
   };
-
-  @override
-  bool get _shouldIteratePositions => false;
 
   Rank get initialRank => switch (team) {
     Team.white => Rank.two,
@@ -183,7 +191,7 @@ final class Pawn with Piece {
       final nextSquare = state[nextPosition];
       if (nextSquare is EmptySquare) {
         if (lastMove case PawnInitialMove(
-          :var to,
+          :final to,
         ) when to == Position(nextPosition.file, position.rank)) {
           continue; // Skip if the last move was a pawn initial move
         }
@@ -203,54 +211,62 @@ final class Pawn with Piece {
         }
       }
     }
-
     return list;
   }
-
-  @override
-  int get value => PieceValue.pawn.points;
 }
 
-abstract mixin class Piece {
+/// Base mixin class for all chess pieces.
+abstract class Piece with EquatableMixin {
+  const Piece();
+
   factory Piece.import(String string) {
-    final match = _importRegex.firstMatch(string);
-    if (match == null) {
-      throw ArgumentError('Invalid piece import format: "$string"');
+    if (string.isEmpty) {
+      throw ArgumentError.value(
+        string,
+        'string',
+        'Piece import string cannot be empty',
+      );
     }
 
-    final team = Team(match.group(1)!);
-    final symbol = PieceSymbol.fromLexeme(match.group(2)!);
+    final match = _importRegex.firstMatch(string);
+    if (match == null) {
+      throw ArgumentError.value(
+        string,
+        'string',
+        'Invalid piece import format: "$string". Expected format: "Team - '
+            'PieceSymbol" (e.g., "White - K")',
+      );
+    }
 
-    return Piece.fromSymbol(symbol, team);
+    final teamName = match.group(1)!;
+    final symbolLexeme = match.group(2)!;
+
+    try {
+      final team = Team(teamName);
+      final symbol = PieceSymbol.fromLexeme(symbolLexeme);
+      return Piece.fromSymbol(symbol, team);
+    } catch (e) {
+      throw ArgumentError.value(
+        string,
+        'string',
+        'Failed to create piece from "$string": $e',
+      );
+    }
   }
 
   factory Piece.fromSymbol(PieceSymbol symbol, Team team) {
     return switch (symbol) {
-      PieceSymbol.king => King(team),
-      PieceSymbol.queen => Queen(team),
-      PieceSymbol.rook => Rook(team),
-      PieceSymbol.bishop => Bishop(team),
-      PieceSymbol.knight => Knight(team),
-      PieceSymbol.pawn => Pawn(team),
+      PieceSymbol.king => team.king,
+      PieceSymbol.queen => team.queen,
+      PieceSymbol.rook => team.rook,
+      PieceSymbol.bishop => team.bishop,
+      PieceSymbol.knight => team.knight,
+      PieceSymbol.pawn => team.pawn,
     };
   }
 
   static final _importRegex = RegExp('^(White|Black) - ([KQRBNP])\$');
-
-  Team get team;
-
-  PieceSymbol get symbol;
-
-  /// {@macro piece_value}
-  int get value;
-
-  String get export => '${team.name} - ${symbol.lexeme}';
-
   String toAlgebraic() => this is Pawn ? '' : symbol.lexeme;
-
-  List<Direction> get _validDirections;
-
-  bool get _shouldIteratePositions => true;
 
   @mustCallSuper
   List<Position> validPositions(BoardState state, Position position) {
@@ -260,7 +276,7 @@ abstract mixin class Piece {
       if (current == null) continue;
       do {
         final square = state[current!];
-        if (square case OccupiedSquare(:var piece)) {
+        if (square case OccupiedSquare(:final piece)) {
           if (piece.team != team) {
             positions.add(current); // Allow capture
           }
@@ -273,17 +289,35 @@ abstract mixin class Piece {
     return positions;
   }
 
-  Square operator >(Position position) => Square(position, this);
-
   @override
   String toString() => symbol.name;
+
+  Square operator >(Position position) => Square(position, this);
+
+  Team get team;
+
+  PieceSymbol get symbol;
+
+  /// {@macro piece_value}
+  int get value;
+
+  String get export => '${team.name} - ${symbol.lexeme}';
+
+  List<Direction> get _validDirections;
+
+  bool get _shouldIteratePositions => true;
+
+  @override
+  List<Object?> get props => [team, symbol];
 }
 
-final class Queen with Piece implements SlidingPiece {
+/// Represents a queen piece that combines rook and bishop movement.
+final class Queen extends Piece implements SlidingPiece {
+  const Queen(this.team);
+
   static const white = Queen(Team.white);
   static const black = Queen(Team.black);
-
-  const Queen(this.team);
+  static const _directions = Direction.orthogonal;
 
   @override
   final Team team;
@@ -291,20 +325,20 @@ final class Queen with Piece implements SlidingPiece {
   @override
   PieceSymbol get symbol => PieceSymbol.queen;
 
-  static const _directions = Direction.orthogonal;
+  @override
+  int get value => PieceValue.queen.points;
 
   @override
   List<Direction> get _validDirections => _directions;
-
-  @override
-  int get value => PieceValue.queen.points;
 }
 
-final class Rook with Piece implements SlidingPiece {
+/// Represents a rook piece that moves horizontally and vertically.
+final class Rook extends Piece implements SlidingPiece {
+  const Rook(this.team);
+
   static const white = Rook(Team.white);
   static const black = Rook(Team.black);
-
-  const Rook(this.team);
+  static const _directions = Direction.cross;
 
   @override
   final Team team;
@@ -312,11 +346,9 @@ final class Rook with Piece implements SlidingPiece {
   @override
   PieceSymbol get symbol => PieceSymbol.rook;
 
-  static const _directions = Direction.cross;
+  @override
+  int get value => PieceValue.rook.points;
 
   @override
   List<Direction> get _validDirections => _directions;
-
-  @override
-  int get value => PieceValue.rook.points;
 }

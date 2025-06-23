@@ -1,15 +1,16 @@
-import 'package:chess_logic/src/controller/board_state.dart';
-import 'package:chess_logic/src/controller/capture.dart';
-import 'package:chess_logic/src/controller/game_state.dart';
-import 'package:chess_logic/src/controller/movement_manager.dart';
-import 'package:chess_logic/src/controller/team_score.dart';
-import 'package:chess_logic/src/move/check.dart';
-import 'package:chess_logic/src/move/move.dart';
-import 'package:chess_logic/src/position/position.dart';
-import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/team/team.dart';
-import 'package:chess_logic/src/utility/extensions.dart';
 import 'package:collection/collection.dart';
+
+import '../move/check.dart';
+import '../move/move.dart';
+import '../position/position.dart';
+import '../square/piece.dart';
+import '../team/team.dart';
+import '../utility/extensions.dart';
+import 'board_state.dart';
+import 'capture.dart';
+import 'game_state.dart';
+import 'movement_manager.dart';
+import 'team_score.dart';
 
 /// Main game controller that orchestrates chess game logic, moves, and scoring.
 class GameController {
@@ -69,14 +70,14 @@ class GameController {
     final customPieces = <Position, Piece>{};
 
     if (data.containsKey('teams')) {
-      for (var MapEntry(value: name) in data['teams']!.entries) {
+      for (final MapEntry(value: name) in data['teams']!.entries) {
         final team = Team(name);
         teams.add(team);
       }
     }
 
     if (data.containsKey('custom')) {
-      for (var entry in data['custom']!.entries) {
+      for (final entry in data['custom']!.entries) {
         customPieces[Position.fromAlgebraic(entry.key)] = Piece.import(
           entry.value,
         );
@@ -86,7 +87,7 @@ class GameController {
     final controller = GameController.custom(teams, customPieces);
 
     if (data.containsKey('history')) {
-      for (var MapEntry(key: teamName, value: algebraic)
+      for (final MapEntry(key: teamName, value: algebraic)
           in data['history']!.entries) {
         final currentTeam = Team(teamName);
         final move = Move.fromAlgebraic(
@@ -128,7 +129,6 @@ class GameController {
 
     return controller;
   }
-  
 
   final Map<Position, Piece>? _custom;
   final List<TeamScore> _scores;
@@ -142,18 +142,21 @@ class GameController {
   int _halfmoveClock;
   GameState _gameState;
 
-  /// The current halfmove clock count - number of half-moves since last pawn
-  /// move or capture
-  int get halfmoveClock => _halfmoveClock;
-  List<Team> get teams => List.unmodifiable(_teams);
-  List<TeamScore> get scores => List.unmodifiable(_scores);
-  List<Move> get history => _movementManager.moveHistory;
-  BoardState get state => _movementManager.state;
-  Team get currentTeam => _teams[_currentTeamIndex];
-  List<Move> get nextPossibleMoves => movesFor(team: currentTeam);
-  GameState get gameState => _gameState;
-  Team? get winner =>
-      _gameState == GameState.teamWin ? history.last.moving.team : null;
+  /// Calculate the halfmove clock based on the move history.
+  static int _calculateHalfmoveClock(List<Move> moveHistory) {
+    if (moveHistory.isEmpty) return 0;
+    var halfmoveClock = 0;
+    var lastMoveIndex = moveHistory.length - 1;
+    do {
+      final lastMove = moveHistory[lastMoveIndex];
+      if (lastMove is CaptureMove || lastMove.moving is Pawn) {
+        return halfmoveClock;
+      }
+      halfmoveClock++;
+      lastMoveIndex--;
+    } while (lastMoveIndex >= 0 && halfmoveClock < 100);
+    return halfmoveClock;
+  }
 
   List<Move> movesFor({Team? team, Position? position}) => state.occupiedSquares
       .where(
@@ -161,7 +164,7 @@ class GameController {
             (team == null || square.piece.team == team) &&
             (position == null || square.position == position),
       )
-      .expand((square) => _movementManager.possibleMovesWithCheck(square))
+      .expand(_movementManager.possibleMovesWithCheck)
       .toList();
 
   void move(Move move) {
@@ -169,12 +172,35 @@ class GameController {
       throw StateError('Cannot move pieces when the game is not in progress');
     }
     if (move is CaptureMove) {
-      var teamScore = _scores.firstWhere((score) => score.team == move.team);
+      final teamScore = _scores.firstWhere((score) => score.team == move.team);
       teamScore.capture(Capture(move));
     }
     move = _movementManager.move(move);
     _updateHalfmoveClock(move);
     _updateStateAfterMove(move);
+  }
+
+  void pause() {
+    if (_gameState case GameState.inProgress || GameState.paused) {
+      throw StateError('Cannot pause when the game is not in progress');
+    }
+    _gameState = GameState.paused;
+  }
+
+  void draw() {
+    if (_gameState == GameState.inProgress) {
+      _gameState = GameState.draw;
+      return;
+    }
+    throw StateError('Cannot draw when the game is not in progress');
+  }
+
+  void resume() {
+    if (_gameState case GameState.paused || GameState.inProgress) {
+      _gameState = GameState.inProgress;
+      return;
+    }
+    throw StateError('Cannot resume when the game is not paused');
   }
 
   /// Updates the halfmove clock based on the move
@@ -209,29 +235,6 @@ class GameController {
     }
   }
 
-  void pause() {
-    if (_gameState case GameState.inProgress || GameState.paused) {
-      throw StateError('Cannot pause when the game is not in progress');
-    }
-    _gameState = GameState.paused;
-  }
-
-  void draw() {
-    if (_gameState == GameState.inProgress) {
-      _gameState = GameState.draw;
-      return;
-    }
-    throw StateError('Cannot draw when the game is not in progress');
-  }
-
-  void resume() {
-    if (_gameState case GameState.paused || GameState.inProgress) {
-      _gameState = GameState.inProgress;
-      return;
-    }
-    throw StateError('Cannot resume when the game is not paused');
-  }
-
   int _nextTeam() =>
       _currentTeamIndex = (_currentTeamIndex + 1) % _teams.length;
 
@@ -239,23 +242,63 @@ class GameController {
   int operator [](Team team) =>
       scores.firstWhere((score) => score.team == team).score;
 
+  /// The current halfmove clock count - number of half-moves since last pawn
+  /// move or capture
+  int get halfmoveClock => _halfmoveClock;
+  List<Team> get teams => List.unmodifiable(_teams);
+  List<TeamScore> get scores => List.unmodifiable(_scores);
+  List<Move> get history => _movementManager.moveHistory;
+  BoardState get state => _movementManager.state;
+  Team get currentTeam => _teams[_currentTeamIndex];
+  List<Move> get nextPossibleMoves => movesFor(team: currentTeam);
+  GameState get gameState => _gameState;
+  bool get _stalemate => movesFor(team: currentTeam).isEmpty;
+
+  Team? get winner =>
+      _gameState == GameState.teamWin ? history.last.moving.team : null;
+
   Map<String, Map<String, String>> get export => {
-    if (_custom case Map(:var entries) when entries.isNotEmpty)
+    if (_custom case Map(:final entries) when entries.isNotEmpty)
       'custom': {
-        for (var MapEntry(key: position, value: piece) in entries)
+        for (final MapEntry(key: position, value: piece) in entries)
           position.toAlgebraic(): piece.export,
       },
     if (nextPossibleMoves.isNotEmpty)
       'history': {
-        for (var move in nextPossibleMoves) move.team.name: move.toAlgebraic(),
+        for (final move in nextPossibleMoves)
+          move.team.name: move.toAlgebraic(),
       },
     if (teams.isNotEmpty)
-      'teams': {for (var team in teams) '${team.index}': team.name},
+      'teams': {for (final team in teams) '${team.index}': team.name},
   };
 
-  bool get _stalemate => movesFor(team: currentTeam).isEmpty;
-
-  /// Checks if the current board position has insufficient material for checkmate
+  /// Checks if the current board position has insufficient material for
+  /// checkmate
+  ///
+  /// According to FIDE rules, the game is drawn if neither side has sufficient
+  /// material to deliver checkmate. This includes:
+  ///
+  /// 1. King vs King
+  /// 2. King vs King + Bishop/Knight (lone minor piece)
+  /// 3. King + Bishop vs King + Bishop (same color squares)
+  ///
+  /// Examples:
+  /// ```dart
+  /// // King vs King - insufficient material
+  /// final controller = GameController.custom([Team.white, Team.black], {
+  ///   Position.e1: King.white,
+  ///   Position.e8: King.black,
+  /// });
+  /// assert(controller._insufficientMaterial == true);
+  ///
+  /// // King + Queen vs King - sufficient material
+  /// final controller2 = GameController.custom([Team.white, Team.black], {
+  ///   Position.e1: King.white,
+  ///   Position.d1: Queen.white,
+  ///   Position.e8: King.black,
+  /// });
+  /// assert(controller2._insufficientMaterial == false);
+  /// ```
   bool get _insufficientMaterial {
     final pieces = state.occupiedSquares.map((square) => square.piece).toList();
 
@@ -307,21 +350,5 @@ class GameController {
     }
 
     return false;
-  }
-
-  /// Calculate the halfmove clock based on the move history.
-  static int _calculateHalfmoveClock(List<Move> moveHistory) {
-    if (moveHistory.isEmpty) return 0;
-    var halfmoveClock = 0;
-    var lastMoveIndex = moveHistory.length - 1;
-    do {
-      var lastMove = moveHistory[lastMoveIndex];
-      if (lastMove is CaptureMove || lastMove.moving is Pawn) {
-        return halfmoveClock;
-      }
-      halfmoveClock++;
-      lastMoveIndex--;
-    } while (lastMoveIndex >= 0 && halfmoveClock < 100);
-    return halfmoveClock;
   }
 }

@@ -1,7 +1,6 @@
 import 'package:chess_logic/src/controller/board_state.dart';
 import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/file.dart';
-import 'package:chess_logic/src/utility/extensions.dart';
 import 'package:chess_logic/src/position/position.dart';
 import 'package:chess_logic/src/position/rank.dart';
 import 'package:chess_logic/src/square/piece.dart';
@@ -22,14 +21,14 @@ void main() {
         final board = BoardState();
 
         // Position instances
-        final e1 = Position.e1;
-        final d1 = Position.d1;
-        final a1 = Position.a1;
-        final h1 = Position.h1;
-        final b1 = Position.b1;
-        final g1 = Position.g1;
-        final c1 = Position.c1;
-        final f1 = Position.f1;
+        const e1 = Position.e1;
+        const d1 = Position.d1;
+        const a1 = Position.a1;
+        const h1 = Position.h1;
+        const b1 = Position.b1;
+        const g1 = Position.g1;
+        const c1 = Position.c1;
+        const f1 = Position.f1;
 
         // Test white pieces
         expect(board[e1].piece, isA<King>());
@@ -53,14 +52,14 @@ void main() {
           expect(board[position].piece, isA<Pawn>());
           expect(board[position].piece!.team, equals(Team.white));
         } // Test black pieces
-        final e8 = Position.e8;
-        final d8 = Position.d8;
-        final a8 = Position.a8;
-        final h8 = Position.h8;
-        final b8 = Position.b8;
-        final g8 = Position.g8;
-        final c8 = Position.c8;
-        final f8 = Position.f8;
+        const e8 = Position.e8;
+        const d8 = Position.d8;
+        const a8 = Position.a8;
+        const h8 = Position.h8;
+        const b8 = Position.b8;
+        const g8 = Position.g8;
+        const c8 = Position.c8;
+        const f8 = Position.f8;
 
         expect(board[e8].piece, isA<King>());
         expect(board[e8].piece!.team, equals(Team.black));
@@ -155,7 +154,7 @@ void main() {
     });
     group('operator []', () {
       test('should return square at given position', () {
-        final e4 = Position.e4;
+        const e4 = Position.e4;
         final square = boardState[e4];
 
         expect(square.position, equals(e4));
@@ -175,8 +174,8 @@ void main() {
 
     group('actOn', () {
       test('should move piece from one square to another', () {
-        final from = Position.e2;
-        final to = Position.e3;
+        const from = Position.e2;
+        const to = Position.e3;
         final move = PawnMove(from: from, to: to, moving: Pawn.white);
 
         boardState.move(move);
@@ -187,15 +186,15 @@ void main() {
       });
       test('should handle capture moves', () {
         // Position instances
-        final e4 = Position.e4;
-        final d5 = Position.d5;
+        const e4 = Position.e4;
+        const d5 = Position.d5;
 
         // Setup: place a black pawn at d5 and white pawn at e4
-        final blackPawn = Pawn.black;
-        final whitePawn = Pawn.white;
+        const blackPawn = Pawn.black;
+        const whitePawn = Pawn.white;
 
-        boardState.squares.replace(OccupiedSquare(d5, blackPawn));
-        boardState.squares.replace(OccupiedSquare(e4, whitePawn));
+        boardState.replace(const OccupiedSquare(d5, blackPawn));
+        boardState.replace(const OccupiedSquare(e4, whitePawn));
 
         final move = PawnCaptureMove(
           from: e4,
@@ -211,16 +210,16 @@ void main() {
       });
       test('should handle en passant captures', () {
         // Position instances
-        final e5 = Position.e5;
-        final d5 = Position.d5;
-        final d6 = Position.d6;
+        const e5 = Position.e5;
+        const d5 = Position.d5;
+        const d6 = Position.d6;
 
         // Setup: white pawn at e5, black pawn at d5
-        final whitePawn = Pawn.white;
-        final blackPawn = Pawn.black;
+        const whitePawn = Pawn.white;
+        const blackPawn = Pawn.black;
 
-        boardState.squares.replace(OccupiedSquare(e5, whitePawn));
-        boardState.squares.replace(OccupiedSquare(d5, blackPawn));
+        boardState.replace(const OccupiedSquare(e5, whitePawn));
+        boardState.replace(const OccupiedSquare(d5, blackPawn));
 
         final move = EnPassantMove(
           from: e5,
@@ -237,8 +236,8 @@ void main() {
       });
       test('should throw ArgumentError when piece does not match', () {
         // Position instances
-        final e4 = Position.e4;
-        final e5 = Position.e5;
+        const e4 = Position.e4;
+        const e5 = Position.e5;
 
         final move = PawnMove(
           from: e4, // Empty square
@@ -259,8 +258,8 @@ void main() {
       });
       test('should throw ArgumentError when wrong piece type', () {
         // Position instances
-        final e2 = Position.e2;
-        final f4 = Position.f4;
+        const e2 = Position.e2;
+        const f4 = Position.f4;
 
         final move = KnightMove(
           from: e2, // Has pawn, not knight
@@ -280,12 +279,12 @@ void main() {
         );
       });
       test('should handle multiple moves in sequence', () {
-        final e2 = Position.e2;
-        final e4 = Position.e4;
-        final d7 = Position.d7;
-        final d5 = Position.d5;
-        final g1 = Position.g1;
-        final f3 = Position.f3;
+        const e2 = Position.e2;
+        const e4 = Position.e4;
+        const d7 = Position.d7;
+        const d5 = Position.d5;
+        const g1 = Position.g1;
+        const f3 = Position.f3;
 
         final moves = <Move>[
           PawnInitialMove(from: e2, to: e4, moving: Pawn.white),
@@ -304,52 +303,50 @@ void main() {
         expect(boardState[g1].isEmpty, isTrue);
         expect(boardState[f3].piece, isA<Knight>());
       });
-      test(
-        'should throw ArgumentError when moving to occupied square with non-capture move',
-        () {
-          // Setup: place pieces on board
-          final e4 = Position.e4;
-          final e5 = Position.e5;
+      test('should throw ArgumentError when moving to occupied square with '
+          'non-capture move', () {
+        // Setup: place pieces on board
+        const e4 = Position.e4;
+        const e5 = Position.e5;
 
-          final whitePawn = Pawn.white;
-          final blackPawn = Pawn.black;
+        const whitePawn = Pawn.white;
+        const blackPawn = Pawn.black;
 
-          // Place white pawn at e4 and black pawn at e5
-          boardState.squares.replace(OccupiedSquare(e4, whitePawn));
-          boardState.squares.replace(OccupiedSquare(e5, blackPawn));
+        // Place white pawn at e4 and black pawn at e5
+        boardState.replace(const OccupiedSquare(e4, whitePawn));
+        boardState.replace(const OccupiedSquare(e5, blackPawn));
 
-          // Try to move white pawn from e4 to e5 (occupied by black pawn)
-          // using a regular PawnMove (not PawnCaptureMove)
-          final invalidMove = PawnMove(from: e4, to: e5, moving: whitePawn);
+        // Try to move white pawn from e4 to e5 (occupied by black pawn)
+        // using a regular PawnMove (not PawnCaptureMove)
+        final invalidMove = PawnMove(from: e4, to: e5, moving: whitePawn);
 
-          expect(
-            () => boardState.move(invalidMove),
-            throwsA(
-              isA<ArgumentError>().having(
-                (e) => e.message,
-                'message',
-                contains('Cannot move to an occupied square: e5'),
-              ),
+        expect(
+          () => boardState.move(invalidMove),
+          throwsA(
+            isA<ArgumentError>().having(
+              (e) => e.message,
+              'message',
+              contains('Cannot move to an occupied square: e5'),
             ),
-          );
+          ),
+        );
 
-          // Verify board state is unchanged
-          expect(boardState[e4].piece, equals(whitePawn));
-          expect(boardState[e5].piece, equals(blackPawn));
-        },
-      );
+        // Verify board state is unchanged
+        expect(boardState[e4].piece, equals(whitePawn));
+        expect(boardState[e5].piece, equals(blackPawn));
+      });
 
       test('should allow moving to occupied square with capture move', () {
         // Setup: place pieces on board
-        final e4 = Position.e4;
-        final d5 = Position.d5;
+        const e4 = Position.e4;
+        const d5 = Position.d5;
 
-        final whitePawn = Pawn.white;
-        final blackPawn = Pawn.black;
+        const whitePawn = Pawn.white;
+        const blackPawn = Pawn.black;
 
         // Place white pawn at e4 and black pawn at d5
-        boardState.squares.replace(OccupiedSquare(e4, whitePawn));
-        boardState.squares.replace(OccupiedSquare(d5, blackPawn));
+        boardState.replace(const OccupiedSquare(e4, whitePawn));
+        boardState.replace(const OccupiedSquare(d5, blackPawn));
 
         // Move white pawn from e4 to d5 (capturing black pawn)
         // using PawnCaptureMove - this should work
@@ -371,9 +368,9 @@ void main() {
 
     group('undo', () {
       test('should reverse a regular move', () {
-        final from = Position.e2;
-        final to = Position.e4;
-        final pawn = Pawn.white;
+        const from = Position.e2;
+        const to = Position.e4;
+        const pawn = Pawn.white;
         final move = PawnInitialMove(from: from, to: to, moving: pawn);
 
         // Apply move
@@ -388,15 +385,15 @@ void main() {
       });
       test('should reverse a capture move', () {
         // Position instances
-        final e4 = Position.e4;
-        final d5 = Position.d5;
+        const e4 = Position.e4;
+        const d5 = Position.d5;
 
         // Setup: place pieces
-        final whitePawn = Pawn.white;
-        final blackPawn = Pawn.black;
+        const whitePawn = Pawn.white;
+        const blackPawn = Pawn.black;
 
-        boardState.squares.replace(OccupiedSquare(e4, whitePawn));
-        boardState.squares.replace(OccupiedSquare(d5, blackPawn));
+        boardState.replace(const OccupiedSquare(e4, whitePawn));
+        boardState.replace(const OccupiedSquare(d5, blackPawn));
 
         final move = PawnCaptureMove(
           from: e4,
@@ -417,16 +414,16 @@ void main() {
       });
       test('should reverse an en passant move', () {
         // Position instances
-        final e5 = Position.e5;
-        final d5 = Position.d5;
-        final d6 = Position.d6;
+        const e5 = Position.e5;
+        const d5 = Position.d5;
+        const d6 = Position.d6;
 
         // Setup: place pieces
-        final whitePawn = Pawn.white;
-        final blackPawn = Pawn.black;
+        const whitePawn = Pawn.white;
+        const blackPawn = Pawn.black;
 
-        boardState.squares.replace(OccupiedSquare(e5, whitePawn));
-        boardState.squares.replace(OccupiedSquare(d5, blackPawn));
+        boardState.replace(const OccupiedSquare(e5, whitePawn));
+        boardState.replace(const OccupiedSquare(d5, blackPawn));
 
         final move = EnPassantMove(
           from: e5,
@@ -449,8 +446,8 @@ void main() {
       });
       test('should throw ArgumentError when piece does not match', () {
         // Position instances
-        final e2 = Position.e2;
-        final e4 = Position.e4;
+        const e2 = Position.e2;
+        const e4 = Position.e4;
 
         // Setup: make a move first
         final move = PawnInitialMove(from: e2, to: e4, moving: Pawn.white);
@@ -475,10 +472,10 @@ void main() {
         );
       });
       test('should handle multiple moves and undos', () {
-        final e2 = Position.e2;
-        final e4 = Position.e4;
-        final d7 = Position.d7;
-        final d5 = Position.d5;
+        const e2 = Position.e2;
+        const e4 = Position.e4;
+        const d7 = Position.d7;
+        const d5 = Position.d5;
 
         final moves = [
           PawnInitialMove(from: e2, to: e4, moving: Pawn.white),
@@ -510,11 +507,11 @@ void main() {
     });
     group('reset', () {
       test('should reset board to starting position', () {
-        final e2 = Position.e2;
-        final e4 = Position.e4;
-        final g1 = Position.g1;
-        final f3 = Position.f3;
-        final e1 = Position.e1;
+        const e2 = Position.e2;
+        const e4 = Position.e4;
+        const g1 = Position.g1;
+        const f3 = Position.f3;
+        const e1 = Position.e1;
 
         // Make some moves to change the board
         boardState.move(PawnInitialMove(from: e2, to: e4, moving: Pawn.white));
@@ -533,8 +530,8 @@ void main() {
         expect(boardState[f3].isEmpty, isTrue);
       });
       test('should reset empty board to starting position', () {
-        final e1 = Position.e1;
-        final e8 = Position.e8;
+        const e1 = Position.e1;
+        const e8 = Position.e8;
 
         final emptyBoard = BoardState.empty();
 
@@ -616,10 +613,10 @@ void main() {
       });
 
       test('should maintain board consistency during complex sequence', () {
-        final d2 = Position.d2;
-        final d4 = Position.d4;
-        final e5 = Position.e5;
-        final e7 = Position.e7;
+        const d2 = Position.d2;
+        const d4 = Position.d4;
+        const e5 = Position.e5;
+        const e7 = Position.e7;
 
         final moves = [
           PawnInitialMove(from: d2, to: d4, moving: Pawn.white),
@@ -658,14 +655,14 @@ void main() {
 
       test('should handle castling moves', () {
         // Position instances
-        final e1 = Position.e1;
-        final f1 = Position.f1;
-        final g1 = Position.g1;
-        final h1 = Position.h1;
+        const e1 = Position.e1;
+        const f1 = Position.f1;
+        const g1 = Position.g1;
+        const h1 = Position.h1;
 
         // Clear pieces between king and rook
-        boardState.squares.replace(EmptySquare(f1));
-        boardState.squares.replace(EmptySquare(g1));
+        boardState.replace(const EmptySquare(f1));
+        boardState.replace(const EmptySquare(g1));
 
         final castlingMove = KingMove.kingsideCastling(
           king: King.white,
@@ -686,13 +683,13 @@ void main() {
     group('edge cases', () {
       test('should handle moves on empty board', () {
         // Position instances
-        final e4 = Position.e4;
-        final e5 = Position.e5;
+        const e4 = Position.e4;
+        const e5 = Position.e5;
 
         final emptyBoard = BoardState.empty();
 
         // Place a piece manually
-        emptyBoard.squares.replace(OccupiedSquare(e4, Pawn.white));
+        emptyBoard.replace(const OccupiedSquare(e4, Pawn.white));
 
         final move = PawnMove(from: e4, to: e5, moving: Pawn.white);
 
@@ -704,13 +701,13 @@ void main() {
 
       test('should handle promotion moves', () {
         // Position instances
-        final e7 = Position.e7;
-        final e8 = Position.e8;
+        const e7 = Position.e7;
+        const e8 = Position.e8;
 
         // Setup: white pawn at e7
-        boardState.squares.replace(EmptySquare(e8));
-        boardState.squares.replace(EmptySquare(e7));
-        boardState.squares.replace(OccupiedSquare(e7, Pawn.white));
+        boardState.replace(const EmptySquare(e8));
+        boardState.replace(const EmptySquare(e7));
+        boardState.replace(const OccupiedSquare(e7, Pawn.white));
 
         final move = PromotionMove(
           from: e7,
@@ -728,8 +725,8 @@ void main() {
 
       test('should handle board with single piece', () {
         // Position instances
-        final a1 = Position.a1;
-        final a2 = Position.a2;
+        const a1 = Position.a1;
+        const a2 = Position.a2;
 
         final singlePieceBoard = BoardState.custom({a1: King.white});
 
@@ -744,19 +741,13 @@ void main() {
 
     group('board state preservation', () {
       test('should preserve other pieces when making a move', () {
-        final e2 = Position.e2;
-        final e4 = Position.e4;
+        const e2 = Position.e2;
+        const e4 = Position.e4;
         final originalPieces = <Position, Piece>{};
 
         // Record all original pieces
-        for (final file in File.values) {
-          for (final rank in Rank.values) {
-            final position = Position(file, rank);
-            final piece = boardState[position].piece;
-            if (piece != null) {
-              originalPieces[position] = piece;
-            }
-          }
+        for (final square in boardState.occupiedSquares) {
+          originalPieces[square.position] = square.piece;
         }
 
         // Make a simple pawn move

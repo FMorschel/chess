@@ -51,7 +51,8 @@ void main() {
     });
 
     test(
-      'should return correct rank for vertical, diagonal and L-shape directions',
+      'should return correct rank for vertical, diagonal and L-shape '
+      'directions',
       () {
         // Upward (towards Rank.eight)
         expect(Rank.one.next(Direction.up), Rank.two);

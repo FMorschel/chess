@@ -1,9 +1,9 @@
-import 'package:chess_logic/src/controller/board_state.dart';
-import 'package:chess_logic/src/move/move.dart';
-import 'package:chess_logic/src/position/position.dart';
-import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/square/square.dart';
-import 'package:chess_logic/src/team/team.dart';
+import '../move/move.dart';
+import '../position/position.dart';
+import '../square/piece.dart';
+import '../square/square.dart';
+import '../team/team.dart';
+import 'board_state.dart';
 
 /// Service for detecting threats against specific pieces and positions.
 ///

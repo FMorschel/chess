@@ -6,7 +6,6 @@ import 'package:chess_logic/src/square/piece_symbol.dart';
 import 'package:chess_logic/src/square/piece_value.dart';
 import 'package:chess_logic/src/square/square.dart';
 import 'package:chess_logic/src/team/team.dart';
-import 'package:chess_logic/src/utility/extensions.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -462,7 +461,7 @@ void main() {
       test('should not be equal to different types', () {
         const piece = Queen.black;
 
-        expect(piece, isNot(equals("queen")));
+        expect(piece, isNot(equals('queen')));
         expect(piece, isNot(equals(42)));
         expect(piece, isNot(equals([])));
       });
@@ -560,15 +559,17 @@ void main() {
 
         final hashCodes = pieces.map((p) => p.hashCode).toSet();
 
-        // While not guaranteed, different pieces should generally have different hash codes
+        // While not guaranteed, different pieces should generally have 
+        //different hash codes
         expect(hashCodes.length, greaterThan(1));
       });
     });
 
     group('Set and Map behavior', () {
       test('should work correctly in Sets', () {
-        final piece1 = Bishop.white;
-        final piece2 = Bishop.white;
+        const piece1 = Bishop.white;
+        // ignore: prefer_const_constructors, testing for equality
+        final piece2 = Bishop(Team.white);
         const piece3 = Bishop.black;
 
         final set = {piece1, piece2, piece3};
@@ -606,15 +607,15 @@ void main() {
         const whiteKing = King.white;
 
         // Define position instances once
-        final d4 = Position.d4; // Center position
-        final c5 = Position.c5; // up-left
-        final d5 = Position.d5; // up
-        final e5 = Position.e5; // up-right
-        final c4 = Position.c4; // left
-        final e4 = Position.e4; // right
-        final c3 = Position.c3; // down-left
-        final d3 = Position.d3; // down
-        final e3 = Position.e3; // down-right
+        const d4 = Position.d4; // Center position
+        const c5 = Position.c5; // up-left
+        const d5 = Position.d5; // up
+        const e5 = Position.e5; // up-right
+        const c4 = Position.c4; // left
+        const e4 = Position.e4; // right
+        const c3 = Position.c3; // down-left
+        const d3 = Position.d3; // down
+        const e3 = Position.e3; // down-right
 
         final validPositions = whiteKing.validPositions(boardState, d4);
 
@@ -633,15 +634,15 @@ void main() {
         const whiteKnight = Knight.white;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final c5 = Position.c5;
-        final e4 = Position.e4;
-        final d5 = Position.d5;
-        final e5 = Position.e5;
+        const d4 = Position.d4;
+        const c5 = Position.c5;
+        const e4 = Position.e4;
+        const d5 = Position.d5;
+        const e5 = Position.e5;
 
         // Place same team pieces in some adjacent squares
-        boardState.squares.replace(OccupiedSquare(c5, whitePawn));
-        boardState.squares.replace(OccupiedSquare(e4, whiteKnight));
+        boardState.replace(const OccupiedSquare(c5, whitePawn));
+        boardState.replace(const OccupiedSquare(e4, whiteKnight));
 
         final validPositions = whiteKing.validPositions(boardState, d4);
 
@@ -658,15 +659,15 @@ void main() {
         const blackKnight = Knight.black;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final c5 = Position.c5;
-        final e4 = Position.e4;
-        final d5 = Position.d5;
-        final e5 = Position.e5;
+        const d4 = Position.d4;
+        const c5 = Position.c5;
+        const e4 = Position.e4;
+        const d5 = Position.d5;
+        const e5 = Position.e5;
 
         // Place enemy pieces in some adjacent squares
-        boardState.squares.replace(c5 < blackPawn);
-        boardState.squares.replace(e4 < blackKnight);
+        boardState.replace(c5 < blackPawn);
+        boardState.replace(e4 < blackKnight);
 
         final validPositions = whiteKing.validPositions(boardState, d4);
 
@@ -681,10 +682,10 @@ void main() {
         const whiteKing = King.white;
 
         // Define position instances once
-        final a1 = Position.a1; // Corner position
-        final a2 = Position.a2; // up
-        final b1 = Position.b1; // right
-        final b2 = Position.b2; // up-right
+        const a1 = Position.a1; // Corner position
+        const a2 = Position.a2; // up
+        const b1 = Position.b1; // right
+        const b2 = Position.b2; // up-right
 
         final validPositions = whiteKing.validPositions(boardState, a1);
 
@@ -702,13 +703,13 @@ void main() {
         const whiteQueen = Queen.white;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final d8 = Position.d8; // vertical up
-        final d1 = Position.d1; // vertical down
-        final a4 = Position.a4; // horizontal left
-        final h4 = Position.h4; // horizontal right
-        final a1 = Position.a1; // diagonal down-left
-        final h8 = Position.h8; // diagonal up-right
+        const d4 = Position.d4;
+        const d8 = Position.d8; // vertical up
+        const d1 = Position.d1; // vertical down
+        const a4 = Position.a4; // horizontal left
+        const h4 = Position.h4; // horizontal right
+        const a1 = Position.a1; // diagonal down-left
+        const h8 = Position.h8; // diagonal up-right
 
         final validPositions = whiteQueen.validPositions(boardState, d4);
 
@@ -734,19 +735,19 @@ void main() {
         const whiteBishop = Bishop.white;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final d6 = Position.d6;
-        final f4 = Position.f4;
-        final d7 = Position.d7;
-        final d8 = Position.d8;
-        final g4 = Position.g4;
-        final h4 = Position.h4;
-        final d5 = Position.d5;
-        final e4 = Position.e4;
+        const d4 = Position.d4;
+        const d6 = Position.d6;
+        const f4 = Position.f4;
+        const d7 = Position.d7;
+        const d8 = Position.d8;
+        const g4 = Position.g4;
+        const h4 = Position.h4;
+        const d5 = Position.d5;
+        const e4 = Position.e4;
 
         // Place same team piece on the queen's path
-        boardState.squares.replace(d6 < whiteRook);
-        boardState.squares.replace(f4 < whiteBishop);
+        boardState.replace(d6 < whiteRook);
+        boardState.replace(f4 < whiteBishop);
 
         final validPositions = whiteQueen.validPositions(boardState, d4);
 
@@ -770,19 +771,19 @@ void main() {
         const blackBishop = Bishop.black;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final d6 = Position.d6;
-        final f4 = Position.f4;
-        final d7 = Position.d7;
-        final d8 = Position.d8;
-        final g4 = Position.g4;
-        final h4 = Position.h4;
-        final d5 = Position.d5;
-        final e4 = Position.e4;
+        const d4 = Position.d4;
+        const d6 = Position.d6;
+        const f4 = Position.f4;
+        const d7 = Position.d7;
+        const d8 = Position.d8;
+        const g4 = Position.g4;
+        const h4 = Position.h4;
+        const d5 = Position.d5;
+        const e4 = Position.e4;
 
         // Place enemy pieces on the queen's path
-        boardState.squares.replace(d6 < blackRook);
-        boardState.squares.replace(f4 < blackBishop);
+        boardState.replace(d6 < blackRook);
+        boardState.replace(f4 < blackBishop);
 
         final validPositions = whiteQueen.validPositions(boardState, d4);
 
@@ -809,13 +810,13 @@ void main() {
           const whiteRook = Rook.white;
 
           // Define position instances once
-          final d4 = Position.d4;
-          final d8 = Position.d8; // vertical up
-          final d1 = Position.d1; // vertical down
-          final a4 = Position.a4; // horizontal left
-          final h4 = Position.h4; // horizontal right
-          final e5 = Position.e5;
-          final c3 = Position.c3;
+          const d4 = Position.d4;
+          const d8 = Position.d8; // vertical up
+          const d1 = Position.d1; // vertical down
+          const a4 = Position.a4; // horizontal left
+          const h4 = Position.h4; // horizontal right
+          const e5 = Position.e5;
+          const c3 = Position.c3;
 
           final validPositions = whiteRook.validPositions(boardState, d4);
 
@@ -843,14 +844,14 @@ void main() {
         const whitePawn = Pawn.white;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final d6 = Position.d6;
-        final d7 = Position.d7;
-        final d8 = Position.d8;
-        final d5 = Position.d5;
+        const d4 = Position.d4;
+        const d6 = Position.d6;
+        const d7 = Position.d7;
+        const d8 = Position.d8;
+        const d5 = Position.d5;
 
         // Place same team piece blocking vertical movement
-        boardState.squares.replace(d6 < whitePawn);
+        boardState.replace(d6 < whitePawn);
 
         final validPositions = whiteRook.validPositions(boardState, d4);
 
@@ -869,13 +870,13 @@ void main() {
         const blackPawn = Pawn.black;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final d6 = Position.d6;
-        final d7 = Position.d7;
-        final d8 = Position.d8;
+        const d4 = Position.d4;
+        const d6 = Position.d6;
+        const d7 = Position.d7;
+        const d8 = Position.d8;
 
         // Place enemy piece on the rook's path
-        boardState.squares.replace(d6 < blackPawn);
+        boardState.replace(d6 < blackPawn);
 
         final validPositions = whiteRook.validPositions(boardState, d4);
 
@@ -893,13 +894,13 @@ void main() {
         const whiteBishop = Bishop.white;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final a1 = Position.a1; // down-left
-        final g7 = Position.g7; // up-right
-        final a7 = Position.a7; // up-left
-        final h8 = Position.h8; // up-right extended
-        final d5 = Position.d5;
-        final e4 = Position.e4;
+        const d4 = Position.d4;
+        const a1 = Position.a1; // down-left
+        const g7 = Position.g7; // up-right
+        const a7 = Position.a7; // up-left
+        const h8 = Position.h8; // up-right extended
+        const d5 = Position.d5;
+        const e4 = Position.e4;
 
         final validPositions = whiteBishop.validPositions(boardState, d4);
 
@@ -926,14 +927,14 @@ void main() {
         const whiteKnight = Knight.white;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final f6 = Position.f6;
-        final g7 = Position.g7;
-        final h8 = Position.h8;
-        final e5 = Position.e5;
+        const d4 = Position.d4;
+        const f6 = Position.f6;
+        const g7 = Position.g7;
+        const h8 = Position.h8;
+        const e5 = Position.e5;
 
         // Place same team piece on diagonal
-        boardState.squares.replace(f6 < whiteKnight);
+        boardState.replace(f6 < whiteKnight);
 
         final validPositions = whiteBishop.validPositions(boardState, d4);
 
@@ -952,13 +953,13 @@ void main() {
         const blackKnight = Knight.black;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final f6 = Position.f6;
-        final g7 = Position.g7;
-        final h8 = Position.h8;
+        const d4 = Position.d4;
+        const f6 = Position.f6;
+        const g7 = Position.g7;
+        const h8 = Position.h8;
 
         // Place enemy piece on diagonal
-        boardState.squares.replace(f6 < blackKnight);
+        boardState.replace(f6 < blackKnight);
 
         final validPositions = whiteBishop.validPositions(boardState, d4);
 
@@ -976,15 +977,15 @@ void main() {
         const whiteKnight = Knight.white;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final b5 = Position.b5; // up-up-left
-        final b3 = Position.b3; // down-down-left
-        final c6 = Position.c6; // up-left-left
-        final c2 = Position.c2; // down-left-left
-        final e6 = Position.e6; // up-right-right
-        final e2 = Position.e2; // down-right-right
-        final f5 = Position.f5; // up-up-right
-        final f3 = Position.f3; // down-down-right
+        const d4 = Position.d4;
+        const b5 = Position.b5; // up-up-left
+        const b3 = Position.b3; // down-down-left
+        const c6 = Position.c6; // up-left-left
+        const c2 = Position.c2; // down-left-left
+        const e6 = Position.e6; // up-right-right
+        const e2 = Position.e2; // down-right-right
+        const f5 = Position.f5; // up-up-right
+        const f3 = Position.f3; // down-down-right
 
         final validPositions = whiteKnight.validPositions(boardState, d4);
 
@@ -1003,15 +1004,15 @@ void main() {
         const whiteRook = Rook.white;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final b5 = Position.b5;
-        final f3 = Position.f3;
-        final c6 = Position.c6;
-        final e6 = Position.e6;
+        const d4 = Position.d4;
+        const b5 = Position.b5;
+        const f3 = Position.f3;
+        const c6 = Position.c6;
+        const e6 = Position.e6;
 
         // Place same team pieces at some knight move destinations
-        boardState.squares.replace(b5 < whitePawn);
-        boardState.squares.replace(f3 < whiteRook);
+        boardState.replace(b5 < whitePawn);
+        boardState.replace(f3 < whiteRook);
 
         final validPositions = whiteKnight.validPositions(boardState, d4);
 
@@ -1028,15 +1029,15 @@ void main() {
         const blackRook = Rook.black;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final b5 = Position.b5;
-        final f3 = Position.f3;
-        final c6 = Position.c6;
-        final e6 = Position.e6;
+        const d4 = Position.d4;
+        const b5 = Position.b5;
+        const f3 = Position.f3;
+        const c6 = Position.c6;
+        const e6 = Position.e6;
 
         // Place enemy pieces at some knight move destinations
-        boardState.squares.replace(b5 < blackPawn);
-        boardState.squares.replace(f3 < blackRook);
+        boardState.replace(b5 < blackPawn);
+        boardState.replace(f3 < blackRook);
 
         final validPositions = whiteKnight.validPositions(boardState, d4);
 
@@ -1051,9 +1052,9 @@ void main() {
         const whiteKnight = Knight.white;
 
         // Define position instances once
-        final a1 = Position.a1; // Corner position
-        final b3 = Position.b3;
-        final c2 = Position.c2;
+        const a1 = Position.a1; // Corner position
+        const b3 = Position.b3;
+        const c2 = Position.c2;
 
         final validPositions = whiteKnight.validPositions(boardState, a1);
 
@@ -1073,13 +1074,14 @@ void main() {
           const whitePawn = Pawn.white;
 
           // Define position instances once
-          final e2 = Position.e2; // Initial position for white pawn
-          final e3 = Position.e3;
-          final e4 = Position.e4;
+          const e2 = Position.e2; // Initial position for white pawn
+          const e3 = Position.e3;
+          const e4 = Position.e4;
 
           final validPositions = whitePawn.validPositions(boardState, e2);
 
-          // Pawn should be able to move 1 or 2 squares forward from initial position
+          // Pawn should be able to move 1 or 2 squares forward from initial
+          // position
           expect(validPositions.length, equals(2));
           expect(validPositions, containsAll([e3, e4]));
         },
@@ -1090,8 +1092,8 @@ void main() {
         const whitePawn = Pawn.white;
 
         // Define position instances once
-        final e3 = Position.e3; // Non-initial position
-        final e4 = Position.e4;
+        const e3 = Position.e3; // Non-initial position
+        const e4 = Position.e4;
 
         final validPositions = whitePawn.validPositions(boardState, e3);
 
@@ -1105,11 +1107,11 @@ void main() {
         const blackPawn = Pawn.black;
 
         // Define position instances once
-        final e2 = Position.e2;
-        final e3 = Position.e3;
+        const e2 = Position.e2;
+        const e3 = Position.e3;
 
         // Block the square in front
-        boardState.squares.replace(e3 < blackPawn);
+        boardState.replace(e3 < blackPawn);
 
         final validPositions = whitePawn.validPositions(boardState, e2);
 
@@ -1123,14 +1125,14 @@ void main() {
         const blackKnight = Knight.black;
 
         // Define position instances once
-        final e4 = Position.e4;
-        final d5 = Position.d5;
-        final f5 = Position.f5;
-        final e5 = Position.e5;
+        const e4 = Position.e4;
+        const d5 = Position.d5;
+        const f5 = Position.f5;
+        const e5 = Position.e5;
 
         // Place enemy pieces diagonally
-        boardState.squares.replace(d5 < blackPawn);
-        boardState.squares.replace(f5 < blackKnight);
+        boardState.replace(d5 < blackPawn);
+        boardState.replace(f5 < blackKnight);
 
         final validPositions = whitePawn.validPositions(boardState, e4);
 
@@ -1148,14 +1150,14 @@ void main() {
         const whiteKnight = Knight.white;
 
         // Define position instances once
-        final e4 = Position.e4;
-        final d5 = Position.d5;
-        final f5 = Position.f5;
-        final e5 = Position.e5;
+        const e4 = Position.e4;
+        const d5 = Position.d5;
+        const f5 = Position.f5;
+        const e5 = Position.e5;
 
         // Place same team pieces diagonally
-        boardState.squares.replace(d5 < whitePawn2);
-        boardState.squares.replace(f5 < whiteKnight);
+        boardState.replace(d5 < whitePawn2);
+        boardState.replace(f5 < whiteKnight);
 
         final validPositions = whitePawn.validPositions(boardState, e4);
 
@@ -1171,9 +1173,9 @@ void main() {
         const blackPawn = Pawn.black;
 
         // Define position instances once
-        final e7 = Position.e7; // Initial position for black pawn
-        final e6 = Position.e6;
-        final e5 = Position.e5;
+        const e7 = Position.e7; // Initial position for black pawn
+        const e6 = Position.e6;
+        const e5 = Position.e5;
 
         final validPositions = blackPawn.validPositions(boardState, e7);
 
@@ -1190,14 +1192,14 @@ void main() {
         const whiteKnight = Knight.white;
 
         // Define position instances once
-        final e5 = Position.e5;
-        final d4 = Position.d4;
-        final f4 = Position.f4;
-        final e4 = Position.e4;
+        const e5 = Position.e5;
+        const d4 = Position.d4;
+        const f4 = Position.f4;
+        const e4 = Position.e4;
 
         // Place white pieces diagonally down from black pawn
-        boardState.squares.replace(d4 < whitePawn);
-        boardState.squares.replace(f4 < whiteKnight);
+        boardState.replace(d4 < whitePawn);
+        boardState.replace(f4 < whiteKnight);
 
         final validPositions = blackPawn.validPositions(boardState, e5);
 
@@ -1216,12 +1218,12 @@ void main() {
           const blackPawn = Pawn.black;
 
           // Define position instances once
-          final e2 = Position.e2;
-          final e4 = Position.e4;
-          final e3 = Position.e3;
+          const e2 = Position.e2;
+          const e4 = Position.e4;
+          const e3 = Position.e3;
 
           // Block the second square ahead
-          boardState.squares.replace(e4 < blackPawn);
+          boardState.replace(e4 < blackPawn);
 
           final validPositions = whitePawn.validPositions(boardState, e2);
 
@@ -1237,18 +1239,19 @@ void main() {
       test(
         'should enable en passant capture when last move was PawnInitialMove',
         () {
-          // Setup: White pawn at e5, black pawn just moved from d7 to d5 (PawnInitialMove)
+          // Setup: White pawn at e5, black pawn just moved from d7 to d5
+          // (PawnInitialMove)
           const whitePawn = Pawn.white;
           const blackPawn = Pawn.black;
 
-          final e5 = Position.e5;
-          final d5 = Position.d5;
-          final d7 = Position.d7;
-          final d6 = Position.d6;
+          const e5 = Position.e5;
+          const d5 = Position.d5;
+          const d7 = Position.d7;
+          const d6 = Position.d6;
 
           // Place pawns on board
-          boardState.squares.replace(e5 < whitePawn);
-          boardState.squares.replace(d5 < blackPawn);
+          boardState.replace(e5 < whitePawn);
+          boardState.replace(d5 < blackPawn);
 
           // Create the last move - black pawn initial move from d7 to d5
           final lastMove = PawnInitialMove(from: d7, to: d5, moving: blackPawn);
@@ -1269,20 +1272,22 @@ void main() {
       );
 
       test(
-        'should enable en passant capture for black pawn when last move was white PawnInitialMove',
+        'should enable en passant capture for black pawn when last move was '
+        'white PawnInitialMove',
         () {
-          // Setup: Black pawn at d4, white pawn just moved from e2 to e4 (PawnInitialMove)
+          // Setup: Black pawn at d4, white pawn just moved from e2 to e4
+          // (PawnInitialMove)
           const whitePawn = Pawn.white;
           const blackPawn = Pawn.black;
 
-          final d4 = Position.d4;
-          final e4 = Position.e4;
-          final e2 = Position.e2;
-          final e3 = Position.e3;
+          const d4 = Position.d4;
+          const e4 = Position.e4;
+          const e2 = Position.e2;
+          const e3 = Position.e3;
 
           // Place pawns on board
-          boardState.squares.replace(d4 < blackPawn);
-          boardState.squares.replace(e4 < whitePawn);
+          boardState.replace(d4 < blackPawn);
+          boardState.replace(e4 < whitePawn);
 
           // Create the last move - white pawn initial move from e2 to e4
           final lastMove = PawnInitialMove(from: e2, to: e4, moving: whitePawn);
@@ -1305,18 +1310,19 @@ void main() {
       test(
         'should not enable en passant when last move was not PawnInitialMove',
         () {
-          // Setup: White pawn at e5, black pawn at d5, but last move was regular PawnMove
+          // Setup: White pawn at e5, black pawn at d5, but last move was
+          //regular PawnMove
           const whitePawn = Pawn.white;
           const blackPawn = Pawn.black;
 
-          final e5 = Position.e5;
-          final d5 = Position.d5;
-          final d6 = Position.d6;
-          final e6 = Position.e6;
+          const e5 = Position.e5;
+          const d5 = Position.d5;
+          const d6 = Position.d6;
+          const e6 = Position.e6;
 
           // Place pawns on board
-          boardState.squares.replace(e5 < whitePawn);
-          boardState.squares.replace(d5 < blackPawn);
+          boardState.replace(e5 < whitePawn);
+          boardState.replace(d5 < blackPawn);
 
           // Create a regular pawn move (not initial move)
           final lastMove = PawnMove(from: d6, to: d5, moving: blackPawn);
@@ -1336,22 +1342,24 @@ void main() {
       );
 
       test(
-        'should not enable en passant when PawnInitialMove destination is wrong file',
+        'should not enable en passant when PawnInitialMove destination is '
+        'wrong file',
         () {
-          // Setup: White pawn at e5, black pawn moved from f7 to f5 (wrong file for en passant)
+          // Setup: White pawn at e5, black pawn moved from f7 to f5 (wrong file
+          //for en passant)
           const whitePawn = Pawn.white;
           const blackPawn = Pawn.black;
 
-          final e5 = Position.e5;
-          final g5 = Position.g5;
-          final g7 = Position.g7;
-          final f6 = Position.f6;
-          final e6 = Position.e6;
-          final d6 = Position.d6;
+          const e5 = Position.e5;
+          const g5 = Position.g5;
+          const g7 = Position.g7;
+          const f6 = Position.f6;
+          const e6 = Position.e6;
+          const d6 = Position.d6;
 
           // Place pawns on board
-          boardState.squares.replace(e5 < whitePawn);
-          boardState.squares.replace(g5 < blackPawn);
+          boardState.replace(e5 < whitePawn);
+          boardState.replace(g5 < blackPawn);
 
           // Create PawnInitialMove but to wrong file for en passant
           final lastMove = PawnInitialMove(from: g7, to: g5, moving: blackPawn);
@@ -1362,7 +1370,8 @@ void main() {
             lastMove: lastMove,
           );
 
-          // Should not include en passant capture since f5 is not adjacent to e5 diagonally
+          // Should not include en passant capture since f5 is not adjacent to
+          //e5 diagonally
           expect(validPositions, isNot(contains(f6)));
           expect(validPositions, isNot(contains(d6)));
           // Should only have forward move
@@ -1376,16 +1385,16 @@ void main() {
         const blackPawn1 = Pawn.black;
         const blackKnight = Knight.black;
 
-        final e5 = Position.e5;
-        final d5 = Position.d5;
-        final f6 = Position.f6;
-        final d6 = Position.d6;
-        final e6 = Position.e6;
+        const e5 = Position.e5;
+        const d5 = Position.d5;
+        const f6 = Position.f6;
+        const d6 = Position.d6;
+        const e6 = Position.e6;
 
         // Place pieces on board
-        boardState.squares.replace(e5 < whitePawn);
-        boardState.squares.replace(d5 < blackPawn1); // For en passant
-        boardState.squares.replace(f6 < blackKnight); // For regular capture
+        boardState.replace(e5 < whitePawn);
+        boardState.replace(d5 < blackPawn1); // For en passant
+        boardState.replace(f6 < blackKnight); // For regular capture
 
         // Create PawnInitialMove for en passant
         final lastMove = PawnInitialMove(
@@ -1412,14 +1421,14 @@ void main() {
         const whitePawn = Pawn.white;
         const blackPawn = Pawn.black;
 
-        final e5 = Position.e5;
-        final d5 = Position.d5;
-        final d6 = Position.d6;
-        final e6 = Position.e6;
+        const e5 = Position.e5;
+        const d5 = Position.d5;
+        const d6 = Position.d6;
+        const e6 = Position.e6;
 
         // Place pawns on board
-        boardState.squares.replace(e5 < whitePawn);
-        boardState.squares.replace(d5 < blackPawn);
+        boardState.replace(e5 < whitePawn);
+        boardState.replace(d5 < blackPawn);
 
         // Call without lastMove parameter
         final validPositions = whitePawn.validPositions(boardState, e5);
@@ -1432,22 +1441,23 @@ void main() {
       });
 
       test('should handle en passant on both sides of pawn simultaneously', () {
-        // Setup: White pawn at e5, black pawns on both sides with valid PawnInitialMoves
+        // Setup: White pawn at e5, black pawns on both sides with valid
+        // PawnInitialMoves
         const whitePawn = Pawn.white;
         const blackPawn1 = Pawn.black;
         const blackPawn2 = Pawn.black;
 
-        final e5 = Position.e5;
-        final d5 = Position.d5;
-        final f5 = Position.f5;
-        final d6 = Position.d6;
-        final f6 = Position.f6;
-        final e6 = Position.e6;
+        const e5 = Position.e5;
+        const d5 = Position.d5;
+        const f5 = Position.f5;
+        const d6 = Position.d6;
+        const f6 = Position.f6;
+        const e6 = Position.e6;
 
         // Place pawns on board
-        boardState.squares.replace(e5 < whitePawn);
-        boardState.squares.replace(d5 < blackPawn1);
-        boardState.squares.replace(f5 < blackPawn2);
+        boardState.replace(e5 < whitePawn);
+        boardState.replace(d5 < blackPawn1);
+        boardState.replace(f5 < blackPawn2);
 
         // Create PawnInitialMove for left side en passant
         final lastMove = PawnInitialMove(
@@ -1462,7 +1472,8 @@ void main() {
           lastMove: lastMove,
         );
 
-        // Should include en passant to d6, but not f6 (since lastMove was only for d-file)
+        // Should include en passant to d6, but not f6 (since lastMove was only
+        // for d-file)
         expect(validPositions, contains(d6)); // En passant for lastMove
         expect(
           validPositions,
@@ -1473,22 +1484,23 @@ void main() {
       });
 
       test('should work correctly for black pawn en passant scenarios', () {
-        // Setup: Black pawn at d4, white pawns that could be captured en passant
+        // Setup: Black pawn at d4, white pawns that could be captured en
+        // passant
         const blackPawn = Pawn.black;
         const whitePawn1 = Pawn.white;
         const whitePawn2 = Pawn.white;
 
-        final d4 = Position.d4;
-        final c4 = Position.c4;
-        final e4 = Position.e4;
-        final c3 = Position.c3;
-        final e3 = Position.e3;
-        final d3 = Position.d3;
+        const d4 = Position.d4;
+        const c4 = Position.c4;
+        const e4 = Position.e4;
+        const c3 = Position.c3;
+        const e3 = Position.e3;
+        const d3 = Position.d3;
 
         // Place pawns on board
-        boardState.squares.replace(d4 < blackPawn);
-        boardState.squares.replace(c4 < whitePawn1);
-        boardState.squares.replace(e4 < whitePawn2);
+        boardState.replace(d4 < blackPawn);
+        boardState.replace(c4 < whitePawn1);
+        boardState.replace(e4 < whitePawn2);
 
         // Create PawnInitialMove for en passant on e-file
         final lastMove = PawnInitialMove(
@@ -1519,15 +1531,15 @@ void main() {
         const blackPawn1 = Pawn.black;
         const blackPawn2 = Pawn.black;
 
-        final e5 = Position.e5;
-        final d5 = Position.d5;
-        final d6 = Position.d6;
-        final e6 = Position.e6;
+        const e5 = Position.e5;
+        const d5 = Position.d5;
+        const d6 = Position.d6;
+        const e6 = Position.e6;
 
         // Place pawns on board
-        boardState.squares.replace(e5 < whitePawn);
-        boardState.squares.replace(d5 < blackPawn1);
-        boardState.squares.replace(
+        boardState.replace(e5 < whitePawn);
+        boardState.replace(d5 < blackPawn1);
+        boardState.replace(
           d6 < blackPawn2,
         ); // Occupy the en passant target square
 
@@ -1561,19 +1573,19 @@ void main() {
         const whiteKing = King.white;
 
         // Define position instances once
-        final d4 = Position.d4;
-        final d6 = Position.d6; // Enemy piece
-        final f4 = Position.f4; // Same team piece
-        final b2 = Position.b2; // Enemy piece on diagonal
-        final a1 = Position.a1; // Same team piece on diagonal
-        final d7 = Position.d7;
-        final g4 = Position.g4;
+        const d4 = Position.d4;
+        const d6 = Position.d6; // Enemy piece
+        const f4 = Position.f4; // Same team piece
+        const b2 = Position.b2; // Enemy piece on diagonal
+        const a1 = Position.a1; // Same team piece on diagonal
+        const d7 = Position.d7;
+        const g4 = Position.g4;
 
         // Set up a complex board scenario
-        boardState.squares.replace(d6 < blackRook);
-        boardState.squares.replace(f4 < whiteBishop);
-        boardState.squares.replace(b2 < blackKnight);
-        boardState.squares.replace(a1 < whiteKing);
+        boardState.replace(d6 < blackRook);
+        boardState.replace(f4 < whiteBishop);
+        boardState.replace(b2 < blackKnight);
+        boardState.replace(a1 < whiteKing);
 
         final validPositions = whiteQueen.validPositions(boardState, d4);
 
@@ -1604,16 +1616,16 @@ void main() {
         const blackQueen = Queen.black;
 
         // Define position instances once
-        final a1 = Position.a1; // Corner position
-        final a3 = Position.a3;
-        final c1 = Position.c1;
-        final a2 = Position.a2;
-        final b1 = Position.b1;
-        final d1 = Position.d1;
+        const a1 = Position.a1; // Corner position
+        const a3 = Position.a3;
+        const c1 = Position.c1;
+        const a2 = Position.a2;
+        const b1 = Position.b1;
+        const d1 = Position.d1;
 
         // Place pieces limiting movement
-        boardState.squares.replace(a3 < whitePawn);
-        boardState.squares.replace(c1 < blackQueen);
+        boardState.replace(a3 < whitePawn);
+        boardState.replace(c1 < blackQueen);
 
         final validPositions = whiteRook.validPositions(boardState, a1);
 
@@ -1638,15 +1650,15 @@ void main() {
           const whiteKing = King.white;
 
           // Define position instances once
-          final e4 = Position.e4;
-          final d3 = Position.d3;
-          final d4 = Position.d4;
-          final d5 = Position.d5;
-          final e3 = Position.e3;
-          final e5 = Position.e5;
-          final f3 = Position.f3;
-          final f4 = Position.f4;
-          final f5 = Position.f5;
+          const e4 = Position.e4;
+          const d3 = Position.d3;
+          const d4 = Position.d4;
+          const d5 = Position.d5;
+          const e3 = Position.e3;
+          const e5 = Position.e5;
+          const f3 = Position.f3;
+          const f4 = Position.f4;
+          const f5 = Position.f5;
 
           final validPositions = whiteKing.validPositions(state, e4);
 
@@ -1665,15 +1677,15 @@ void main() {
           const whiteQueen = Queen.white;
 
           // Define position instances once
-          final d4 = Position.d4;
-          final a4 = Position.a4;
-          final h4 = Position.h4;
-          final d1 = Position.d1;
-          final d8 = Position.d8;
-          final a1 = Position.a1;
-          final g7 = Position.g7;
-          final a7 = Position.a7;
-          final g1 = Position.g1;
+          const d4 = Position.d4;
+          const a4 = Position.a4;
+          const h4 = Position.h4;
+          const d1 = Position.d1;
+          const d8 = Position.d8;
+          const a1 = Position.a1;
+          const g7 = Position.g7;
+          const a7 = Position.a7;
+          const g1 = Position.g1;
 
           final validPositions = whiteQueen.validPositions(state, d4);
 
@@ -1703,7 +1715,7 @@ void main() {
           const blackRook = Rook.black;
 
           // Define position instances once
-          final e5 = Position.e5;
+          const e5 = Position.e5;
 
           final validPositions = blackRook.validPositions(state, e5);
 
@@ -1726,7 +1738,7 @@ void main() {
         test('Bishop in center of empty board', () {
           final state = BoardState.empty();
           const bishop = Bishop.white;
-          final position = Position.d4;
+          const position = Position.d4;
 
           final validPositions = bishop.validPositions(state, position);
 
@@ -1741,7 +1753,7 @@ void main() {
         test('Knight in center of empty board', () {
           final state = BoardState.empty();
           const knight = Knight.black;
-          final position = Position.e4;
+          const position = Position.e4;
 
           final validPositions = knight.validPositions(state, position);
 
@@ -1765,7 +1777,7 @@ void main() {
         test('White pawn in center of empty board', () {
           final state = BoardState.empty();
           const pawn = Pawn.white;
-          final position = Position.e4;
+          const position = Position.e4;
 
           final validPositions = pawn.validPositions(state, position);
 
@@ -1777,7 +1789,7 @@ void main() {
         test('Black pawn in center of empty board', () {
           final state = BoardState.empty();
           const pawn = Pawn.black;
-          final position = Position.e5;
+          const position = Position.e5;
 
           final validPositions = pawn.validPositions(state, position);
 
@@ -1789,7 +1801,7 @@ void main() {
         test('White pawn on starting rank', () {
           final state = BoardState.empty();
           const pawn = Pawn.white;
-          final position = Position.e2;
+          const position = Position.e2;
 
           final validPositions = pawn.validPositions(state, position);
 
@@ -1801,7 +1813,7 @@ void main() {
         test('Black pawn on starting rank', () {
           final state = BoardState.empty();
           const pawn = Pawn.black;
-          final position = Position.d7;
+          const position = Position.d7;
 
           final validPositions = pawn.validPositions(state, position);
 
@@ -1815,14 +1827,14 @@ void main() {
         test('Queen blocked by same team pieces', () {
           final state = BoardState.empty();
           // Place white queen at d4
-          state.squares.replace(Queen.white > Position.d4);
+          state.replace(Queen.white > Position.d4);
           // Place white pieces blocking some directions
-          state.squares.replace(Pawn.white > Position.d5); // Block north
-          state.squares.replace(Rook.white > Position.f4); // Block east
-          state.squares.replace(Bishop.white > Position.e5); // Block northeast
+          state.replace(Pawn.white > Position.d5); // Block north
+          state.replace(Rook.white > Position.f4); // Block east
+          state.replace(Bishop.white > Position.e5); // Block northeast
 
           const queen = Queen.white;
-          final position = Position.d4;
+          const position = Position.d4;
           final validPositions = queen.validPositions(state, position);
 
           // Should not be able to move to or past blocked squares
@@ -1842,12 +1854,12 @@ void main() {
         test('Rook blocked by same team piece', () {
           final state = BoardState.empty();
           // Place black rook at a1
-          state.squares.replace(Rook.black > Position.a1);
+          state.replace(Rook.black > Position.a1);
           // Place black piece blocking horizontal movement
-          state.squares.replace(Knight.black > Position.d1);
+          state.replace(Knight.black > Position.d1);
 
           const rook = Rook.black;
-          final position = Position.a1;
+          const position = Position.a1;
           final validPositions = rook.validPositions(state, position);
 
           // Should not be able to move to or past blocking piece
@@ -1863,12 +1875,12 @@ void main() {
         test('Bishop blocked by same team piece', () {
           final state = BoardState.empty();
           // Place white bishop at c1
-          state.squares.replace(Bishop.white > Position.c1);
+          state.replace(Bishop.white > Position.c1);
           // Place white piece blocking diagonal
-          state.squares.replace(Pawn.white > Position.e3);
+          state.replace(Pawn.white > Position.e3);
 
           const bishop = Bishop.white;
-          final position = Position.c1;
+          const position = Position.c1;
           final validPositions = bishop.validPositions(state, position);
 
           // Should not be able to move to or past blocking piece
@@ -1882,13 +1894,13 @@ void main() {
         test('Knight not blocked by same team piece (jumps over)', () {
           final state = BoardState.empty();
           // Place black knight at e4
-          state.squares.replace(Knight.black > Position.e4);
+          state.replace(Knight.black > Position.e4);
           // Place black pieces around it
-          state.squares.replace(Pawn.black > Position.d4);
-          state.squares.replace(Rook.black > Position.e3);
+          state.replace(Pawn.black > Position.d4);
+          state.replace(Rook.black > Position.e3);
 
           const knight = Knight.black;
-          final position = Position.e4;
+          const position = Position.e4;
           final validPositions = knight.validPositions(state, position);
 
           // Knight should still be able to jump to most L-shaped positions
@@ -1902,7 +1914,8 @@ void main() {
                 state[pos].isOccupied && state[pos].piece!.team == Team.black,
           )) {
             fail(
-              'Knight should not be able to move to squares occupied by same team',
+              'Knight should not be able to move to squares occupied by same '
+              'team',
             );
           }
         });
@@ -1910,12 +1923,12 @@ void main() {
         test('Pawn blocked by same team piece', () {
           final state = BoardState.empty();
           // Place white pawn at e2
-          state.squares.replace(Pawn.white > Position.e2);
+          state.replace(Pawn.white > Position.e2);
           // Place white piece blocking forward movement
-          state.squares.replace(Bishop.white > Position.e3);
+          state.replace(Bishop.white > Position.e3);
 
           const pawn = Pawn.white;
-          final position = Position.e2;
+          const position = Position.e2;
           final validPositions = pawn.validPositions(state, position);
 
           // Should not be able to move forward when blocked
@@ -1927,14 +1940,14 @@ void main() {
         test('Queen can capture enemy pieces', () {
           final state = BoardState.empty();
           // Place white queen at d4
-          state.squares.replace(Queen.white > Position.d4);
+          state.replace(Queen.white > Position.d4);
           // Place black pieces in various directions
-          state.squares.replace(Pawn.black > Position.d7); // North
-          state.squares.replace(Rook.black > Position.g4); // East
-          state.squares.replace(Knight.black > Position.f6); // Northeast
+          state.replace(Pawn.black > Position.d7); // North
+          state.replace(Rook.black > Position.g4); // East
+          state.replace(Knight.black > Position.f6); // Northeast
 
           const queen = Queen.white;
-          final position = Position.d4;
+          const position = Position.d4;
           final validPositions = queen.validPositions(state, position);
 
           // Should be able to capture enemy pieces
@@ -1955,15 +1968,15 @@ void main() {
         test('Rook can capture enemy pieces', () {
           final state = BoardState.empty();
           const rook = Rook.black;
-          final rookPosition = Position.h8;
+          const rookPosition = Position.h8;
           // Place black rook at h8
-          state.squares.replace(rook > rookPosition);
+          state.replace(rook > rookPosition);
 
           // Place white pieces to capture
-          final bishopPosition = Position.h3;
-          state.squares.replace(Bishop.white > bishopPosition);
-          final queenPosition = Position.c8;
-          state.squares.replace(Queen.white > queenPosition);
+          const bishopPosition = Position.h3;
+          state.replace(Bishop.white > bishopPosition);
+          const queenPosition = Position.c8;
+          state.replace(Queen.white > queenPosition);
 
           final validPositions = rook.validPositions(state, rookPosition);
 
@@ -1979,13 +1992,13 @@ void main() {
         test('Bishop can capture enemy pieces', () {
           final state = BoardState.empty();
           // Place white bishop at f1
-          state.squares.replace(Bishop.white > Position.f1);
+          state.replace(Bishop.white > Position.f1);
           // Place black pieces on diagonals
-          state.squares.replace(Pawn.black > Position.h3);
-          state.squares.replace(Rook.black > Position.c4);
+          state.replace(Pawn.black > Position.h3);
+          state.replace(Rook.black > Position.c4);
 
           const bishop = Bishop.white;
-          final position = Position.f1;
+          const position = Position.f1;
           final validPositions = bishop.validPositions(state, position);
 
           // Should be able to capture enemy pieces
@@ -1999,15 +2012,15 @@ void main() {
         test('Knight can capture enemy pieces', () {
           final state = BoardState.empty();
           // Place black knight at e4
-          state.squares.replace(Knight.black > Position.e4);
+          state.replace(Knight.black > Position.e4);
           // Place white pieces at knight's target squares
-          state.squares.replace(Pawn.white > Position.f6);
-          state.squares.replace(Bishop.white > Position.c3);
+          state.replace(Pawn.white > Position.f6);
+          state.replace(Bishop.white > Position.c3);
           // Place black piece at another target square
-          state.squares.replace(Rook.black > Position.g5);
+          state.replace(Rook.black > Position.g5);
 
           const knight = Knight.black;
-          final position = Position.e4;
+          const position = Position.e4;
           final validPositions = knight.validPositions(state, position);
 
           // Should be able to capture enemy pieces
@@ -2021,15 +2034,15 @@ void main() {
         test('King can capture enemy pieces', () {
           final state = BoardState.empty();
           // Place white king at e4
-          state.squares.replace(King.white > Position.e4);
+          state.replace(King.white > Position.e4);
           // Place black pieces around
-          state.squares.replace(Pawn.black > Position.e5);
-          state.squares.replace(Rook.black > Position.f4);
+          state.replace(Pawn.black > Position.e5);
+          state.replace(Rook.black > Position.f4);
           // Place white piece
-          state.squares.replace(Bishop.white > Position.d4);
+          state.replace(Bishop.white > Position.d4);
 
           const king = King.white;
-          final position = Position.e4;
+          const position = Position.e4;
           final validPositions = king.validPositions(state, position);
 
           // Should be able to capture enemy pieces
@@ -2043,15 +2056,15 @@ void main() {
         test('Pawn capture behavior', () {
           final state = BoardState.empty();
           // Place white pawn at e4
-          state.squares.replace(Pawn.white > Position.e4);
+          state.replace(Pawn.white > Position.e4);
           // Place black pieces diagonally (for capture)
-          state.squares.replace(Knight.black > Position.d5);
-          state.squares.replace(Bishop.black > Position.f5);
+          state.replace(Knight.black > Position.d5);
+          state.replace(Bishop.black > Position.f5);
           // Place black piece directly ahead (blocks forward movement)
-          state.squares.replace(Rook.black > Position.e5);
+          state.replace(Rook.black > Position.e5);
 
           const pawn = Pawn.white;
-          final position = Position.e4;
+          const position = Position.e4;
           final validPositions = pawn.validPositions(state, position);
 
           // White pawn should be able to capture diagonally
@@ -2065,15 +2078,15 @@ void main() {
         test('Black pawn capture behavior', () {
           final state = BoardState.empty();
           // Place black pawn at d5
-          state.squares.replace(Pawn.black > Position.d5);
+          state.replace(Pawn.black > Position.d5);
           // Place white pieces diagonally (for capture)
-          state.squares.replace(Knight.white > Position.c4);
-          state.squares.replace(Queen.white > Position.e4);
+          state.replace(Knight.white > Position.c4);
+          state.replace(Queen.white > Position.e4);
           // Place white piece directly ahead (blocks forward movement)
-          state.squares.replace(Pawn.white > Position.d4);
+          state.replace(Pawn.white > Position.d4);
 
           const pawn = Pawn.black;
-          final position = Position.d5;
+          const position = Position.d5;
           final validPositions = pawn.validPositions(state, position);
 
           // Black pawn should be able to capture diagonally
@@ -2094,20 +2107,20 @@ void main() {
           const whiteRook = Rook.white;
 
           // Define position instances once
-          final e1 = Position.e1;
-          final a1 = Position.a1;
-          final h1 = Position.h1;
-          final c1 = Position.c1;
-          final g1 = Position.g1;
-          final d1 = Position.d1;
-          final f1 = Position.f1;
-          final e2 = Position.e2;
+          const e1 = Position.e1;
+          const a1 = Position.a1;
+          const h1 = Position.h1;
+          const c1 = Position.c1;
+          const g1 = Position.g1;
+          const d1 = Position.d1;
+          const f1 = Position.f1;
+          const e2 = Position.e2;
 
           // Place white king at starting position
-          state.squares.replace(whiteKing > e1);
+          state.replace(whiteKing > e1);
           // Place rooks at starting positions
-          state.squares.replace(whiteRook > a1);
-          state.squares.replace(whiteRook > h1);
+          state.replace(whiteRook > a1);
+          state.replace(whiteRook > h1);
 
           final validPositions = whiteKing.validPositions(state, e1);
 
@@ -2129,20 +2142,20 @@ void main() {
           const whiteBishop = Bishop.white;
 
           // Define position instances once
-          final e1 = Position.e1;
-          final a1 = Position.a1;
-          final h1 = Position.h1;
-          final f1 = Position.f1;
-          final g1 = Position.g1;
-          final c1 = Position.c1;
+          const e1 = Position.e1;
+          const a1 = Position.a1;
+          const h1 = Position.h1;
+          const f1 = Position.f1;
+          const g1 = Position.g1;
+          const c1 = Position.c1;
 
           // Place white king at starting position
-          state.squares.replace(whiteKing > e1);
+          state.replace(whiteKing > e1);
           // Place rooks at starting positions
-          state.squares.replace(whiteRook > a1);
-          state.squares.replace(whiteRook > h1);
+          state.replace(whiteRook > a1);
+          state.replace(whiteRook > h1);
           // Block castling path
-          state.squares.replace(whiteBishop > f1);
+          state.replace(whiteBishop > f1);
 
           final validPositions = whiteKing.validPositions(state, e1);
 
@@ -2159,13 +2172,13 @@ void main() {
           const blackQueen = Queen.black;
 
           // Define position instances once
-          final a1 = Position.a1;
-          final h1 = Position.h1;
-          final a8 = Position.a8;
-          final h8 = Position.h8;
+          const a1 = Position.a1;
+          const h1 = Position.h1;
+          const a8 = Position.a8;
+          const h8 = Position.h8;
 
           // Place queen at corner
-          state.squares.replace(blackQueen > a1);
+          state.replace(blackQueen > a1);
 
           final validPositions = blackQueen.validPositions(state, a1);
 
@@ -2184,12 +2197,12 @@ void main() {
           const whiteKnight = Knight.white;
 
           // Define position instances once
-          final a1 = Position.a1;
-          final b3 = Position.b3;
-          final c2 = Position.c2;
+          const a1 = Position.a1;
+          const b3 = Position.b3;
+          const c2 = Position.c2;
 
           // Place knight at edge
-          state.squares.replace(whiteKnight > a1);
+          state.replace(whiteKnight > a1);
 
           final validPositions = whiteKnight.validPositions(state, a1);
 
@@ -2208,23 +2221,23 @@ void main() {
           const blackKnight = Knight.black;
 
           // Define position instances once
-          final d4 = Position.d4;
-          final d6 = Position.d6;
-          final f4 = Position.f4;
-          final b4 = Position.b4;
-          final f6 = Position.f6;
-          final g4 = Position.g4;
-          final g7 = Position.g7;
-          final a4 = Position.a4;
-          final d1 = Position.d1;
+          const d4 = Position.d4;
+          const d6 = Position.d6;
+          const f4 = Position.f4;
+          const b4 = Position.b4;
+          const f6 = Position.f6;
+          const g4 = Position.g4;
+          const g7 = Position.g7;
+          const a4 = Position.a4;
+          const d1 = Position.d1;
 
           // Place white queen at center
-          state.squares.replace(whiteQueen > d4);
+          state.replace(whiteQueen > d4);
           // Create a complex blocking scenario with mixed teams
-          state.squares.replace(whitePawn > d6); // Same team block
-          state.squares.replace(blackRook > f4); // Enemy capture
-          state.squares.replace(whiteBishop > b4); // Same team block
-          state.squares.replace(blackKnight > f6); // Enemy capture
+          state.replace(whitePawn > d6); // Same team block
+          state.replace(blackRook > f4); // Enemy capture
+          state.replace(whiteBishop > b4); // Same team block
+          state.replace(blackKnight > f6); // Enemy capture
 
           final validPositions = whiteQueen.validPositions(state, d4);
 

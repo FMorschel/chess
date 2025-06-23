@@ -7,9 +7,9 @@ import 'package:test/test.dart';
 
 void main() {
   group('PawnMove', () {
-    final whitePawn = Pawn.white;
-    final from = Position.e1;
-    final to = Position.e2;
+    const whitePawn = Pawn.white;
+    const from = Position.e1;
+    const to = Position.e2;
     test('stores all fields correctly', () {
       final move = PawnMove(from: from, to: to, moving: whitePawn);
 
@@ -80,10 +80,10 @@ void main() {
     });
   });
   group('PawnCaptureMove', () {
-    final whitePawn = Pawn.white;
-    final from = Position.e1;
-    final to = Position.f2;
-    final captured = Pawn.black;
+    const whitePawn = Pawn.white;
+    const from = Position.e1;
+    const to = Position.f2;
+    const captured = Pawn.black;
 
     test('stores all fields correctly', () {
       final move = PawnCaptureMove(

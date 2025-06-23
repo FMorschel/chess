@@ -6,9 +6,9 @@ import 'package:test/test.dart';
 
 void main() {
   group('KingMove', () {
-    final whiteKing = King.white;
-    final from = Position.e1;
-    final to = Position.e2;
+    const whiteKing = King.white;
+    const from = Position.e1;
+    const to = Position.e2;
     test('stores all fields correctly', () {
       final move = KingMove(from: from, to: to, moving: whiteKing);
 
@@ -55,10 +55,10 @@ void main() {
     });
   });
   group('KingCaptureMove', () {
-    final whiteKing = King.white;
-    final from = Position.e1;
-    final to = Position.e2;
-    final captured = Pawn.black;
+    const whiteKing = King.white;
+    const from = Position.e1;
+    const to = Position.e2;
+    const captured = Pawn.black;
 
     test('stores all fields correctly', () {
       final move = KingCaptureMove(

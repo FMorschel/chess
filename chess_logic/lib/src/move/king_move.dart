@@ -6,7 +6,6 @@ final class KingMove extends Move<King> {
     required super.from,
     required super.to,
     super.check,
-    AmbiguousMovementType? ambiguous,
   }) : assert(
          from.file.distanceTo(to.file) <= 1 &&
              from.rank.distanceTo(to.rank) <= 1,
@@ -14,23 +13,6 @@ final class KingMove extends Move<King> {
          '$to)',
        ),
        super.base();
-
-  static KingCaptureMove<P> capture<P extends Piece>({
-    required King moving,
-    required Position from,
-    required Position to,
-    required P captured,
-    Check check = Check.none,
-    AmbiguousMovementType? ambiguous,
-  }) {
-    return KingCaptureMove(
-      moving: moving,
-      from: from,
-      to: to,
-      captured: captured,
-      check: check,
-    );
-  }
 
   factory KingMove.queensideCastling({
     required King king,
@@ -64,6 +46,23 @@ final class KingMove extends Move<King> {
     );
   }
 
+  static KingCaptureMove<P> capture<P extends Piece>({
+    required King moving,
+    required Position from,
+    required Position to,
+    required P captured,
+    Check check = Check.none,
+    AmbiguousMovementType? ambiguous,
+  }) {
+    return KingCaptureMove(
+      moving: moving,
+      from: from,
+      to: to,
+      captured: captured,
+      check: check,
+    );
+  }
+
   @override
   KingMove copyWith({Check? check, void ambiguous}) =>
       KingMove(moving: moving, from: from, to: to, check: check ?? this.check);
@@ -77,11 +76,11 @@ final class KingCaptureMove<P extends Piece> extends CaptureMove<King, P>
     required super.from,
     required super.to,
     super.check,
-    void ambiguous,
   }) : assert(
          from.file.distanceTo(to.file) <= 1 &&
              from.rank.distanceTo(to.rank) <= 1,
-         'King can only move one square in any direction (from: $from, to: $to)',
+         'King can only move one square in any direction (from: $from, to: $to'
+         ')',
        ),
        assert(captured is! King, 'King cannot capture another king'),
        super.base();

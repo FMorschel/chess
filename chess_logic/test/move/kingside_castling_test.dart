@@ -6,9 +6,9 @@ import 'package:test/test.dart';
 
 void main() {
   group('KingsideCastling', () {
-    final whiteKing = King.white;
-    final kingFrom = Position.e1;
-    final kingTo = Position.g1;
+    const whiteKing = King.white;
+    const kingFrom = Position.e1;
+    const kingTo = Position.g1;
     final rookMove = RookMove(
       moving: Rook.white,
       from: Position.h1,

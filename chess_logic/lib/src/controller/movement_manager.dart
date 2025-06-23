@@ -1,17 +1,18 @@
-import 'package:chess_logic/src/controller/board_state.dart';
-import 'package:chess_logic/src/controller/check_detector.dart';
-import 'package:chess_logic/src/controller/threat_detector.dart';
-import 'package:chess_logic/src/move/check.dart';
-import 'package:chess_logic/src/move/move.dart';
-import 'package:chess_logic/src/position/direction.dart';
-import 'package:chess_logic/src/position/file.dart';
-import 'package:chess_logic/src/position/position.dart';
-import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/square/piece_symbol.dart';
-import 'package:chess_logic/src/square/square.dart';
-import 'package:chess_logic/src/team/team.dart';
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
+
+import '../move/check.dart';
+import '../move/move.dart';
+import '../position/direction.dart';
+import '../position/file.dart';
+import '../position/position.dart';
+import '../square/piece.dart';
+import '../square/piece_symbol.dart';
+import '../square/square.dart';
+import '../team/team.dart';
+import 'board_state.dart';
+import 'check_detector.dart';
+import 'threat_detector.dart';
 
 class MovementManager {
   MovementManager(BoardState state, List<Move> moveHistory, List<Team> teams)
@@ -21,19 +22,22 @@ class MovementManager {
     if (teams.isEmpty) {
       throw ArgumentError('At least one team must be provided.');
     }
-    for (var team in teams) {
-      canCastelling[team] = (queen: true, king: true);
+    for (final team in teams) {
+      _canCastelling[team] = (queen: true, king: true);
     }
-    for (var movement in moveHistory) {
+    for (final movement in moveHistory) {
       if (movement.moving case King(:final team)) {
-        canCastelling[team] = (queen: false, king: false);
+        _canCastelling[team] = (queen: false, king: false);
       }
       if (movement.moving case Rook(:final team)) {
         if (movement.from.file == File.a) {
-          canCastelling[team] = (queen: false, king: canCastelling[team]!.king);
+          _canCastelling[team] = (
+            queen: false,
+            king: _canCastelling[team]!.king,
+          );
         } else if (movement.from.file == File.h) {
-          canCastelling[team] = (
-            queen: canCastelling[team]!.queen,
+          _canCastelling[team] = (
+            queen: _canCastelling[team]!.queen,
             king: false,
           );
         }
@@ -42,24 +46,14 @@ class MovementManager {
     }
   }
 
-  late final List<Move> _moveHistory;
   final CheckDetector _checkDetector;
-
   final Map<Team, ({bool queen, bool king})> _canCastelling = {};
 
-  @visibleForTesting
-  Map<Team, ({bool queen, bool king})> get canCastelling => _canCastelling;
-
-  BoardState get state => _checkDetector.state;
-  List<Move> get moveHistory => List.unmodifiable(_moveHistory);
-  ThreatDetector get threatDetector => _checkDetector.threatDetector;
-
-  @visibleForTesting
-  CheckDetector get checkDetector => _checkDetector;
+  late final List<Move> _moveHistory;
 
   Move move(Move move) {
     final checkValues = _checkDetector.moveWouldCreateCheck(move);
-    var check = checkValues.values.maxOrNull ?? Check.none;
+    final check = checkValues.values.maxOrNull ?? Check.none;
     if (check != Check.none) {
       move = move.copyWith(check: check);
     }
@@ -70,7 +64,8 @@ class MovementManager {
 
   bool isTeamInCheck(Team team) => _checkDetector.isTeamInCheck(team);
 
-  /// Returns a list of all possible moves for the given square with check detection.
+  /// Returns a list of all possible moves for the given square with check
+  /// detection.
   List<Move> possibleMovesWithCheck(Square square) {
     if (square is! OccupiedSquare) {
       return const [];
@@ -86,7 +81,7 @@ class MovementManager {
         moves.remove(move);
         continue;
       }
-      var checkStatus = results.values.maxOrNull ?? Check.none;
+      final checkStatus = results.values.maxOrNull ?? Check.none;
       final moveWithCheck = move.copyWith(check: checkStatus);
       movesWithCheck.add(moveWithCheck);
     }
@@ -107,8 +102,8 @@ class MovementManager {
       case King():
         final positions = piece.validPositions(state, square.position);
         final kingIsInCheck = _checkDetector.isTeamInCheck(piece.team);
-        final (:king, :queen) = canCastelling[square.piece.team]!;
-        for (var (position, direction) in piece.rookPositions) {
+        final (:king, :queen) = _canCastelling[square.piece.team]!;
+        for (final (position, direction) in piece.rookPositions) {
           final rookDestination = square.position.next(direction);
           final destination = rookDestination?.next(direction);
           if (destination == null ||
@@ -155,7 +150,7 @@ class MovementManager {
             }
           }
         }
-        for (var position in positions) {
+        for (final position in positions) {
           var anotherKingSide = false;
           for (final direction in Direction.orthogonal) {
             if (position.next(direction) case final next?
@@ -194,8 +189,8 @@ class MovementManager {
           square.position,
           lastMove: untracked ?? moveHistory.lastOrNull,
         );
-        for (var direction in piece.captureDirections) {
-          var position = square.position.next(direction);
+        for (final direction in piece.captureDirections) {
+          final position = square.position.next(direction);
           if (position == null ||
               !positions.contains(position) ||
               (state[position].piece?.team != null &&
@@ -203,7 +198,7 @@ class MovementManager {
             continue;
           }
           positions.remove(position);
-          if ((untracked ?? moveHistory.lastOrNull) case PawnInitialMove(
+          if (untracked ?? moveHistory.lastOrNull case PawnInitialMove(
             :final to,
             moving: final pawn,
           )) {
@@ -219,7 +214,7 @@ class MovementManager {
             }
           }
         }
-        for (var position in positions) {
+        for (final position in positions) {
           final capture = state[position].piece;
           if (capture != null) {
             if (capture.team == square.piece.team) {
@@ -251,7 +246,7 @@ class MovementManager {
           }
         }
       default:
-        for (var position in piece.validPositions(state, square.position)) {
+        for (final position in piece.validPositions(state, square.position)) {
           final capture = state[position].piece;
           if (capture != null) {
             if (capture.team == square.piece.team) {
@@ -274,4 +269,14 @@ class MovementManager {
     }
     return moves;
   }
+
+  @visibleForTesting
+  Map<Team, ({bool queen, bool king})> get canCastelling => _canCastelling;
+
+  BoardState get state => _checkDetector.state;
+  List<Move> get moveHistory => List.unmodifiable(_moveHistory);
+  ThreatDetector get threatDetector => _checkDetector.threatDetector;
+
+  @visibleForTesting
+  CheckDetector get checkDetector => _checkDetector;
 }

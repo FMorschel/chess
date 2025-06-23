@@ -7,9 +7,9 @@ import 'package:test/test.dart';
 
 void main() {
   group('RookMove', () {
-    final whiteRook = Rook.white;
-    final from = Position.a1;
-    final to = Position.a4;
+    const whiteRook = Rook.white;
+    const from = Position.a1;
+    const to = Position.a4;
 
     test('stores all fields correctly', () {
       final move = RookMove(from: from, to: to, moving: whiteRook);
@@ -91,10 +91,10 @@ void main() {
   });
 
   group('RookCaptureMove', () {
-    final whiteRook = Rook.white;
-    final from = Position.a1;
-    final to = Position.a4;
-    final captured = Pawn.black;
+    const whiteRook = Rook.white;
+    const from = Position.a1;
+    const to = Position.a4;
+    const captured = Pawn.black;
 
     test('stores all fields correctly', () {
       final move = RookCaptureMove(

@@ -21,15 +21,15 @@ void main() {
     });
 
     test('should return correct algebraic notation', () {
-      final pos = Position.e4;
+      const pos = Position.e4;
 
       expect(pos.toAlgebraic(), equals('e4'));
     });
 
     test('should support equality and hashCode', () {
-      final pos1 = Position.b2;
-      final pos2 = Position.b2;
-      final pos3 = Position.c2;
+      const pos1 = Position.b2;
+      const pos2 = Position.b2;
+      const pos3 = Position.c2;
 
       expect(pos1, equals(pos2));
       expect(pos1.hashCode, equals(pos2.hashCode));
@@ -47,7 +47,7 @@ void main() {
 
   group('next', () {
     test('should return correct position for all directions', () {
-      final c4 = Position.c4;
+      const c4 = Position.c4;
 
       // Cardinal
       expect(c4.next(Direction.up), Position.c5);
@@ -73,13 +73,13 @@ void main() {
     });
 
     test('should return null when moving off board', () {
-      final a1 = Position.a1;
+      const a1 = Position.a1;
       expect(a1.next(Direction.down), isNull);
       expect(a1.next(Direction.left), isNull);
       expect(a1.next(Direction.downLeft), isNull);
       expect(a1.next(Direction.downDownLeft), isNull);
 
-      final h8 = Position.h8;
+      const h8 = Position.h8;
       expect(h8.next(Direction.up), isNull);
       expect(h8.next(Direction.right), isNull);
       expect(h8.next(Direction.upRight), isNull);
@@ -89,9 +89,9 @@ void main() {
 
   group('compareTo', () {
     test('should compare files first', () {
-      final a1 = Position.a1;
-      final b1 = Position.b1;
-      final h1 = Position.h1;
+      const a1 = Position.a1;
+      const b1 = Position.b1;
+      const h1 = Position.h1;
 
       expect(a1.compareTo(b1), lessThan(0));
       expect(b1.compareTo(a1), greaterThan(0));
@@ -100,9 +100,9 @@ void main() {
     });
 
     test('should compare ranks when files are equal', () {
-      final e1 = Position.e1;
-      final e4 = Position.e4;
-      final e8 = Position.e8;
+      const e1 = Position.e1;
+      const e4 = Position.e4;
+      const e8 = Position.e8;
 
       expect(e1.compareTo(e4), lessThan(0));
       expect(e4.compareTo(e1), greaterThan(0));
@@ -113,16 +113,16 @@ void main() {
     });
 
     test('should return 0 for equal positions', () {
-      final pos1 = Position.d4;
-      final pos2 = Position.d4;
+      const pos1 = Position.d4;
+      const pos2 = Position.d4;
 
       expect(pos1.compareTo(pos2), equals(0));
       expect(pos2.compareTo(pos1), equals(0));
     });
 
     test('should prioritize file comparison over rank', () {
-      final a8 = Position.a8;
-      final h1 = Position.h1;
+      const a8 = Position.a8;
+      const h1 = Position.h1;
 
       // Even though a8 has higher rank than h1,
       // file 'a' comes before file 'h'
@@ -149,8 +149,8 @@ void main() {
     });
 
     test('should satisfy compareTo contract - antisymmetric', () {
-      final pos1 = Position.c3;
-      final pos2 = Position.f6;
+      const pos1 = Position.c3;
+      const pos2 = Position.f6;
 
       final result1 = pos1.compareTo(pos2);
       final result2 = pos2.compareTo(pos1);
@@ -159,9 +159,9 @@ void main() {
     });
 
     test('should satisfy compareTo contract - transitive', () {
-      final pos1 = Position.a1;
-      final pos2 = Position.d4;
-      final pos3 = Position.h8;
+      const pos1 = Position.a1;
+      const pos2 = Position.d4;
+      const pos3 = Position.h8;
 
       expect(pos1.compareTo(pos2), lessThan(0));
       expect(pos2.compareTo(pos3), lessThan(0));
@@ -169,10 +169,10 @@ void main() {
     });
 
     test('should handle all corner positions correctly', () {
-      final a1 = Position.a1;
-      final a8 = Position.a8;
-      final h1 = Position.h1;
-      final h8 = Position.h8;
+      const a1 = Position.a1;
+      const a8 = Position.a8;
+      const h1 = Position.h1;
+      const h8 = Position.h8;
 
       // a1 should be smallest
       expect(a1.compareTo(a8), lessThan(0));
@@ -194,9 +194,9 @@ void main() {
     });
 
     test('should be consistent with equality', () {
-      final pos1 = Position.e4;
-      final pos2 = Position.e4;
-      final pos3 = Position.e5;
+      const pos1 = Position.e4;
+      const pos2 = Position.e4;
+      const pos3 = Position.e5;
 
       // Equal positions should have compareTo result of 0
       expect(pos1.compareTo(pos2), equals(0));
@@ -208,9 +208,9 @@ void main() {
     });
 
     test('list contains should use equality', () {
-      final pos1 = Position.c3;
-      final pos2 = Position.c3;
-      final pos3 = Position.d4;
+      const pos1 = Position.c3;
+      const pos2 = Position.c3;
+      const pos3 = Position.d4;
 
       final positions = [pos1, pos3];
 

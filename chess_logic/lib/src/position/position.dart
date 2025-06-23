@@ -1,10 +1,11 @@
-import 'package:chess_logic/src/position/direction.dart';
-import 'package:chess_logic/src/move/ambiguous_movement_type.dart';
-import 'package:chess_logic/src/position/file.dart';
-import 'package:chess_logic/src/position/rank.dart';
-import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/square/square.dart';
 import 'package:equatable/equatable.dart';
+
+import '../move/ambiguous_movement_type.dart';
+import '../square/piece.dart';
+import '../square/square.dart';
+import 'direction.dart';
+import 'file.dart';
+import 'rank.dart';
 
 final class AmbiguousPosition with EquatableMixin {
   const AmbiguousPosition({this.file, this.rank})
@@ -127,16 +128,10 @@ enum Position implements AmbiguousPosition, Comparable<Position> {
   h7._(File.h, Rank.seven),
   h8._(File.h, Rank.eight);
 
-  const Position._(this.file, this.rank);
-
   factory Position(File file, Rank rank) =>
       Position.values.firstWhere((p) => p.file == file && p.rank == rank);
 
-  @override
-  final File file;
-
-  @override
-  final Rank rank;
+  const Position._(this.file, this.rank);
 
   factory Position.fromAlgebraic(String notation) {
     if (notation.length != 2) {
@@ -158,6 +153,12 @@ enum Position implements AmbiguousPosition, Comparable<Position> {
     final rank = Rank.fromValue(rankValue);
     return Position(file, rank);
   }
+
+  @override
+  final File file;
+
+  @override
+  final Rank rank;
 
   Square operator <(Piece? piece) => Square(this, piece);
 

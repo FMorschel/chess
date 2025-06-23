@@ -117,7 +117,8 @@ void main() {
       );
 
       test(
-        'all directions should be covered by cross, diagonal and knight collections',
+        'all directions should be covered by cross, diagonal and knight '
+        'collections',
         () {
           final covered = <Direction>{
             ...Direction.cross,

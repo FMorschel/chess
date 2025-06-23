@@ -1,8 +1,8 @@
-import 'package:chess_logic/src/move/ambiguous_movement_type.dart';
-import 'package:chess_logic/src/move/check.dart';
-import 'package:chess_logic/src/move/move.dart';
-import 'package:chess_logic/src/position/position.dart';
-import 'package:chess_logic/src/utility/visitor.dart';
+import '../position/position.dart';
+import '../utility/visitor.dart';
+import 'ambiguous_movement_type.dart';
+import 'check.dart';
+import 'move.dart';
 
 class AlgebraicNotationFormatter
     with Visitor<Move, AlgebraicNotationFormatter, String> {
@@ -16,7 +16,7 @@ class AlgebraicNotationFormatter
   // One method for each move type
   String formatRegularMove(Move move) {
     _buffer.write(move.moving.toAlgebraic());
-    if (move.ambiguous case var ambiguous? when move is! EnPassantMove) {
+    if (move.ambiguous case final ambiguous? when move is! EnPassantMove) {
       _formatAmbiguous(ambiguous, move.from);
     }
     _buffer.write(move.to.toAlgebraic());
@@ -25,7 +25,7 @@ class AlgebraicNotationFormatter
 
   String formatRegularCaptureMove(CaptureMove move) {
     _buffer.write(move.moving.toAlgebraic());
-    if (move.ambiguous case var ambiguous? when move is! EnPassantMove) {
+    if (move.ambiguous case final ambiguous? when move is! EnPassantMove) {
       _formatAmbiguous(ambiguous, move.from);
     }
     _buffer.write(_capture);
@@ -73,6 +73,7 @@ class AlgebraicNotationFormatter
   }
 
   String _formatAmbiguous(AmbiguousMovementType type, Position from) {
+    // ignore: unnecessary_statements, to enforce exhaustive matching
     (switch (type) {
       AmbiguousMovementType.file => _buffer.write(from.file.letter),
       AmbiguousMovementType.rank => _buffer.write(from.rank.value),
@@ -84,14 +85,15 @@ class AlgebraicNotationFormatter
   @override
   String visit(Move visitee) {
     _buffer.clear();
+    // ignore: unnecessary_statements, to enforce exhaustive matching
     (switch (visitee) {
-      EnPassantMove move => formatEnPassantMove(move),
-      KingsideCastling move => formatKingsideCastling(move),
-      PromotionCaptureMove move => formatPromotionCaptureMove(move),
-      PromotionMove move => formatPromotionMove(move),
-      QueensideCastling move => formatQueensideCastling(move),
-      CaptureMove move => formatRegularCaptureMove(move),
-      Move move => formatRegularMove(move),
+      final EnPassantMove move => formatEnPassantMove(move),
+      final KingsideCastling move => formatKingsideCastling(move),
+      final PromotionCaptureMove move => formatPromotionCaptureMove(move),
+      final PromotionMove move => formatPromotionMove(move),
+      final QueensideCastling move => formatQueensideCastling(move),
+      final CaptureMove move => formatRegularCaptureMove(move),
+      final Move move => formatRegularMove(move),
     });
     return _formatCheck(visitee.check);
   }

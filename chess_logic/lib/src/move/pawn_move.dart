@@ -18,6 +18,31 @@ final class PawnMove extends Move<Pawn> {
        ),
        super.base();
 
+  factory PawnMove.initial({
+    required Pawn pawn,
+    required Position from,
+    required Position to,
+    Check check = Check.none,
+  }) {
+    return PawnInitialMove(moving: pawn, from: from, to: to, check: check);
+  }
+
+  factory PawnMove.enPassant({
+    required Pawn pawn,
+    required Position from,
+    required Position to,
+    required Pawn captured,
+    Check check = Check.none,
+  }) {
+    return EnPassantMove(
+      moving: pawn,
+      from: from,
+      to: to,
+      captured: captured,
+      check: check,
+    );
+  }
+
   static PawnCaptureMove<P> capture<P extends Piece>({
     required Pawn moving,
     required Position from,
@@ -33,16 +58,6 @@ final class PawnMove extends Move<Pawn> {
       captured: captured,
       check: check,
     );
-  }
-
-  factory PawnMove.initial({
-    required Pawn pawn,
-    required Position from,
-    required Position to,
-    Check check = Check.none,
-    void ambiguous,
-  }) {
-    return PawnInitialMove(moving: pawn, from: from, to: to, check: check);
   }
 
   static PromotionMove promotion<P extends Piece>({
@@ -72,22 +87,6 @@ final class PawnMove extends Move<Pawn> {
     ),
   };
 
-  factory PawnMove.enPassant({
-    required Pawn pawn,
-    required Position from,
-    required Position to,
-    required Pawn captured,
-    Check check = Check.none,
-  }) {
-    return EnPassantMove(
-      moving: pawn,
-      from: from,
-      to: to,
-      captured: captured,
-      check: check,
-    );
-  }
-
   @override
   PawnMove copyWith({Check? check, AmbiguousMovementType? ambiguous}) =>
       PawnMove(
@@ -105,7 +104,6 @@ final class PawnInitialMove extends Move<Pawn> implements PawnMove {
     required super.to,
     required super.moving,
     super.check,
-    void ambiguous,
   }) : assert(
          from.next(moving.forward)?.next(moving.forward) == to,
          'Initial pawn move must move two squares forward '
@@ -137,13 +135,30 @@ final class PawnCaptureMove<P extends Piece> extends CaptureMove<Pawn, P>
     required super.to,
     required super.moving,
     super.check,
-    void ambiguous,
   }) : assert(
-         moving.captureDirections.map((dir) => from.next(dir)).contains(to),
+         moving.captureDirections.map(from.next).contains(to),
          'Pawn move must move one square diagonally '
          '(${from.toAlgebraic()} -> ${to.toAlgebraic()})',
        ),
        super.base(ambiguous: AmbiguousMovementType.file);
+
+  factory PawnCaptureMove.promotion({
+    required Pawn pawn,
+    required Position from,
+    required Position to,
+    required P captured,
+    required PieceSymbol promotion,
+    Check check = Check.none,
+  }) {
+    return PromotionCaptureMove<P>(
+      moving: pawn,
+      from: from,
+      to: to,
+      captured: captured,
+      promotion: promotion,
+      check: check,
+    );
+  }
 
   static PawnCaptureMove<Pawn> enPassant({
     required Pawn pawn,
@@ -157,25 +172,6 @@ final class PawnCaptureMove<P extends Piece> extends CaptureMove<Pawn, P>
       from: from,
       to: to,
       captured: captured,
-      check: check,
-    );
-  }
-
-  factory PawnCaptureMove.promotion({
-    required Pawn pawn,
-    required Position from,
-    required Position to,
-    required P captured,
-    required PieceSymbol promotion,
-    Check check = Check.none,
-    void ambiguous,
-  }) {
-    return PromotionCaptureMove<P>(
-      moving: pawn,
-      from: from,
-      to: to,
-      captured: captured,
-      promotion: promotion,
       check: check,
     );
   }
@@ -206,7 +202,7 @@ final class EnPassantMove extends PawnCaptureMove<Pawn> {
          'En passant must move one square diagonally '
          '(${from.toAlgebraic()} -> ${to.toAlgebraic()})',
        ),
-       super(ambiguous: AmbiguousMovementType.file);
+       super();
 
   @override
   // ignore: overridden_fields, better performance
@@ -268,7 +264,6 @@ final class PromotionCaptureMove<P extends Piece> extends PawnCaptureMove<P>
     required super.moving,
     required this.promotion,
     super.check,
-    void ambiguous,
   }) : assert(
          promotion.canPromoteTo,
          'Promotion must be to a valid piece symbol ($promotion)',

@@ -7,9 +7,9 @@ import 'package:test/test.dart';
 
 void main() {
   group('KnightMove', () {
-    final whiteKnight = Knight.white;
-    final from = Position.b1;
-    final to = Position.c3;
+    const whiteKnight = Knight.white;
+    const from = Position.b1;
+    const to = Position.c3;
 
     test('stores all fields correctly', () {
       final move = KnightMove(from: from, to: to, moving: whiteKnight);
@@ -91,10 +91,10 @@ void main() {
   });
 
   group('KnightCaptureMove', () {
-    final whiteKnight = Knight.white;
-    final from = Position.b1;
-    final to = Position.c3;
-    final captured = Pawn.black;
+    const whiteKnight = Knight.white;
+    const from = Position.b1;
+    const to = Position.c3;
+    const captured = Pawn.black;
 
     test('stores all fields correctly', () {
       final move = KnightCaptureMove(

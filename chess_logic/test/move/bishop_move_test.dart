@@ -7,9 +7,9 @@ import 'package:test/test.dart';
 
 void main() {
   group('BishopMove', () {
-    final whiteBishop = Bishop.white;
-    final from = Position.c1;
-    final to = Position.f4;
+    const whiteBishop = Bishop.white;
+    const from = Position.c1;
+    const to = Position.f4;
 
     test('stores all fields correctly', () {
       final move = BishopMove(from: from, to: to, moving: whiteBishop);
@@ -91,10 +91,10 @@ void main() {
   });
 
   group('BishopCaptureMove', () {
-    final whiteBishop = Bishop.white;
-    final from = Position.c1;
-    final to = Position.f4;
-    final captured = Pawn.black;
+    const whiteBishop = Bishop.white;
+    const from = Position.c1;
+    const to = Position.f4;
+    const captured = Pawn.black;
 
     test('stores all fields correctly', () {
       final move = BishopCaptureMove(

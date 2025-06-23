@@ -1,14 +1,14 @@
-import 'package:chess_logic/src/controller/board_state.dart';
-import 'package:chess_logic/src/controller/movement_manager.dart';
-import 'package:chess_logic/src/controller/threat_detector.dart';
-import 'package:chess_logic/src/move/check.dart';
-import 'package:chess_logic/src/move/move.dart';
-import 'package:chess_logic/src/position/position.dart';
-import 'package:chess_logic/src/position/file.dart';
-import 'package:chess_logic/src/position/rank.dart';
-import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/square/square.dart';
-import 'package:chess_logic/src/team/team.dart';
+import '../move/check.dart';
+import '../move/move.dart';
+import '../position/file.dart';
+import '../position/position.dart';
+import '../position/rank.dart';
+import '../square/piece.dart';
+import '../square/square.dart';
+import '../team/team.dart';
+import 'board_state.dart';
+import 'movement_manager.dart';
+import 'threat_detector.dart';
 
 /// Service for detecting check and checkmate states in chess.
 ///
@@ -20,23 +20,6 @@ class CheckDetector {
   final ThreatDetector threatDetector;
 
   late MovementManager _movementManager;
-
-  /// The movement manager used to evaluate possible moves.
-  ///
-  /// Must operate on the same [BoardState] as [state].
-  ///
-  /// This is intended to be set after the [CheckDetector] is created,
-  /// typically by the [MovementManager] itself.
-  set movementManager(MovementManager manager) {
-    if (manager.state != state) {
-      throw ArgumentError(
-        'MovementManager must operate on the same BoardState as ThreatDetector',
-      );
-    }
-    _movementManager = manager;
-  }
-
-  BoardState get state => threatDetector.state;
 
   /// Evaluates if a move would create check or checkmate for any team.
   ///
@@ -240,7 +223,7 @@ class CheckDetector {
     // Check if any of these moves captures the threatening piece
     for (final move in possibleMoves) {
       if (move case CaptureMove(
-        :var capturedPosition,
+        :final capturedPosition,
       ) when capturedPosition == threateningPosition) {
         // Test if this move resolves the check
         if (threatDetector.wouldMoveResolvePieceThreat(move, kingSquare)) {
@@ -325,5 +308,22 @@ class CheckDetector {
     }
 
     return blockingPositions;
+  }
+
+  BoardState get state => threatDetector.state;
+
+  /// The movement manager used to evaluate possible moves.
+  ///
+  /// Must operate on the same [BoardState] as [state].
+  ///
+  /// This is intended to be set after the [CheckDetector] is created,
+  /// typically by the [MovementManager] itself.
+  set movementManager(MovementManager manager) {
+    if (manager.state != state) {
+      throw ArgumentError(
+        'MovementManager must operate on the same BoardState as ThreatDetector',
+      );
+    }
+    _movementManager = manager;
   }
 }

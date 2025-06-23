@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:chess_logic/chess_logic.dart';
 
 /// Demonstrates the Scholar's Mate - the fastest possible checkmate in chess.
@@ -54,7 +56,7 @@ void main() {
   ];
 
   for (final move in moves) {
-    print('\nExecuting move: ${move.toString()}');
+    print('\nExecuting move: $move');
     game.move(move);
     print(game.state.toString(complete: true));
   }

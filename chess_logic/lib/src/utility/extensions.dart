@@ -1,10 +1,11 @@
-import 'package:chess_logic/src/controller/capture.dart';
-import 'package:chess_logic/src/controller/team_score.dart';
-import 'package:chess_logic/src/move/move.dart';
-import 'package:chess_logic/src/position/position.dart';
-import 'package:chess_logic/src/square/square.dart';
-import 'package:chess_logic/src/team/team.dart';
 import 'package:collection/collection.dart';
+
+import '../controller/capture.dart';
+import '../controller/team_score.dart';
+import '../move/move.dart';
+import '../position/position.dart';
+import '../square/square.dart';
+import '../team/team.dart';
 
 extension IterableCaptureExtension on Iterable<Capture> {
   int get totalValue => fold<int>(0, (sum, capture) => sum + capture.value);
@@ -56,5 +57,5 @@ extension ListTeamScoreExtension on List<TeamScore> {
 }
 
 extension IterableTeamExtension on Iterable<Team> {
-  List<TeamScore> get scores => map((team) => TeamScore(team)).toList();
+  List<TeamScore> get scores => map(TeamScore.new).toList();
 }

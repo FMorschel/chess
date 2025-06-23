@@ -89,7 +89,7 @@ void main() {
       });
 
       test('should not be equal for different positions', () {
-        final position2 = Position.a1;
+        const position2 = Position.a1;
         final square1 = Square(position, piece);
         final square2 = Square(position2, piece);
 
@@ -131,7 +131,7 @@ void main() {
       });
 
       test('should handle different positions correctly', () {
-        final pos = Position.a8;
+        const pos = Position.a8;
         final square = Square(pos);
         final result = square.toString();
         expect(result, equals('a8, empty'));

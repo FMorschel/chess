@@ -96,8 +96,7 @@ void main() {
         expect(pieces, hasLength(1));
 
         // Verify it's a new list (modifications don't affect original)
-        pieces.clear();
-        expect(teamScore.capturedPieces, hasLength(1));
+        expect(pieces.clear, throwsUnsupportedError);
       });
 
       test('should maintain correct order of captures', () {
@@ -398,7 +397,8 @@ Capture _createCapture<P extends Piece, C extends Piece>({
   required P captor,
 }) {
   // Use different positions based on piece type to ensure valid moves
-  Position from, to;
+  Position from;
+  Position to;
 
   if (captor is Rook) {
     from = Position.a1;

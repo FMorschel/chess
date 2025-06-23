@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:chess_logic/src/position/direction.dart';
+import 'direction.dart';
 
 enum File implements Comparable<File> {
   a('a'),
@@ -14,8 +14,6 @@ enum File implements Comparable<File> {
 
   const File(this.letter);
 
-  final String letter;
-
   factory File.fromLetter(String letter) {
     return File.values.firstWhere(
       (f) => f.letter.toUpperCase() == letter.toUpperCase(),
@@ -26,6 +24,8 @@ enum File implements Comparable<File> {
       ),
     );
   }
+
+  final String letter;
 
   File? next(Direction direction) => switch (direction) {
     Direction.up || Direction.down => null,

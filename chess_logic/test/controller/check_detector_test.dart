@@ -485,7 +485,7 @@ void main() {
           Team.values,
         ).checkDetector;
 
-        var result = checkDetector.moveWouldCreateCheck(
+        final result = checkDetector.moveWouldCreateCheck(
           PawnInitialMove(
             // (enables en passant)
             from: Position.f7,

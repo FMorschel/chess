@@ -8,11 +8,11 @@ import 'package:test/test.dart';
 
 void main() {
   group('EnPassantMove', () {
-    final whitePawn = Pawn.white;
-    final blackPawn = Pawn.black;
-    final from = Position.e5;
-    final to = Position.d6;
-    final captured = Pawn.black;
+    const whitePawn = Pawn.white;
+    const blackPawn = Pawn.black;
+    const from = Position.e5;
+    const to = Position.d6;
+    const captured = Pawn.black;
 
     test('stores all fields correctly', () {
       final move = EnPassantMove(

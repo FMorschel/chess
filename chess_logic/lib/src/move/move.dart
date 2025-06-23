@@ -1,15 +1,16 @@
-import 'package:chess_logic/src/controller/capture.dart';
-import 'package:chess_logic/src/position/direction.dart';
-import 'package:chess_logic/src/move/algebraic_notation_formatter.dart';
-import 'package:chess_logic/src/move/ambiguous_movement_type.dart';
-import 'package:chess_logic/src/move/check.dart';
-import 'package:chess_logic/src/position/file.dart';
-import 'package:chess_logic/src/position/position.dart';
-import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/square/piece_symbol.dart';
-import 'package:chess_logic/src/team/team.dart';
-import 'package:chess_logic/src/utility/visitor.dart';
 import 'package:equatable/equatable.dart';
+
+import '../controller/capture.dart';
+import '../position/direction.dart';
+import '../position/file.dart';
+import '../position/position.dart';
+import '../square/piece.dart';
+import '../square/piece_symbol.dart';
+import '../team/team.dart';
+import '../utility/visitor.dart';
+import 'algebraic_notation_formatter.dart';
+import 'ambiguous_movement_type.dart';
+import 'check.dart';
 
 part 'bishop_move.dart';
 part 'king_move.dart';
@@ -21,6 +22,55 @@ part 'rook_move.dart';
 /// Regular move of a piece from one square to another
 sealed class Move<P extends Piece> extends Equatable
     with Visitee<AlgebraicNotationFormatter, Move> {
+  factory Move.create({
+    required P moving,
+    required Position from,
+    required Position to,
+    Check check = Check.none,
+    AmbiguousMovementType? ambiguous,
+  }) {
+    return switch (moving) {
+          King() => KingMove(from: from, to: to, moving: moving, check: check),
+          Queen() => QueenMove(
+            from: from,
+            to: to,
+            moving: moving,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Rook() => RookMove(
+            from: from,
+            to: to,
+            moving: moving,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Bishop() => BishopMove(
+            from: from,
+            to: to,
+            moving: moving,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Knight() => KnightMove(
+            from: from,
+            to: to,
+            moving: moving,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          Pawn() => PawnMove(
+            from: from,
+            to: to,
+            moving: moving,
+            check: check,
+            ambiguous: ambiguous,
+          ),
+          _ => Move.create(moving: moving, from: from, to: to),
+        }
+        as Move<P>;
+  }
+
   const Move.base({
     required this.from,
     required this.to,
@@ -31,6 +81,19 @@ sealed class Move<P extends Piece> extends Equatable
          from != to,
          'Move must be from a different square (from: $from, to: $to)',
        );
+
+  static final _algebraicRegex = RegExp(
+    '^(([QRBNK]?([a-h]?[1-8]?)?(x)?([a-h][1-8])(=[QRBN])?)|(O-O)|(O-O-O))([+#]'
+    r')?$',
+  );
+
+  static final _visitor = AlgebraicNotationFormatter();
+
+  final Position from;
+  final Position to;
+  final P moving;
+  final Check check;
+  final AmbiguousMovementType? ambiguous;
 
   static Move<P> fromAlgebraic<P extends Piece, C extends Piece>(
     String algebraic,
@@ -45,7 +108,7 @@ sealed class Move<P extends Piece> extends Equatable
     })
     pieceOrigin,
   }) {
-    var match = _algebraicRegex.firstMatch(algebraic);
+    final match = _algebraicRegex.firstMatch(algebraic);
     if (match == null) {
       throw ArgumentError.value(
         algebraic,
@@ -185,61 +248,6 @@ sealed class Move<P extends Piece> extends Equatable
     );
   }
 
-  factory Move.create({
-    required P moving,
-    required Position from,
-    required Position to,
-    Check check = Check.none,
-    AmbiguousMovementType? ambiguous,
-  }) {
-    return switch (moving) {
-          King() => KingMove(
-            from: from,
-            to: to,
-            moving: moving,
-            check: check,
-            ambiguous: ambiguous,
-          ),
-          Queen() => QueenMove(
-            from: from,
-            to: to,
-            moving: moving,
-            check: check,
-            ambiguous: ambiguous,
-          ),
-          Rook() => RookMove(
-            from: from,
-            to: to,
-            moving: moving,
-            check: check,
-            ambiguous: ambiguous,
-          ),
-          Bishop() => BishopMove(
-            from: from,
-            to: to,
-            moving: moving,
-            check: check,
-            ambiguous: ambiguous,
-          ),
-          Knight() => KnightMove(
-            from: from,
-            to: to,
-            moving: moving,
-            check: check,
-            ambiguous: ambiguous,
-          ),
-          Pawn() => PawnMove(
-            from: from,
-            to: to,
-            moving: moving,
-            check: check,
-            ambiguous: ambiguous,
-          ),
-          _ => Move.create(moving: moving, from: from, to: to),
-        }
-        as Move<P>;
-  }
-
   static CaptureMove<P, C> capture<P extends Piece, C extends Piece>({
     required P moving,
     required Position from,
@@ -256,21 +264,6 @@ sealed class Move<P extends Piece> extends Equatable
     ambiguous: ambiguous,
   );
 
-  static final _algebraicRegex = RegExp(
-    r'^(([QRBNK]?([a-h]?[1-8]?)?(x)?([a-h][1-8])(=[QRBN])?)|(O-O)|(O-O-O))([+#])?$',
-  );
-
-  static final _visitor = AlgebraicNotationFormatter();
-
-  final Position from;
-  final Position to;
-  final P moving;
-  final Check check;
-  final AmbiguousMovementType? ambiguous;
-
-  /// The team that is making the move.
-  Team get team => moving.team;
-
   @override
   String accept(AlgebraicNotationFormatter visitor) {
     return visitor.visit(this);
@@ -281,7 +274,15 @@ sealed class Move<P extends Piece> extends Equatable
   @override
   String toString() => toAlgebraic();
 
+  /// Creates a copy of this move with the given parameters.
+  ///
+  /// This method is used to create a new instance of the move with modified
+  /// properties ([Move.check] or [Move.ambiguous]). It is useful for fixing
+  /// these properties after the move has been created.
   Move<P> copyWith({Check? check, AmbiguousMovementType? ambiguous});
+
+  /// The team that is making the move.
+  Team get team => moving.team;
 
   @override
   List<Object?> get props => [from, to, moving, check];
@@ -301,6 +302,7 @@ sealed class CaptureMove<P extends Piece, C extends Piece> extends Move<P> {
          'Captured piece must be from a different team',
        ),
        super.base();
+
   factory CaptureMove.create({
     required P moving,
     required C captured,
@@ -371,7 +373,6 @@ sealed class CaptureMove<P extends Piece, C extends Piece> extends Move<P> {
   final C captured;
 
   late final capturedPosition = to;
-
   late final _capture = Capture<P, C>(this);
 
   Capture<P, C> asCapture() => _capture;

@@ -31,11 +31,9 @@ enum Direction {
     Direction.downLeft,
     Direction.downRight,
   ];
+
   /// Both [cross] and [diagonal] directions, excluding [knight] moves.
-  static const orthogonal = [
-    ...cross,
-    ...diagonal,
-  ];
+  static const orthogonal = [...cross, ...diagonal];
   static const knight = [
     Direction.upUpLeft,
     Direction.upLeftLeft,
@@ -47,7 +45,7 @@ enum Direction {
     Direction.downRightRight,
   ];
 
-  /// Returns the opposite direction.
+  /// The opposite direction.
   Direction get opposite {
     return switch (this) {
       Direction.up => Direction.down,

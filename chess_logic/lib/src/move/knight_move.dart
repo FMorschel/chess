@@ -8,7 +8,7 @@ final class KnightMove extends Move<Knight> {
     super.check,
     super.ambiguous,
   }) : assert(
-         Direction.knight.map((dir) => from.next(dir)).contains(to),
+         Direction.knight.map(from.next).contains(to),
          'Knight move must form an "L" shape '
          '(${from.toAlgebraic()} -> ${to.toAlgebraic()})',
        ),

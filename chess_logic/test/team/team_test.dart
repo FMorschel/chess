@@ -35,28 +35,28 @@ void main() {
   });
   group('BlackTeam', () {
     test('black team name', () {
-      expect(BlackTeam().name, 'Black');
+      expect(const BlackTeam().name, 'Black');
     });
 
     test('black team homeRank', () {
-      expect(BlackTeam().homeRank, Rank.eight);
+      expect(const BlackTeam().homeRank, Rank.eight);
     });
 
     test('black team is Team.black', () {
-      expect(BlackTeam(), Team.black);
+      expect(const BlackTeam(), Team.black);
     });
   });
   group('WhiteTeam', () {
     test('white team name', () {
-      expect(WhiteTeam().name, 'White');
+      expect(const WhiteTeam().name, 'White');
     });
 
     test('white team homeRank', () {
-      expect(WhiteTeam().homeRank, Rank.one);
+      expect(const WhiteTeam().homeRank, Rank.one);
     });
 
     test('white team is Team.white', () {
-      expect(WhiteTeam(), Team.white);
+      expect(const WhiteTeam(), Team.white);
     });
   });
 }

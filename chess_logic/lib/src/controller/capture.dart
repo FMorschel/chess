@@ -1,14 +1,17 @@
-import 'package:chess_logic/src/move/move.dart';
-import 'package:chess_logic/src/position/position.dart';
-import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/team/team.dart';
+import '../move/move.dart';
+import '../position/position.dart';
+import '../square/piece.dart';
+import '../team/team.dart';
 
 /// Represents a capture in chess, encapsulating the move that resulted in the
 /// capture and providing access to the relevant information.
+///
+/// Wraps a [CaptureMove] to provide convenient access to capture-specific
+/// properties like the captured piece, capturing piece, and capture position.
 extension type Capture<P extends Piece, C extends Piece>(
   CaptureMove<P, C> _move
 ) {
-  /// The captured piece.
+  /// The piece that was captured in this move.
   C get piece => _move.captured;
 
   /// The piece that performed the capture.
@@ -23,5 +26,6 @@ extension type Capture<P extends Piece, C extends Piece>(
   /// {@macro piece_value}
   int get value => piece.value;
 
+  /// Converts this capture to algebraic notation.
   String toAlgebraic() => _move.toAlgebraic();
 }

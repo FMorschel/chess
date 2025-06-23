@@ -6,9 +6,9 @@ import 'package:test/test.dart';
 
 void main() {
   group('PawnInitialMove', () {
-    final whitePawn = Pawn.white;
-    final from = Position.e2;
-    final to = Position.e4;
+    const whitePawn = Pawn.white;
+    const from = Position.e2;
+    const to = Position.e4;
     test('stores all fields correctly', () {
       final move = PawnInitialMove(from: from, to: to, moving: whitePawn);
 

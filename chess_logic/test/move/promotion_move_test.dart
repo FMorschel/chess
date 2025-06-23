@@ -8,9 +8,9 @@ import 'package:test/test.dart';
 
 void main() {
   group('PromotionMove', () {
-    final whitePawn = Pawn.white;
-    final from = Position.e7;
-    final to = Position.e8;
+    const whitePawn = Pawn.white;
+    const from = Position.e7;
+    const to = Position.e8;
 
     test('stores all fields correctly', () {
       final move = PromotionMove(
@@ -122,10 +122,10 @@ void main() {
   });
 
   group('PromotionCaptureMove', () {
-    final whitePawn = Pawn.white;
-    final from = Position.e7;
-    final to = Position.d8;
-    final captured = Rook.black;
+    const whitePawn = Pawn.white;
+    const from = Position.e7;
+    const to = Position.d8;
+    const captured = Rook.black;
 
     test('stores all fields correctly', () {
       final move = PromotionCaptureMove(

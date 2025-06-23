@@ -11,43 +11,42 @@ void main() {
     late BoardState boardState;
     late ThreatDetector threatDetector;
     // Define piece instances once for all tests
-    final whiteKing = King.white;
-    final whiteQueen = Queen.white;
-    final whiteKnight = Knight.white;
-    final whitePawn = Pawn.white;
+    const whiteKing = King.white;
+    const whiteQueen = Queen.white;
+    const whiteKnight = Knight.white;
+    const whitePawn = Pawn.white;
 
-    final blackQueen = Queen.black;
-    final blackRook = Rook.black;
-    final blackKnight = Knight(
-      Team.black,
-    ); // Define position instances once for all tests
-    final a1 = Position.a1;
-    final a2 = Position.a2;
-    final a3 = Position.a3;
-    final a4 = Position.a4;
-    final b3 = Position.b3;
-    final c2 = Position.c2;
-    final c6 = Position.c6;
-    final d1 = Position.d1;
-    final d2 = Position.d2;
-    final d3 = Position.d3;
-    final d4 = Position.d4;
-    final d5 = Position.d5;
-    final d8 = Position.d8;
-    final e1 = Position.e1;
-    final e2 = Position.e2;
-    final e3 = Position.e3;
-    final e4 = Position.e4;
-    final e6 = Position.e6;
-    final e8 = Position.e8;
-    final f5 = Position.f5;
-    final g7 = Position.g7;
-    final h1 = Position.h1;
-    final h2 = Position.h2;
-    final h3 = Position.h3;
-    final h4 = Position.h4;
-    final h7 = Position.h7;
-    final h8 = Position.h8;
+    const blackQueen = Queen.black;
+    const blackRook = Rook.black;
+    const blackKnight = Knight.black;
+    // Define position instances once for all tests
+    const a1 = Position.a1;
+    const a2 = Position.a2;
+    const a3 = Position.a3;
+    const a4 = Position.a4;
+    const b3 = Position.b3;
+    const c2 = Position.c2;
+    const c6 = Position.c6;
+    const d1 = Position.d1;
+    const d2 = Position.d2;
+    const d3 = Position.d3;
+    const d4 = Position.d4;
+    const d5 = Position.d5;
+    const d8 = Position.d8;
+    const e1 = Position.e1;
+    const e2 = Position.e2;
+    const e3 = Position.e3;
+    const e4 = Position.e4;
+    const e6 = Position.e6;
+    const e8 = Position.e8;
+    const f5 = Position.f5;
+    const g7 = Position.g7;
+    const h1 = Position.h1;
+    const h2 = Position.h2;
+    const h3 = Position.h3;
+    const h4 = Position.h4;
+    const h7 = Position.h7;
+    const h8 = Position.h8;
 
     setUp(() {
       boardState = BoardState.empty();
@@ -100,7 +99,8 @@ void main() {
         );
       });
       test('should return false when attacked by same team', () {
-        // Setup: White queen at e8, checking if e1 is under attack for white team
+        // Setup: White queen at e8, checking if e1 is under attack for white
+        // team
         boardState = BoardState.custom({e8: whiteQueen});
         threatDetector = ThreatDetector(boardState);
 
@@ -456,7 +456,8 @@ void main() {
       );
 
       test(
-        'should return true when move resolves threat by moving threatened piece',
+        'should return true when move resolves threat by moving threatened '
+        'piece',
         () {
           // Setup: King under attack, moving the king to safety
           boardState = BoardState.custom({e1: whiteKing, e8: blackQueen});

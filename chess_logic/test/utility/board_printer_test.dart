@@ -215,7 +215,9 @@ void main() {
         expect(
           result,
           contains('   a b c d e f g h'),
-        ); // For compact board, check that positions correspond to correct files
+        );
+        // For compact board, check that positions correspond to correct
+        // files
         final customBoard = BoardState.custom({
           Position.a1: Piece.fromSymbol(PieceSymbol.rook, Team.white),
           Position.h1: Piece.fromSymbol(PieceSymbol.rook, Team.black),

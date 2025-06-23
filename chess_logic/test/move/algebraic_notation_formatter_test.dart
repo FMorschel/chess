@@ -440,7 +440,8 @@ void main() {
     });
 
     test(
-      'should format complex scenarios with promotion captures and different pieces',
+      'should format complex scenarios with promotion captures and different '
+      'pieces',
       () {
         final promotionCaptures = [
           (PieceSymbol.rook, 'R'),

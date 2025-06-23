@@ -1,12 +1,12 @@
 {
   "roots": [
-    "_",
+    "_chess",
     "chess",
     "chess_logic"
   ],
   "packages": [
     {
-      "name": "_",
+      "name": "_chess",
       "version": "0.0.0",
       "dependencies": [],
       "devDependencies": []

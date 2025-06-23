@@ -136,7 +136,7 @@ void main() {
 
     group('possibleMoves', () {
       test('should return empty list for empty square', () {
-        final emptySquare = EmptySquare(Position.e4);
+        const emptySquare = EmptySquare(Position.e4);
         final manager = MovementManager(boardState, [], teams);
 
         final moves = manager.possibleMoves(emptySquare);
@@ -144,9 +144,9 @@ void main() {
       });
 
       test('should return pawn moves for pawn', () {
-        final pawnPosition = Position.e2;
-        final pawn = Pawn.white;
-        final square = OccupiedSquare(pawnPosition, pawn);
+        const pawnPosition = Position.e2;
+        const pawn = Pawn.white;
+        const square = OccupiedSquare(pawnPosition, pawn);
         final manager = MovementManager(boardState, [], teams);
 
         final moves = manager.possibleMoves(square);
@@ -250,7 +250,7 @@ void main() {
 
     group('possibleMovesWithCheck', () {
       test('should return empty list for empty square', () {
-        final emptySquare = EmptySquare(Position.e4);
+        const emptySquare = EmptySquare(Position.e4);
         final manager = MovementManager(boardState, [], teams);
 
         final moves = manager.possibleMovesWithCheck(emptySquare);
@@ -395,7 +395,8 @@ void main() {
             kingsideCastling,
             isEmpty,
             reason:
-                'Should not allow kingside castling when it would put king in check',
+                'Should not allow kingside castling when it would put king in '
+                'check',
           );
           expect(
             queensideCastling,
@@ -426,7 +427,8 @@ void main() {
             queensideCastling,
             isEmpty,
             reason:
-                'Should not allow queenside castling when it would put king in check',
+                'Should not allow queenside castling when it would put king in '
+                'check',
           );
           expect(
             kingsideCastling,
@@ -530,7 +532,8 @@ void main() {
             .possibleMoves(pawnSquare)
             .whereType<EnPassantMove>();
 
-        // En passant should be available, but let's just check moves are generated
+        // En passant should be available, but let's just check moves are
+        // generated
         expect(moves, isNotEmpty, reason: 'Pawn should have moves available');
       });
       test(
@@ -576,7 +579,8 @@ void main() {
           Position.a8: King.black,
         });
 
-        // Simulate the black pawn having just moved from f7 to f5 (enabling en passant)
+        // Simulate the black pawn having just moved from f7 to f5 (enabling en
+        // passant)
         final lastMove = PawnInitialMove(
           from: Position.f7,
           to: Position.f5,
@@ -611,7 +615,8 @@ void main() {
         final manager = MovementManager(customBoard, [], teams);
 
         final moves = manager.possibleMoves(kingSquare);
-        // King should have some moves available (at least a few squares around it)
+        // King should have some moves available (at least a few squares around
+        // it)
         expect(moves, isNotEmpty, reason: 'King should have moves available');
       });
 
@@ -766,7 +771,8 @@ void main() {
             enPassantMoves,
             isNotEmpty,
             reason:
-                'Should still work with move history when no untracked provided',
+                'Should still work with move history when no untracked '
+                'provided',
           );
         },
       );

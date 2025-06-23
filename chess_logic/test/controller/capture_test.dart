@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 void main() {
   group('Capture', () {
     test('should expose the captured piece', () {
-      final pawn = Pawn.black;
+      const pawn = Pawn.black;
       final capture = _createCapture(captured: pawn, captor: Queen.white);
 
       expect(capture.piece, equals(pawn));
@@ -18,7 +18,7 @@ void main() {
     });
 
     test('should expose the captor piece', () {
-      final queen = Queen.white;
+      const queen = Queen.white;
       final capture = _createCapture(captured: Pawn.black, captor: queen);
 
       expect(capture.captor, equals(queen));
@@ -107,8 +107,8 @@ void main() {
       });
 
       test('should maintain immutability of underlying move', () {
-        final originalPawn = Pawn.black;
-        final originalQueen = Queen.white;
+        const originalPawn = Pawn.black;
+        const originalQueen = Queen.white;
         final capture = _createCapture(
           captured: originalPawn,
           captor: originalQueen,
@@ -215,15 +215,16 @@ void main() {
         expect(result.isNotEmpty, isTrue);
 
         // Verify it contains typical capture notation elements
-        // (This will depend on the exact implementation of CaptureMove.toAlgebraic)
+        // (This will depend on the exact implementation of
+        // CaptureMove.toAlgebraic)
         expect(result, isNot(equals('')));
       });
 
       test('should maintain consistency with move algebraic notation', () {
-        final captured = Rook.black;
-        final captor = Queen.white;
-        final from = Position.d1;
-        final to = Position.d8;
+        const captured = Rook.black;
+        const captor = Queen.white;
+        const from = Position.d1;
+        const to = Position.d8;
 
         final move = CaptureMove<Queen, Rook>.create(
           from: from,
@@ -244,7 +245,7 @@ void main() {
 
         // This test documents that our capture system respects this rule
         // by not including such scenarios in valid captures
-        final whiteKing = King.white;
+        const whiteKing = King.white;
 
         // If we were to attempt this in a real game, it should be prevented
         // at the move validation level, not at the capture representation level
@@ -275,7 +276,8 @@ Capture _createCapture<P extends Piece, C extends Piece>({
   required P captor,
 }) {
   // Use different positions based on piece type to ensure valid moves
-  Position from, to;
+  Position from;
+  Position to;
 
   if (captor is Rook) {
     from = Position.a1;

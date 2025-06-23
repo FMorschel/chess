@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:chess_logic/src/position/direction.dart';
+import 'direction.dart';
 
 enum Rank implements Comparable<Rank> {
   one(1),
@@ -13,7 +13,6 @@ enum Rank implements Comparable<Rank> {
   eight(8);
 
   const Rank(this.value);
-  final int value;
 
   factory Rank.fromValue(int value) {
     return Rank.values.firstWhere(
@@ -25,6 +24,8 @@ enum Rank implements Comparable<Rank> {
       ),
     );
   }
+
+  final int value;
 
   Rank? next(Direction direction) => switch (direction) {
     Direction.left || Direction.right => null,

@@ -1,15 +1,11 @@
-import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/position/position.dart';
 import 'package:equatable/equatable.dart';
+
+import '../position/position.dart';
+import 'piece.dart';
 
 /// Represents a square on the chessboard.
 /// Holds a Position and optionally a Piece.
 sealed class Square<P extends Piece> with EquatableMixin {
-  final Position position;
-  final P? piece;
-
-  const Square._(this.position, [this.piece]);
-
   factory Square(Position position, [P? piece]) {
     if (piece == null) {
       return EmptySquare(position);
@@ -17,13 +13,19 @@ sealed class Square<P extends Piece> with EquatableMixin {
     return OccupiedSquare(position, piece);
   }
 
-  /// Returns true if there is a piece on this square.
+  const Square._(this.position, [this.piece]);
+
+  final Position position;
+  final P? piece;
+
+  /// True if there is a piece on this square.
   bool get isOccupied => piece != null;
 
-  /// Returns true if this square is empty.
+  /// True if this square is empty.
   bool get isEmpty => piece == null;
 
-  bool get lightSquare => (position.file.index + position.rank.index).isEven;
+  /// True if this square is a light-colored square on the board
+  bool get lightSquare => (position.file.index + position.rank.index).isOdd;
 
   OccupiedSquare<O> replacePiece<O extends Piece>(O piece) =>
       OccupiedSquare(position, piece);
