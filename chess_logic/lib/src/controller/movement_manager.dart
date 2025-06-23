@@ -63,7 +63,7 @@ class MovementManager {
     if (check != Check.none) {
       move = move.copyWith(check: check);
     }
-    state.actOn(move);
+    state.move(move);
     _moveHistory.add(move);
     return move;
   }

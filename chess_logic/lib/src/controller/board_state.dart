@@ -26,27 +26,6 @@ class BoardState {
     }
   }
 
-  /// Private constructor for copying an existing board state
-  BoardState._copy(BoardState other) : squares = _emptySquares {
-    // Copy all squares from the other board state
-    for (var square in other.squares) {
-      final newSquare = square.piece != null
-          ? this[square.position].replacePiece(square.piece!)
-          : this[square.position].removePiece();
-      squares.replace(newSquare);
-    }
-  }
-
-  /// Creates a new BoardState with the given move applied, without modifying
-  /// the current state.
-  ///
-  /// This allows you to preview what the board would look like after a move.
-  BoardState move(Move move) {
-    final newState = BoardState._copy(this);
-    newState.actOn(move);
-    return newState;
-  }
-
   static List<Square> get _emptySquares => [
     for (var file in File.values)
       for (var rank in Rank.values) EmptySquare(Position(file, rank)),
@@ -59,7 +38,7 @@ class BoardState {
   List<OccupiedSquare> get occupiedSquares =>
       squares.whereType<OccupiedSquare>().toList();
 
-  void actOn(Move move) {
+  void move(Move move) {
     if (this[move.from].piece != move.moving) {
       throw ArgumentError(
         'The piece at ${move.from} does not match the moving piece: '
@@ -91,7 +70,7 @@ class BoardState {
 
     if (move is CastlingMove) {
       // Handle castling move
-      actOn(move.rook);
+      this.move(move.rook);
     }
   }
 
@@ -174,8 +153,7 @@ class BoardState {
   }
 
   Map<Position, Piece> get export => {
-    for (var square in occupiedSquares)
-      square.position: square.piece,
+    for (var square in occupiedSquares) square.position: square.piece,
   };
 
   @override

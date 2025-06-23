@@ -179,7 +179,7 @@ void main() {
         final to = Position.e3;
         final move = PawnMove(from: from, to: to, moving: Pawn.white);
 
-        boardState.actOn(move);
+        boardState.move(move);
 
         expect(boardState[from].isEmpty, isTrue);
         expect(boardState[to].piece, isA<Pawn>());
@@ -204,7 +204,7 @@ void main() {
           captured: blackPawn,
         );
 
-        boardState.actOn(move);
+        boardState.move(move);
 
         expect(boardState[e4].isEmpty, isTrue);
         expect(boardState[d5].piece, equals(whitePawn));
@@ -229,7 +229,7 @@ void main() {
           captured: blackPawn,
         );
 
-        boardState.actOn(move);
+        boardState.move(move);
 
         expect(boardState[e5].isEmpty, isTrue);
         expect(boardState[d6].piece, equals(whitePawn));
@@ -247,7 +247,7 @@ void main() {
         );
 
         expect(
-          () => boardState.actOn(move),
+          () => boardState.move(move),
           throwsA(
             isA<ArgumentError>().having(
               (e) => e.message,
@@ -269,7 +269,7 @@ void main() {
         );
 
         expect(
-          () => boardState.actOn(move),
+          () => boardState.move(move),
           throwsA(
             isA<ArgumentError>().having(
               (e) => e.message,
@@ -294,7 +294,7 @@ void main() {
         ];
 
         for (final move in moves) {
-          boardState.actOn(move);
+          boardState.move(move);
         }
 
         expect(boardState[e2].isEmpty, isTrue);
@@ -323,7 +323,7 @@ void main() {
           final invalidMove = PawnMove(from: e4, to: e5, moving: whitePawn);
 
           expect(
-            () => boardState.actOn(invalidMove),
+            () => boardState.move(invalidMove),
             throwsA(
               isA<ArgumentError>().having(
                 (e) => e.message,
@@ -361,7 +361,7 @@ void main() {
         );
 
         // This should not throw an error
-        expect(() => boardState.actOn(captureMove), returnsNormally);
+        expect(() => boardState.move(captureMove), returnsNormally);
 
         // Verify the capture was successful
         expect(boardState[e4].isEmpty, isTrue);
@@ -377,7 +377,7 @@ void main() {
         final move = PawnInitialMove(from: from, to: to, moving: pawn);
 
         // Apply move
-        boardState.actOn(move);
+        boardState.move(move);
         expect(boardState[from].isEmpty, isTrue);
         expect(boardState[to].piece, equals(pawn));
 
@@ -406,7 +406,7 @@ void main() {
         );
 
         // Apply move
-        boardState.actOn(move);
+        boardState.move(move);
         expect(boardState[e4].isEmpty, isTrue);
         expect(boardState[d5].piece, equals(whitePawn));
 
@@ -436,7 +436,7 @@ void main() {
         );
 
         // Apply move
-        boardState.actOn(move);
+        boardState.move(move);
         expect(boardState[e5].isEmpty, isTrue);
         expect(boardState[d6].piece, equals(whitePawn));
         expect(boardState[d5].isEmpty, isTrue);
@@ -454,7 +454,7 @@ void main() {
 
         // Setup: make a move first
         final move = PawnInitialMove(from: e2, to: e4, moving: Pawn.white);
-        boardState.actOn(move);
+        boardState.move(move);
 
         // Try to undo with wrong piece
         final wrongMove = KnightMove(
@@ -487,7 +487,7 @@ void main() {
 
         // Apply moves
         for (final move in moves) {
-          boardState.actOn(move);
+          boardState.move(move);
         }
 
         // Verify moves were applied
@@ -517,8 +517,8 @@ void main() {
         final e1 = Position.e1;
 
         // Make some moves to change the board
-        boardState.actOn(PawnInitialMove(from: e2, to: e4, moving: Pawn.white));
-        boardState.actOn(KnightMove(from: g1, to: f3, moving: Knight.white));
+        boardState.move(PawnInitialMove(from: e2, to: e4, moving: Pawn.white));
+        boardState.move(KnightMove(from: g1, to: f3, moving: Knight.white));
 
         // Reset board
         boardState.reset();
@@ -603,7 +603,7 @@ void main() {
         ];
 
         for (final move in moves) {
-          boardState.actOn(move);
+          boardState.move(move);
         }
 
         // Verify final position
@@ -633,7 +633,7 @@ void main() {
         ];
 
         for (final move in moves) {
-          boardState.actOn(move);
+          boardState.move(move);
         }
 
         // Check piece count - should have 31 pieces (32 - 1 captured)
@@ -674,7 +674,7 @@ void main() {
           rook: RookMove(from: h1, to: f1, moving: Rook.white),
         );
 
-        boardState.actOn(castlingMove);
+        boardState.move(castlingMove);
 
         expect(boardState[e1].isEmpty, isTrue);
         expect(boardState[g1].piece, isA<King>());
@@ -696,7 +696,7 @@ void main() {
 
         final move = PawnMove(from: e4, to: e5, moving: Pawn.white);
 
-        emptyBoard.actOn(move);
+        emptyBoard.move(move);
 
         expect(emptyBoard[e4].isEmpty, isTrue);
         expect(emptyBoard[e5].piece, isA<Pawn>());
@@ -719,7 +719,7 @@ void main() {
           promotion: PieceSymbol.queen,
         );
 
-        boardState.actOn(move);
+        boardState.move(move);
 
         expect(boardState[e7].isEmpty, isTrue);
         expect(boardState[e8].piece, isA<Queen>());
@@ -735,7 +735,7 @@ void main() {
 
         final move = KingMove(from: a1, to: a2, moving: King.white);
 
-        singlePieceBoard.actOn(move);
+        singlePieceBoard.move(move);
 
         expect(singlePieceBoard[a1].isEmpty, isTrue);
         expect(singlePieceBoard[a2].piece, isA<King>());
@@ -761,7 +761,7 @@ void main() {
 
         // Make a simple pawn move
         final move = PawnInitialMove(from: e2, to: e4, moving: Pawn.white);
-        boardState.actOn(move);
+        boardState.move(move);
 
         // Check that all other pieces remain unchanged
         for (final entry in originalPieces.entries) {

@@ -13,16 +13,11 @@ sealed class PromotionPiece with Piece {}
 
 sealed class SlidingPiece implements PromotionPiece {}
 
-enum Bishop with Piece implements SlidingPiece {
-  white._(Team.white),
-  black._(Team.black);
+final class Bishop with Piece implements SlidingPiece {
+  static const white = Bishop(Team.white);
+  static const black = Bishop(Team.black);
 
-  const Bishop._(this.team);
-
-  factory Bishop(Team team) => switch (team) {
-    Team.white => Bishop.white,
-    Team.black => Bishop.black,
-  };
+  const Bishop(this.team);
 
   @override
   final Team team;
@@ -39,16 +34,11 @@ enum Bishop with Piece implements SlidingPiece {
   List<Direction> get _validDirections => _directions;
 }
 
-enum King with Piece {
-  white._(Team.white),
-  black._(Team.black);
+final class King with Piece {
+  static const white = King(Team.white);
+  static const black = King(Team.black);
 
-  const King._(this.team);
-
-  factory King(Team team) => switch (team) {
-    Team.white => King.white,
-    Team.black => King.black,
-  };
+  const King(this.team);
 
   @override
   final Team team;
@@ -123,16 +113,11 @@ enum King with Piece {
   int get value => PieceValue.king.points;
 }
 
-enum Knight with Piece implements PromotionPiece {
-  white._(Team.white),
-  black._(Team.black);
+final class Knight with Piece implements PromotionPiece {
+  static const white = Knight(Team.white);
+  static const black = Knight(Team.black);
 
-  const Knight._(this.team);
-
-  factory Knight(Team team) => switch (team) {
-    Team.white => Knight.white,
-    Team.black => Knight.black,
-  };
+  const Knight(this.team);
 
   @override
   final Team team;
@@ -152,16 +137,11 @@ enum Knight with Piece implements PromotionPiece {
   int get value => PieceValue.knight.points;
 }
 
-enum Pawn with Piece {
-  white._(Team.white),
-  black._(Team.black);
+final class Pawn with Piece {
+  static const white = Pawn(Team.white);
+  static const black = Pawn(Team.black);
 
-  const Pawn._(this.team);
-
-  factory Pawn(Team team) => switch (team) {
-    Team.white => Pawn.white,
-    Team.black => Pawn.black,
-  };
+  const Pawn(this.team);
 
   @override
   final Team team;
@@ -231,7 +211,7 @@ enum Pawn with Piece {
   int get value => PieceValue.pawn.points;
 }
 
-abstract mixin class Piece implements Enum {
+abstract mixin class Piece {
   factory Piece.import(String string) {
     final match = _importRegex.firstMatch(string);
     if (match == null) {
@@ -299,16 +279,11 @@ abstract mixin class Piece implements Enum {
   String toString() => symbol.name;
 }
 
-enum Queen with Piece implements SlidingPiece {
-  white._(Team.white),
-  black._(Team.black);
+final class Queen with Piece implements SlidingPiece {
+  static const white = Queen(Team.white);
+  static const black = Queen(Team.black);
 
-  const Queen._(this.team);
-
-  factory Queen(Team team) => switch (team) {
-    Team.white => Queen.white,
-    Team.black => Queen.black,
-  };
+  const Queen(this.team);
 
   @override
   final Team team;
@@ -325,16 +300,11 @@ enum Queen with Piece implements SlidingPiece {
   int get value => PieceValue.queen.points;
 }
 
-enum Rook with Piece implements SlidingPiece {
-  white._(Team.white),
-  black._(Team.black);
+final class Rook with Piece implements SlidingPiece {
+  static const white = Rook(Team.white);
+  static const black = Rook(Team.black);
 
-  const Rook._(this.team);
-
-  factory Rook(Team team) => switch (team) {
-    Team.white => Rook.white,
-    Team.black => Rook.black,
-  };
+  const Rook(this.team);
 
   @override
   final Team team;

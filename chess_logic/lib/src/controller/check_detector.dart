@@ -48,7 +48,7 @@ class CheckDetector {
     final result = <Team, Check>{};
 
     // Apply the move temporarily
-    state.actOn(move);
+    state.move(move);
 
     // Check all teams for check/checkmate
     for (final team in Team.values) {
@@ -145,7 +145,7 @@ class CheckDetector {
 
     for (final testMove in possibleMoves) {
       // Apply the move temporarily
-      state.actOn(testMove);
+      state.move(testMove);
 
       // Check if the king is safe at the new position
       final newKingSquare = state[testMove.to];

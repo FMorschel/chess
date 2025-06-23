@@ -103,7 +103,7 @@ class ThreatDetector {
     }
 
     // Apply the move temporarily
-    state.actOn(move);
+    state.move(move);
 
     // Check if the exposed piece is now under threat
     final isExposed = isPieceUnderThreat(exposedPosition);
@@ -152,7 +152,7 @@ class ThreatDetector {
 
     // Apply the move temporarily
     try {
-      state.actOn(move);
+      state.move(move);
     } catch (_) {
       return false;
     }
