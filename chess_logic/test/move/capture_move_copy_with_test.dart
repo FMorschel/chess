@@ -4,7 +4,6 @@ import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/position.dart';
 import 'package:chess_logic/src/square/piece.dart';
 import 'package:chess_logic/src/square/piece_symbol.dart';
-import 'package:chess_logic/src/team/team.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -15,8 +14,8 @@ void main() {
           final original = PawnCaptureMove<Rook>(
             from: Position.e5,
             to: Position.d6,
-            moving: Pawn(Team.white),
-            captured: Rook(Team.black),
+            moving: Pawn.white,
+            captured: Rook.black,
             check: Check.none,
           );
 
@@ -33,8 +32,8 @@ void main() {
           final original = PawnCaptureMove<Bishop>(
             from: Position.e5,
             to: Position.d6,
-            moving: Pawn(Team.white),
-            captured: Bishop(Team.black),
+            moving: Pawn.white,
+            captured: Bishop.black,
             check: Check.checkmate,
           );
 
@@ -51,14 +50,12 @@ void main() {
           final original = PawnCaptureMove<Knight>(
             from: Position.a7,
             to: Position.b8,
-            moving: Pawn(Team.white),
-            captured: Knight(Team.black),
+            moving: Pawn.white,
+            captured: Knight.black,
             check: Check.check,
           );
 
-          final copy = original.copyWith(
-            check: null,
-          );
+          final copy = original.copyWith(check: null);
 
           expect(copy.from, equals(original.from));
           expect(copy.to, equals(original.to));
@@ -71,8 +68,8 @@ void main() {
           final original = PawnCaptureMove<Pawn>(
             from: Position.e5,
             to: Position.d6,
-            moving: Pawn(Team.white),
-            captured: Pawn(Team.black),
+            moving: Pawn.white,
+            captured: Pawn.black,
           );
 
           final copy = original.copyWith();
@@ -85,8 +82,8 @@ void main() {
           final original = PawnCaptureMove<Rook>(
             from: Position.e5,
             to: Position.d6,
-            moving: Pawn(Team.white),
-            captured: Rook(Team.black),
+            moving: Pawn.white,
+            captured: Rook.black,
             check: Check.none,
           );
 
@@ -105,8 +102,8 @@ void main() {
           final original = QueenCaptureMove<Bishop>(
             from: Position.d1,
             to: Position.h5,
-            moving: Queen(Team.white),
-            captured: Bishop(Team.black),
+            moving: Queen.white,
+            captured: Bishop.black,
             check: Check.none,
             ambiguous: AmbiguousMovementType.file,
           );
@@ -128,8 +125,8 @@ void main() {
           final original = QueenCaptureMove<Knight>(
             from: Position.d1,
             to: Position.d4,
-            moving: Queen(Team.white),
-            captured: Knight(Team.black),
+            moving: Queen.white,
+            captured: Knight.black,
             ambiguous: AmbiguousMovementType.file,
           );
 
@@ -151,8 +148,8 @@ void main() {
           final original = RookCaptureMove<Pawn>(
             from: Position.a1,
             to: Position.a8,
-            moving: Rook(Team.black),
-            captured: Pawn(Team.white),
+            moving: Rook.black,
+            captured: Pawn.white,
             check: Check.none,
           );
 
@@ -175,8 +172,8 @@ void main() {
           final original = BishopCaptureMove<Queen>(
             from: Position.c1,
             to: Position.f4,
-            moving: Bishop(Team.white),
-            captured: Queen(Team.black),
+            moving: Bishop.white,
+            captured: Queen.black,
             check: Check.check,
           );
 
@@ -199,8 +196,8 @@ void main() {
           final original = KnightCaptureMove<Pawn>(
             from: Position.b1,
             to: Position.c3,
-            moving: Knight(Team.black),
-            captured: Pawn(Team.white),
+            moving: Knight.black,
+            captured: Pawn.white,
             check: Check.none,
           );
 
@@ -219,24 +216,30 @@ void main() {
       });
 
       group('KingCaptureMove', () {
-        test('should modify only check parameter (ambiguous not supported)', () {
-          final original = KingCaptureMove<Pawn>(
-            from: Position.e1,
-            to: Position.e2,
-            moving: King(Team.white),
-            captured: Pawn(Team.black),
-            check: Check.none,
-          );
+        test(
+          'should modify only check parameter (ambiguous not supported)',
+          () {
+            final original = KingCaptureMove<Pawn>(
+              from: Position.e1,
+              to: Position.e2,
+              moving: King.white,
+              captured: Pawn.black,
+              check: Check.none,
+            );
 
-          final modified = original.copyWith(check: Check.check);
+            final modified = original.copyWith(check: Check.check);
 
-          expect(modified.from, equals(original.from));
-          expect(modified.to, equals(original.to));
-          expect(modified.moving, equals(original.moving));
-          expect(modified.captured, equals(original.captured));
-          expect(modified.check, equals(Check.check));
-          expect(modified.ambiguous, isNull); // King moves don't use ambiguous
-        });
+            expect(modified.from, equals(original.from));
+            expect(modified.to, equals(original.to));
+            expect(modified.moving, equals(original.moving));
+            expect(modified.captured, equals(original.captured));
+            expect(modified.check, equals(Check.check));
+            expect(
+              modified.ambiguous,
+              isNull,
+            ); // King moves don't use ambiguous
+          },
+        );
       });
     });
 
@@ -246,8 +249,8 @@ void main() {
           final original = EnPassantMove(
             from: Position.e5,
             to: Position.d6,
-            moving: Pawn(Team.white),
-            captured: Pawn(Team.black),
+            moving: Pawn.white,
+            captured: Pawn.black,
             check: Check.none,
           );
 
@@ -265,8 +268,8 @@ void main() {
           final original = EnPassantMove(
             from: Position.e5,
             to: Position.d6,
-            moving: Pawn(Team.white),
-            captured: Pawn(Team.black),
+            moving: Pawn.white,
+            captured: Pawn.black,
           );
 
           final modified = original.copyWith(check: Check.check);
@@ -281,8 +284,8 @@ void main() {
           final original = PromotionCaptureMove<Rook>(
             from: Position.e7,
             to: Position.d8,
-            moving: Pawn(Team.white),
-            captured: Rook(Team.black),
+            moving: Pawn.white,
+            captured: Rook.black,
             promotion: PieceSymbol.queen,
             check: Check.none,
           );
@@ -302,8 +305,8 @@ void main() {
           final original = PromotionCaptureMove<Knight>(
             from: Position.e7,
             to: Position.d8,
-            moving: Pawn(Team.white),
-            captured: Knight(Team.black),
+            moving: Pawn.white,
+            captured: Knight.black,
             promotion: PieceSymbol.bishop,
           );
 
@@ -317,18 +320,14 @@ void main() {
 
     group('Parameter validation', () {
       test('should handle all check types', () {
-        final checkTypes = [
-          Check.none,
-          Check.check,
-          Check.checkmate,
-        ];
+        final checkTypes = [Check.none, Check.check, Check.checkmate];
 
         for (final check in checkTypes) {
           final original = RookCaptureMove<Bishop>(
             from: Position.a1,
             to: Position.a8,
-            moving: Rook(Team.white),
-            captured: Bishop(Team.black),
+            moving: Rook.white,
+            captured: Bishop.black,
           );
 
           final modified = original.copyWith(check: check);
@@ -349,8 +348,8 @@ void main() {
           final original = QueenCaptureMove<Rook>(
             from: Position.d1,
             to: Position.d8,
-            moving: Queen(Team.white),
-            captured: Rook(Team.black),
+            moving: Queen.white,
+            captured: Rook.black,
           );
 
           final modified = original.copyWith(ambiguous: ambiguous);
@@ -371,8 +370,8 @@ void main() {
           final original = PromotionCaptureMove<Pawn>(
             from: Position.e7,
             to: Position.d8,
-            moving: Pawn(Team.white),
-            captured: Pawn(Team.black),
+            moving: Pawn.white,
+            captured: Pawn.black,
             promotion: promotion,
           );
 
@@ -389,8 +388,8 @@ void main() {
         final original = BishopCaptureMove<Queen>(
           from: Position.c1,
           to: Position.f4,
-          moving: Bishop(Team.white),
-          captured: Queen(Team.black),
+          moving: Bishop.white,
+          captured: Queen.black,
           check: Check.none,
           ambiguous: null,
         );
@@ -412,8 +411,8 @@ void main() {
         final original = KnightCaptureMove<Rook>(
           from: Position.b1,
           to: Position.c3,
-          moving: Knight(Team.white),
-          captured: Rook(Team.black),
+          moving: Knight.white,
+          captured: Rook.black,
           check: Check.none,
         );
 
@@ -435,8 +434,8 @@ void main() {
         final original = PawnCaptureMove<Bishop>(
           from: Position.e5,
           to: Position.d6,
-          moving: Pawn(Team.white),
-          captured: Bishop(Team.black),
+          moving: Pawn.white,
+          captured: Bishop.black,
           check: Check.none,
         );
 
@@ -459,8 +458,8 @@ void main() {
         final original = RookCaptureMove<Knight>(
           from: Position.a1,
           to: Position.a8,
-          moving: Rook(Team.white),
-          captured: Knight(Team.black),
+          moving: Rook.white,
+          captured: Knight.black,
           check: Check.check,
         );
 
@@ -479,8 +478,8 @@ void main() {
         final original = QueenCaptureMove<Rook>(
           from: Position.d1,
           to: Position.d8,
-          moving: Queen(Team.white),
-          captured: Rook(Team.black),
+          moving: Queen.white,
+          captured: Rook.black,
           check: Check.none,
         );
 
@@ -500,8 +499,8 @@ void main() {
         final original = PromotionCaptureMove<Bishop>(
           from: Position.e7,
           to: Position.d8,
-          moving: Pawn(Team.white),
-          captured: Bishop(Team.black),
+          moving: Pawn.white,
+          captured: Bishop.black,
           promotion: PieceSymbol.queen,
         );
 
@@ -519,8 +518,8 @@ void main() {
         final original = PawnCaptureMove<Queen>(
           from: Position.e5,
           to: Position.d6,
-          moving: Pawn(Team.white),
-          captured: Queen(Team.black),
+          moving: Pawn.white,
+          captured: Queen.black,
           check: Check.check,
         );
 
@@ -539,8 +538,8 @@ void main() {
         final original = QueenCaptureMove<Knight>(
           from: Position.d1,
           to: Position.h5,
-          moving: Queen(Team.white),
-          captured: Knight(Team.black),
+          moving: Queen.white,
+          captured: Knight.black,
           check: Check.check,
           ambiguous: AmbiguousMovementType.file,
         );

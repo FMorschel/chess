@@ -3,12 +3,11 @@ import 'package:chess_logic/src/move/check.dart';
 import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/position.dart';
 import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/team/team.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('QueenMove', () {
-    final whiteQueen = Queen(Team.white);
+    final whiteQueen = Queen.white;
     final from = Position.d1;
     final to = Position.d4;
 
@@ -22,11 +21,7 @@ void main() {
 
     test('throws assertion error for invalid move', () {
       expect(
-        () => QueenMove(
-          from: from,
-          to: Position.e3,
-          moving: whiteQueen,
-        ),
+        () => QueenMove(from: from, to: Position.e3, moving: whiteQueen),
         throwsA(isA<AssertionError>()),
       );
     });
@@ -96,10 +91,10 @@ void main() {
   });
 
   group('QueenCaptureMove', () {
-    final whiteQueen = Queen(Team.white);
+    final whiteQueen = Queen.white;
     final from = Position.d1;
     final to = Position.d4;
-    final captured = Pawn(Team.black);
+    final captured = Pawn.black;
 
     test('stores all fields correctly', () {
       final move = QueenCaptureMove(

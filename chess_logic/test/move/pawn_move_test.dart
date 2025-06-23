@@ -3,12 +3,11 @@ import 'package:chess_logic/src/move/check.dart';
 import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/position.dart';
 import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/team/team.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('PawnMove', () {
-    final whitePawn = Pawn(Team.white);
+    final whitePawn = Pawn.white;
     final from = Position.e1;
     final to = Position.e2;
     test('stores all fields correctly', () {
@@ -22,11 +21,7 @@ void main() {
     group('invalid', () {
       test('promotion to invalid', () {
         expect(
-          () => PawnMove(
-            from: from,
-            to: Position.e3,
-            moving: whitePawn,
-          ),
+          () => PawnMove(from: from, to: Position.e3, moving: whitePawn),
           throwsA(isA<AssertionError>()),
         );
       });
@@ -85,10 +80,10 @@ void main() {
     });
   });
   group('PawnCaptureMove', () {
-    final whitePawn = Pawn(Team.white);
+    final whitePawn = Pawn.white;
     final from = Position.e1;
     final to = Position.f2;
-    final captured = Pawn(Team.black);
+    final captured = Pawn.black;
 
     test('stores all fields correctly', () {
       final move = PawnCaptureMove(

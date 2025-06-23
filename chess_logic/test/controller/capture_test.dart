@@ -9,8 +9,8 @@ import 'package:test/test.dart';
 void main() {
   group('Capture', () {
     test('should expose the captured piece', () {
-      final pawn = Pawn(Team.black);
-      final capture = _createCapture(captured: pawn, captor: Queen(Team.white));
+      final pawn = Pawn.black;
+      final capture = _createCapture(captured: pawn, captor: Queen.white);
 
       expect(capture.piece, equals(pawn));
       expect(capture.piece, isA<Pawn>());
@@ -18,8 +18,8 @@ void main() {
     });
 
     test('should expose the captor piece', () {
-      final queen = Queen(Team.white);
-      final capture = _createCapture(captured: Pawn(Team.black), captor: queen);
+      final queen = Queen.white;
+      final capture = _createCapture(captured: Pawn.black, captor: queen);
 
       expect(capture.captor, equals(queen));
       expect(capture.captor, isA<Queen>());
@@ -27,49 +27,40 @@ void main() {
     });
 
     test('should expose the position where the capture occurred', () {
-      final capture = _createCapture(
-        captured: Pawn(Team.black),
-        captor: Queen(Team.white),
-      );
+      final capture = _createCapture(captured: Pawn.black, captor: Queen.white);
 
       expect(capture.position, isA<Position>());
       expect(capture.position, equals(Position.d8));
     });
 
     test('should expose the team that performed the capture', () {
-      final capture = _createCapture(
-        captured: Pawn(Team.black),
-        captor: Queen(Team.white),
-      );
+      final capture = _createCapture(captured: Pawn.black, captor: Queen.white);
 
       expect(capture.team, equals(Team.white));
     });
 
     test('should expose the value of the captured piece', () {
       final capture1 = _createCapture(
-        captured: Pawn(Team.black),
-        captor: Queen(Team.white),
+        captured: Pawn.black,
+        captor: Queen.white,
       );
       expect(capture1.value, equals(1)); // Pawn value
 
       final capture2 = _createCapture(
-        captured: Queen(Team.black),
-        captor: Rook(Team.white),
+        captured: Queen.black,
+        captor: Rook.white,
       );
       expect(capture2.value, equals(9)); // Queen value
 
       final capture3 = _createCapture(
-        captured: Knight(Team.black),
-        captor: Bishop(Team.white),
+        captured: Knight.black,
+        captor: Bishop.white,
       );
       expect(capture3.value, equals(3)); // Knight value
     });
 
     test('should convert to algebraic notation', () {
-      final capture = _createCapture(
-        captured: Pawn(Team.black),
-        captor: Queen(Team.white),
-      );
+      final capture = _createCapture(captured: Pawn.black, captor: Queen.white);
 
       // The toAlgebraic method delegates to the underlying move
       expect(capture.toAlgebraic(), isA<String>());
@@ -78,8 +69,8 @@ void main() {
     group('edge cases and validation', () {
       test('should handle capture with same piece types', () {
         final capture = _createCapture(
-          captured: Queen(Team.black),
-          captor: Queen(Team.white),
+          captured: Queen.black,
+          captor: Queen.white,
         );
 
         expect(capture.piece, isA<Queen>());
@@ -89,23 +80,9 @@ void main() {
         expect(capture.value, equals(9)); // Queen value
       });
       test('should handle capture with all valid piece combinations', () {
-        final whitePieces = [
-          Pawn(Team.white),
-          Rook(Team.white),
-          Knight(Team.white),
-          Bishop(Team.white),
-          Queen(Team.white),
-          King(Team.white),
-        ];
+        final whitePieces = Team.white.pieces;
 
-        final blackPieces = [
-          Pawn(Team.black),
-          Rook(Team.black),
-          Knight(Team.black),
-          Bishop(Team.black),
-          Queen(Team.black),
-          King(Team.black),
-        ];
+        final blackPieces = Team.black.pieces;
 
         int validCombinations = 0;
         for (final captor in whitePieces) {
@@ -130,8 +107,8 @@ void main() {
       });
 
       test('should maintain immutability of underlying move', () {
-        final originalPawn = Pawn(Team.black);
-        final originalQueen = Queen(Team.white);
+        final originalPawn = Pawn.black;
+        final originalQueen = Queen.white;
         final capture = _createCapture(
           captured: originalPawn,
           captor: originalQueen,
@@ -146,27 +123,15 @@ void main() {
     group('property consistency', () {
       test('team should always match captor team', () {
         final whiteCaptures = [
-          _createCapture(captured: Pawn(Team.black), captor: Queen(Team.white)),
-          _createCapture(
-            captured: Rook(Team.black),
-            captor: Knight(Team.white),
-          ),
-          _createCapture(
-            captured: Bishop(Team.black),
-            captor: King(Team.white),
-          ),
+          _createCapture(captured: Pawn.black, captor: Queen.white),
+          _createCapture(captured: Rook.black, captor: Knight.white),
+          _createCapture(captured: Bishop.black, captor: King.white),
         ];
 
         final blackCaptures = [
-          _createCapture(captured: Pawn(Team.white), captor: Queen(Team.black)),
-          _createCapture(
-            captured: Rook(Team.white),
-            captor: Knight(Team.black),
-          ),
-          _createCapture(
-            captured: Bishop(Team.white),
-            captor: King(Team.black),
-          ),
+          _createCapture(captured: Pawn.white, captor: Queen.black),
+          _createCapture(captured: Rook.white, captor: Knight.black),
+          _createCapture(captured: Bishop.white, captor: King.black),
         ];
 
         for (final capture in whiteCaptures) {
@@ -180,20 +145,17 @@ void main() {
         }
       });
       test('value should always match captured piece value', () {
-        final testCases = [
-          (Pawn(Team.black), 1),
-          (Rook(Team.black), 5),
-          (Knight(Team.black), 3),
-          (Bishop(Team.black), 3),
-          (Queen(Team.black), 9),
-          (King(Team.black), 0), // King has 0 value (invaluable)
+        final testCases = <(Piece, int)>[
+          (Pawn.black, 1),
+          (Rook.black, 5),
+          (Knight.black, 3),
+          (Bishop.black, 3),
+          (Queen.black, 9),
+          (King.black, 0), // King has 0 value (invaluable)
         ];
 
         for (final (piece, expectedValue) in testCases) {
-          final capture = _createCapture(
-            captured: piece,
-            captor: Queen(Team.white),
-          );
+          final capture = _createCapture(captured: piece, captor: Queen.white);
 
           expect(capture.value, equals(expectedValue));
           expect(capture.piece.value, equals(expectedValue));
@@ -204,8 +166,8 @@ void main() {
     group('type safety and generics', () {
       test('should preserve type information for captured piece', () {
         final capture = _createCapture(
-          captured: Queen(Team.black),
-          captor: Rook(Team.white),
+          captured: Queen.black,
+          captor: Rook.white,
         );
 
         // Type should be preserved
@@ -219,13 +181,13 @@ void main() {
       test('should work with different piece type combinations', () {
         // Test various valid combinations to ensure type safety
         // Note: Excludes king-on-king captures as they're illegal in chess
-        final testCases = [
-          (Pawn(Team.white), Knight(Team.black)),
-          (Bishop(Team.white), Rook(Team.black)),
-          (Queen(Team.white), King(Team.black)), // Queen can capture king
-          (Knight(Team.white), Pawn(Team.black)),
-          (King(Team.white), Pawn(Team.black)), // King can capture other pieces
-          (Rook(Team.white), Queen(Team.black)),
+        final testCases = <(Piece, Piece)>[
+          (Pawn.white, Knight.black),
+          (Bishop.white, Rook.black),
+          (Queen.white, King.black), // Queen can capture king
+          (Knight.white, Pawn.black),
+          (King.white, Pawn.black), // King can capture other pieces
+          (Rook.white, Queen.black),
         ];
 
         for (final (captor, captured) in testCases) {
@@ -242,8 +204,8 @@ void main() {
     group('algebraic notation delegation', () {
       test('should delegate toAlgebraic to underlying move', () {
         final capture = _createCapture(
-          captured: Pawn(Team.black),
-          captor: Queen(Team.white),
+          captured: Pawn.black,
+          captor: Queen.white,
         );
 
         final result = capture.toAlgebraic();
@@ -258,8 +220,8 @@ void main() {
       });
 
       test('should maintain consistency with move algebraic notation', () {
-        final captured = Rook(Team.black);
-        final captor = Queen(Team.white);
+        final captured = Rook.black;
+        final captor = Queen.white;
         final from = Position.d1;
         final to = Position.d8;
 
@@ -282,19 +244,19 @@ void main() {
 
         // This test documents that our capture system respects this rule
         // by not including such scenarios in valid captures
-        final whiteKing = King(Team.white);
+        final whiteKing = King.white;
 
         // If we were to attempt this in a real game, it should be prevented
         // at the move validation level, not at the capture representation level
         // However, we exclude it from our comprehensive testing for correctness
 
         // Test that kings can capture other pieces (but not other kings)
-        final validTargets = [
-          Pawn(Team.black),
-          Rook(Team.black),
-          Knight(Team.black),
-          Bishop(Team.black),
-          Queen(Team.black),
+        final validTargets = <Piece>[
+          Pawn.black,
+          Rook.black,
+          Knight.black,
+          Bishop.black,
+          Queen.black,
         ];
 
         for (final target in validTargets) {

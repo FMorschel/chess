@@ -11,13 +11,13 @@ void main() {
     late BoardState boardState;
     late ThreatDetector threatDetector;
     // Define piece instances once for all tests
-    final whiteKing = King(Team.white);
-    final whiteQueen = Queen(Team.white);
-    final whiteKnight = Knight(Team.white);
-    final whitePawn = Pawn(Team.white);
+    final whiteKing = King.white;
+    final whiteQueen = Queen.white;
+    final whiteKnight = Knight.white;
+    final whitePawn = Pawn.white;
 
-    final blackQueen = Queen(Team.black);
-    final blackRook = Rook(Team.black);
+    final blackQueen = Queen.black;
+    final blackRook = Rook.black;
     final blackKnight = Knight(
       Team.black,
     ); // Define position instances once for all tests
@@ -56,29 +56,24 @@ void main() {
     group('isPieceUnderThreat', () {
       test('should return true when piece is under attack', () {
         // Setup: White king under attack by black queen
-        final customPieces = {e1: whiteKing, e8: blackQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({e1: whiteKing, e8: blackQueen});
         threatDetector = ThreatDetector(boardState);
 
         final whiteKingOnBoard = boardState[e1];
 
         expect(threatDetector.isPieceUnderThreat(whiteKingOnBoard), isTrue);
       });
-
       test('should return false when piece is safe', () {
         // Setup: White king safe from black queen
-        final customPieces = {a1: whiteKing, h7: blackQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({a1: whiteKing, h7: blackQueen});
         threatDetector = ThreatDetector(boardState);
         final whiteKingOnBoard = boardState[a1];
 
         expect(threatDetector.isPieceUnderThreat(whiteKingOnBoard), isFalse);
       });
-
       test('should return false when attacked by same team piece', () {
         // Setup: White king "attacked" by white queen (same team)
-        final customPieces = {e1: whiteKing, e8: whiteQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({e1: whiteKing, e8: whiteQueen});
         threatDetector = ThreatDetector(boardState);
 
         final whiteKingOnBoard = boardState[e1];
@@ -89,17 +84,14 @@ void main() {
     group('isPositionUnderAttackFor', () {
       test('should return true when position is under attack by opponent', () {
         // Setup: Black queen attacking e1
-        final customPieces = {e8: blackQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({e8: blackQueen});
         threatDetector = ThreatDetector(boardState);
 
         expect(threatDetector.isPositionUnderAttackFor(e1, Team.white), isTrue);
       });
-
       test('should return false when position is safe', () {
         // Setup: Black queen not attacking a2
-        final customPieces = {h8: blackQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({h8: blackQueen});
         threatDetector = ThreatDetector(boardState);
 
         expect(
@@ -107,11 +99,9 @@ void main() {
           isFalse,
         );
       });
-
       test('should return false when attacked by same team', () {
         // Setup: White queen at e8, checking if e1 is under attack for white team
-        final customPieces = {e8: whiteQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({e8: whiteQueen});
         threatDetector = ThreatDetector(boardState);
 
         expect(
@@ -123,8 +113,7 @@ void main() {
     group('canPieceAttackPosition', () {
       test('should return true when piece can attack target position', () {
         // Setup: Queen can attack multiple positions
-        final customPieces = {d4: whiteQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({d4: whiteQueen});
         threatDetector = ThreatDetector(boardState);
 
         final queenOnBoard = boardState[d4];
@@ -133,11 +122,9 @@ void main() {
         expect(threatDetector.canPieceAttackPosition(queenOnBoard, h4), isTrue);
         expect(threatDetector.canPieceAttackPosition(queenOnBoard, a1), isTrue);
       });
-
       test('should return false when piece cannot attack target position', () {
         // Setup: Knight cannot attack certain positions
-        final customPieces = {d4: whiteKnight};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({d4: whiteKnight});
         threatDetector = ThreatDetector(boardState);
 
         final knightOnBoard = boardState[d4];
@@ -151,11 +138,9 @@ void main() {
           isFalse,
         );
       });
-
       test('should return true for valid knight moves', () {
         // Setup: Knight valid moves
-        final customPieces = {d4: whiteKnight};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({d4: whiteKnight});
         threatDetector = ThreatDetector(boardState);
 
         final knightOnBoard = boardState[d4];
@@ -176,8 +161,11 @@ void main() {
     });
     group('getThreateningPieces', () {
       test('should return all pieces threatening the target square', () {
-        final customPieces = {e1: whiteKing, e8: blackQueen, a1: blackRook};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          e1: whiteKing,
+          e8: blackQueen,
+          a1: blackRook,
+        });
         threatDetector = ThreatDetector(boardState);
 
         final whiteKingOnBoard = boardState[e1];
@@ -188,11 +176,9 @@ void main() {
         expect(threatening.length, equals(2));
         expect(threatening, containsAll([e8 < blackQueen, a1 < blackRook]));
       });
-
       test('should return empty list when no pieces threaten target', () {
         // Setup: King safe from all pieces
-        final customPieces = {a1: whiteKing, h7: blackQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({a1: whiteKing, h7: blackQueen});
         threatDetector = ThreatDetector(boardState);
 
         final whiteKingOnBoard = boardState[a1];
@@ -207,8 +193,7 @@ void main() {
     group('getThreatenedPositions', () {
       test('should return all positions threatened by a piece', () {
         // Setup: Queen threatening multiple positions
-        final customPieces = {d4: whiteQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({d4: whiteQueen});
         threatDetector = ThreatDetector(boardState);
 
         final threatenedPositions = threatDetector.getThreatenedPositions(
@@ -226,8 +211,7 @@ void main() {
       });
       test('should return limited positions for knight', () {
         // Setup: Knight with limited moves
-        final customPieces = {a1: whiteKnight};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({a1: whiteKnight});
         threatDetector = ThreatDetector(boardState);
 
         final threatenedPositions = threatDetector.getThreatenedPositions(
@@ -243,8 +227,11 @@ void main() {
     group('wouldMoveExposePieceToThreat', () {
       test('should return true when move exposes piece to threat', () {
         // Setup: Moving a piece that was blocking an attack
-        final customPieces = {d2: whiteKing, e2: whitePawn, h2: blackQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          d2: whiteKing,
+          e2: whitePawn,
+          h2: blackQueen,
+        });
         threatDetector = ThreatDetector(boardState);
 
         final pawnMove = Move.create(from: e2, to: e3, moving: whitePawn);
@@ -260,8 +247,11 @@ void main() {
       });
       test('should return false when piece is already under threat', () {
         // Setup: Move that doesn't expose the king
-        final customPieces = {e1: whiteKing, d2: whitePawn, e8: blackQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          e1: whiteKing,
+          d2: whitePawn,
+          e8: blackQueen,
+        });
         threatDetector = ThreatDetector(boardState);
 
         final pawnMove = Move.create(from: d2, to: d3, moving: whitePawn);
@@ -277,8 +267,11 @@ void main() {
       });
       test('should return false when move does not expose piece', () {
         // Setup: Moving a piece that was blocking an attack
-        final customPieces = {d2: whiteKing, e2: whitePawn, h1: blackQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          d2: whiteKing,
+          e2: whitePawn,
+          h1: blackQueen,
+        });
         threatDetector = ThreatDetector(boardState);
 
         final pawnMove = Move.create(from: e2, to: e3, moving: whitePawn);
@@ -294,8 +287,11 @@ void main() {
       });
       test('should return false when move protects piece', () {
         // Setup: Moving a piece that was blocking an attack
-        final customPieces = {d3: whiteKing, e2: whitePawn, h3: blackQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          d3: whiteKing,
+          e2: whitePawn,
+          h3: blackQueen,
+        });
         threatDetector = ThreatDetector(boardState);
 
         final pawnMove = Move.create(from: e2, to: e3, moving: whitePawn);
@@ -313,17 +309,14 @@ void main() {
     group('isPositionSafeFor', () {
       test('should return true when position is safe for team', () {
         // Setup: Safe position for white pieces
-        final customPieces = {h3: blackQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({h3: blackQueen});
         threatDetector = ThreatDetector(boardState);
 
         expect(threatDetector.isPositionSafeFor(a1, Team.white), isTrue);
       });
-
       test('should return false when position is under attack', () {
         // Setup: Dangerous position for white pieces
-        final customPieces = {e8: blackQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({e8: blackQueen});
         threatDetector = ThreatDetector(boardState);
 
         expect(threatDetector.isPositionSafeFor(e1, Team.white), isFalse);
@@ -334,8 +327,11 @@ void main() {
         'should return true when specific piece type threatens position',
         () {
           // Setup: Queen threatening a position
-          final customPieces = {e1: whiteKing, e8: blackQueen, a1: blackRook};
-          boardState = BoardState.custom(customPieces);
+          boardState = BoardState.custom({
+            e1: whiteKing,
+            e8: blackQueen,
+            a1: blackRook,
+          });
           threatDetector = ThreatDetector(boardState);
 
           final whiteKingOnBoard = boardState[e1];
@@ -353,11 +349,10 @@ void main() {
         'should return false when piece type is not threatening position',
         () {
           // Setup: No rook threatening the position
-          final customPieces = {
+          boardState = BoardState.custom({
             e1: whiteKing,
             d2: blackQueen, // Queen threatens but we're checking for Rook
-          };
-          boardState = BoardState.custom(customPieces);
+          });
           threatDetector = ThreatDetector(boardState);
           final whiteKingOnBoard = boardState[e1];
 
@@ -373,13 +368,12 @@ void main() {
     group('complex scenarios', () {
       test('should handle multiple simultaneous threats', () {
         // Setup: King under attack by multiple pieces
-        final customPieces = {
+        boardState = BoardState.custom({
           e4: whiteKing,
           e8: blackQueen,
           a4: blackRook,
           c6: blackKnight,
-        };
-        boardState = BoardState.custom(customPieces);
+        });
         threatDetector = ThreatDetector(boardState);
         final whiteKingOnBoard = boardState[e4];
 
@@ -390,11 +384,13 @@ void main() {
         );
         expect(threatening.length, greaterThan(1));
       });
-
       test('should handle pieces blocked by other pieces', () {
         // Setup: Queen blocked by pawn
-        final customPieces = {e1: whiteKing, e2: whitePawn, e8: blackQueen};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          e1: whiteKing,
+          e2: whitePawn,
+          e8: blackQueen,
+        });
         threatDetector = ThreatDetector(boardState);
         final whiteKingOnBoard = boardState[e1];
 
@@ -410,8 +406,11 @@ void main() {
         'should return true when move resolves piece threat by blocking',
         () {
           // Setup: King under attack, moving a piece to block the attack
-          final customPieces = {e1: whiteKing, e8: blackQueen, d3: whiteQueen};
-          boardState = BoardState.custom(customPieces);
+          boardState = BoardState.custom({
+            e1: whiteKing,
+            e8: blackQueen,
+            d3: whiteQueen,
+          });
           threatDetector = ThreatDetector(boardState);
 
           final queenMove = Move.create(from: d3, to: e3, moving: whiteQueen);
@@ -431,8 +430,11 @@ void main() {
         'should return true when move resolves threat by capturing attacker',
         () {
           // Setup: King under attack, capturing the attacking piece
-          final customPieces = {e1: whiteKing, e2: blackQueen, d3: whiteQueen};
-          boardState = BoardState.custom(customPieces);
+          boardState = BoardState.custom({
+            e1: whiteKing,
+            e2: blackQueen,
+            d3: whiteQueen,
+          });
           threatDetector = ThreatDetector(boardState);
 
           final queenCapture = CaptureMove.create(
@@ -457,8 +459,7 @@ void main() {
         'should return true when move resolves threat by moving threatened piece',
         () {
           // Setup: King under attack, moving the king to safety
-          final customPieces = {e1: whiteKing, e8: blackQueen};
-          boardState = BoardState.custom(customPieces);
+          boardState = BoardState.custom({e1: whiteKing, e8: blackQueen});
           threatDetector = ThreatDetector(boardState);
 
           final kingMove = Move.create(from: e1, to: d1, moving: whiteKing);
@@ -473,11 +474,13 @@ void main() {
           );
         },
       );
-
       test('should return false when piece is not currently under threat', () {
         // Setup: King is safe, move doesn't affect threat status
-        final customPieces = {a1: whiteKing, h8: blackQueen, d2: whitePawn};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          a1: whiteKing,
+          h8: blackQueen,
+          d2: whitePawn,
+        });
         threatDetector = ThreatDetector(boardState);
 
         final pawnMove = Move.create(from: d2, to: d3, moving: whitePawn);
@@ -491,11 +494,13 @@ void main() {
           isFalse,
         );
       });
-
       test('should return false when move does not resolve threat', () {
         // Setup: King under attack, but move doesn't help
-        final customPieces = {e1: whiteKing, e8: blackQueen, a2: whitePawn};
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          e1: whiteKing,
+          e8: blackQueen,
+          a2: whitePawn,
+        });
         threatDetector = ThreatDetector(boardState);
 
         final pawnMove = Move.create(from: a2, to: a3, moving: whitePawn);
@@ -509,16 +514,14 @@ void main() {
           isFalse,
         );
       });
-
       test('should return false when move creates new threat', () {
         // Setup: Piece under attack, move removes blocker creating new threat
-        final customPieces = {
+        boardState = BoardState.custom({
           d4: whiteKing,
           d2: whitePawn,
           d8: blackQueen,
           h4: blackRook,
-        };
-        boardState = BoardState.custom(customPieces);
+        });
         threatDetector = ThreatDetector(boardState);
 
         final pawnMove = Move.create(from: d2, to: d3, moving: whitePawn);

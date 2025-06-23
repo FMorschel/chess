@@ -58,168 +58,168 @@ void main() {
 
   group('King', () {
     test('should have correct symbol and value', () {
-      const king = King(Team.white);
+      const king = King.white;
       expect(king.symbol, equals(PieceSymbol.king));
       expect(king.value, equals(PieceValue.king.points));
       expect(king.value, equals(0));
     });
 
     test('should have correct algebraic notation', () {
-      const king = King(Team.white);
+      const king = King.white;
       expect(king.toAlgebraic(), equals('K'));
     });
 
     test('should have correct string representation', () {
-      const king = King(Team.black);
+      const king = King.black;
       expect(king.toString(), equals('king'));
     });
 
     test('should preserve team', () {
-      const whiteKing = King(Team.white);
-      const blackKing = King(Team.black);
+      const whiteKing = King.white;
+      const blackKing = King.black;
       expect(whiteKing.team, equals(Team.white));
       expect(blackKing.team, equals(Team.black));
     });
 
     test('should not be a promotion piece', () {
-      const king = King(Team.white);
+      const king = King.white;
       expect(king, isNot(isA<PromotionPiece>()));
     });
   });
 
   group('Queen', () {
     test('should have correct symbol and value', () {
-      const queen = Queen(Team.white);
+      const queen = Queen.white;
       expect(queen.symbol, equals(PieceSymbol.queen));
       expect(queen.value, equals(PieceValue.queen.points));
       expect(queen.value, equals(9));
     });
 
     test('should have correct algebraic notation', () {
-      const queen = Queen(Team.white);
+      const queen = Queen.white;
       expect(queen.toAlgebraic(), equals('Q'));
     });
 
     test('should have correct string representation', () {
-      const queen = Queen(Team.black);
+      const queen = Queen.black;
       expect(queen.toString(), equals('queen'));
     });
 
     test('should be a promotion piece', () {
-      const queen = Queen(Team.white);
+      const queen = Queen.white;
       expect(queen, isA<PromotionPiece>());
     });
   });
 
   group('Rook', () {
     test('should have correct symbol and value', () {
-      const rook = Rook(Team.white);
+      const rook = Rook.white;
       expect(rook.symbol, equals(PieceSymbol.rook));
       expect(rook.value, equals(PieceValue.rook.points));
       expect(rook.value, equals(5));
     });
 
     test('should have correct algebraic notation', () {
-      const rook = Rook(Team.white);
+      const rook = Rook.white;
       expect(rook.toAlgebraic(), equals('R'));
     });
 
     test('should have correct string representation', () {
-      const rook = Rook(Team.black);
+      const rook = Rook.black;
       expect(rook.toString(), equals('rook'));
     });
 
     test('should be a promotion piece', () {
-      const rook = Rook(Team.white);
+      const rook = Rook.white;
       expect(rook, isA<PromotionPiece>());
     });
   });
 
   group('Bishop', () {
     test('should have correct symbol and value', () {
-      const bishop = Bishop(Team.white);
+      const bishop = Bishop.white;
       expect(bishop.symbol, equals(PieceSymbol.bishop));
       expect(bishop.value, equals(PieceValue.bishop.points));
       expect(bishop.value, equals(3));
     });
 
     test('should have correct algebraic notation', () {
-      const bishop = Bishop(Team.white);
+      const bishop = Bishop.white;
       expect(bishop.toAlgebraic(), equals('B'));
     });
 
     test('should have correct string representation', () {
-      const bishop = Bishop(Team.black);
+      const bishop = Bishop.black;
       expect(bishop.toString(), equals('bishop'));
     });
 
     test('should be a promotion piece', () {
-      const bishop = Bishop(Team.white);
+      const bishop = Bishop.white;
       expect(bishop, isA<PromotionPiece>());
     });
   });
 
   group('Knight', () {
     test('should have correct symbol and value', () {
-      const knight = Knight(Team.white);
+      const knight = Knight.white;
       expect(knight.symbol, equals(PieceSymbol.knight));
       expect(knight.value, equals(PieceValue.knight.points));
       expect(knight.value, equals(3));
     });
 
     test('should have correct algebraic notation', () {
-      const knight = Knight(Team.white);
+      const knight = Knight.white;
       expect(knight.toAlgebraic(), equals('N'));
     });
 
     test('should have correct string representation', () {
-      const knight = Knight(Team.black);
+      const knight = Knight.black;
       expect(knight.toString(), equals('knight'));
     });
 
     test('should be a promotion piece', () {
-      const knight = Knight(Team.white);
+      const knight = Knight.white;
       expect(knight, isA<PromotionPiece>());
     });
   });
 
   group('Pawn', () {
     test('should have correct symbol and value', () {
-      const pawn = Pawn(Team.white);
+      const pawn = Pawn.white;
       expect(pawn.symbol, equals(PieceSymbol.pawn));
       expect(pawn.value, equals(PieceValue.pawn.points));
       expect(pawn.value, equals(1));
     });
 
     test('should have empty algebraic notation', () {
-      const pawn = Pawn(Team.white);
+      const pawn = Pawn.white;
       expect(pawn.toAlgebraic(), equals(''));
     });
 
     test('should have correct string representation', () {
-      const pawn = Pawn(Team.black);
+      const pawn = Pawn.black;
       expect(pawn.toString(), equals('pawn'));
     });
 
     test('should preserve team', () {
-      const whitePawn = Pawn(Team.white);
-      const blackPawn = Pawn(Team.black);
+      const whitePawn = Pawn.white;
+      const blackPawn = Pawn.black;
       expect(whitePawn.team, equals(Team.white));
       expect(blackPawn.team, equals(Team.black));
     });
 
     test('should not be a promotion piece', () {
-      const pawn = Pawn(Team.white);
+      const pawn = Pawn.white;
       expect(pawn, isNot(isA<PromotionPiece>()));
     });
   });
 
   group('PromotionPiece', () {
     test('should include Queen, Rook, Bishop, and Knight', () {
-      const queen = Queen(Team.white);
-      const rook = Rook(Team.white);
-      const bishop = Bishop(Team.white);
-      const knight = Knight(Team.white);
+      const queen = Queen.white;
+      const rook = Rook.white;
+      const bishop = Bishop.white;
+      const knight = Knight.white;
 
       expect(queen, isA<PromotionPiece>());
       expect(rook, isA<PromotionPiece>());
@@ -228,8 +228,8 @@ void main() {
     });
 
     test('should not include King and Pawn', () {
-      const king = King(Team.white);
-      const pawn = Pawn(Team.white);
+      const king = King.white;
+      const pawn = Pawn.white;
 
       expect(king, isNot(isA<PromotionPiece>()));
       expect(pawn, isNot(isA<PromotionPiece>()));
@@ -237,40 +237,25 @@ void main() {
   });
 
   group('piece equality and identity', () {
-    test(
-      'different pieces with same type and team should be equal instances',
-      () {
-        final king1 = King(Team.white);
-        final king2 = King(Team.white);
+    test('same piece type with different teams should be different', () {
+      const whiteQueen = Queen.white;
+      const blackQueen = Queen.black;
 
-        // They are different instances but same type and team
-        expect(identical(king1, king2), isFalse);
-        expect(king1, equals(king2));
-      },
-    );
-
-    test(
-      'same piece type with different teams should have different teams',
-      () {
-        const whiteQueen = Queen(Team.white);
-        const blackQueen = Queen(Team.black);
-
-        expect(whiteQueen.team, isNot(equals(blackQueen.team)));
-        expect(whiteQueen.symbol, equals(blackQueen.symbol));
-        expect(whiteQueen.value, equals(blackQueen.value));
-      },
-    );
+      expect(whiteQueen.team, isNot(equals(blackQueen.team)));
+      expect(whiteQueen.symbol, equals(blackQueen.symbol));
+      expect(whiteQueen.value, equals(blackQueen.value));
+    });
   });
 
   group('piece hierarchy', () {
     test('all pieces should inherit from Piece', () {
       final pieces = [
-        King(Team.white),
-        Queen(Team.white),
-        Rook(Team.white),
-        Bishop(Team.white),
-        Knight(Team.white),
-        Pawn(Team.white),
+        King.white,
+        Queen.white,
+        Rook.white,
+        Bishop.white,
+        Knight.white,
+        Pawn.white,
       ];
 
       for (final piece in pieces) {
@@ -280,10 +265,10 @@ void main() {
 
     test('promotion pieces should have promotion symbol correspondence', () {
       final promotionPieces = [
-        Queen(Team.white),
-        Rook(Team.white),
-        Bishop(Team.white),
-        Knight(Team.white),
+        Queen.white,
+        Rook.white,
+        Bishop.white,
+        Knight.white,
       ];
 
       final promotionSymbols = PieceSymbol.promotionSymbols;
@@ -292,7 +277,7 @@ void main() {
         expect(promotionSymbols, contains(piece.symbol));
       }
 
-      final others = [King(Team.white), Pawn(Team.white)];
+      final others = <Piece>[King.white, Pawn.white];
 
       for (final piece in others) {
         expect(promotionSymbols, isNot(contains(piece.symbol)));
@@ -300,17 +285,13 @@ void main() {
     });
 
     test('sliding pieces should implement slidingpieces', () {
-      final slidingPieces = [
-        Queen(Team.white),
-        Rook(Team.white),
-        Bishop(Team.white),
-      ];
+      final slidingPieces = [Queen.white, Rook.white, Bishop.white];
 
       for (final piece in slidingPieces) {
         expect(piece, isA<SlidingPiece>());
       }
 
-      final others = [King(Team.white), Knight(Team.white), Pawn(Team.white)];
+      final others = [King.white, Knight.white, Pawn.white];
 
       for (final piece in others) {
         expect(piece, isNot(isA<SlidingPiece>()));
@@ -320,12 +301,12 @@ void main() {
 
   group('piece values', () {
     test('should match corresponding PieceValue enum values', () {
-      const king = King(Team.white);
-      const queen = Queen(Team.white);
-      const rook = Rook(Team.white);
-      const bishop = Bishop(Team.white);
-      const knight = Knight(Team.white);
-      const pawn = Pawn(Team.white);
+      const king = King.white;
+      const queen = Queen.white;
+      const rook = Rook.white;
+      const bishop = Bishop.white;
+      const knight = Knight.white;
+      const pawn = Pawn.white;
 
       expect(king.value, equals(PieceValue.king.points));
       expect(queen.value, equals(PieceValue.queen.points));
@@ -339,37 +320,37 @@ void main() {
   group('piece equality tests', () {
     group('same piece type with same team', () {
       test('should be equal', () {
-        const piece1 = King(Team.white);
-        const piece2 = King(Team.white);
+        const piece1 = King.white;
+        const piece2 = King.white;
 
         expect(piece1 == piece2, isTrue);
         expect(piece1, equals(piece2));
       });
 
       test('should have same hashCode', () {
-        const piece1 = Queen(Team.black);
-        const piece2 = Queen(Team.black);
+        const piece1 = Queen.black;
+        const piece2 = Queen.black;
 
         expect(piece1.hashCode, equals(piece2.hashCode));
       });
 
       test('should work for all piece types', () {
         final whitePieces1 = [
-          King(Team.white),
-          Queen(Team.white),
-          Rook(Team.white),
-          Bishop(Team.white),
-          Knight(Team.white),
-          Pawn(Team.white),
+          King.white,
+          Queen.white,
+          Rook.white,
+          Bishop.white,
+          Knight.white,
+          Pawn.white,
         ];
 
         final whitePieces2 = [
-          King(Team.white),
-          Queen(Team.white),
-          Rook(Team.white),
-          Bishop(Team.white),
-          Knight(Team.white),
-          Pawn(Team.white),
+          King.white,
+          Queen.white,
+          Rook.white,
+          Bishop.white,
+          Knight.white,
+          Pawn.white,
         ];
 
         for (int i = 0; i < whitePieces1.length; i++) {
@@ -381,37 +362,37 @@ void main() {
 
     group('same piece type with different teams', () {
       test('should not be equal', () {
-        const whiteKing = King(Team.white);
-        const blackKing = King(Team.black);
+        const whiteKing = King.white;
+        const blackKing = King.black;
 
         expect(whiteKing == blackKing, isFalse);
         expect(whiteKing, isNot(equals(blackKing)));
       });
 
       test('should have different hashCodes', () {
-        const whiteQueen = Queen(Team.white);
-        const blackQueen = Queen(Team.black);
+        const whiteQueen = Queen.white;
+        const blackQueen = Queen.black;
 
         expect(whiteQueen.hashCode, isNot(equals(blackQueen.hashCode)));
       });
 
       test('should work for all piece types', () {
         final whitePieces = [
-          King(Team.white),
-          Queen(Team.white),
-          Rook(Team.white),
-          Bishop(Team.white),
-          Knight(Team.white),
-          Pawn(Team.white),
+          King.white,
+          Queen.white,
+          Rook.white,
+          Bishop.white,
+          Knight.white,
+          Pawn.white,
         ];
 
         final blackPieces = [
-          King(Team.black),
-          Queen(Team.black),
-          Rook(Team.black),
-          Bishop(Team.black),
-          Knight(Team.black),
-          Pawn(Team.black),
+          King.black,
+          Queen.black,
+          Rook.black,
+          Bishop.black,
+          Knight.black,
+          Pawn.black,
         ];
 
         for (int i = 0; i < whitePieces.length; i++) {
@@ -422,28 +403,28 @@ void main() {
 
     group('different piece types with same team', () {
       test('should not be equal', () {
-        const Piece king = King(Team.white);
-        const Piece queen = Queen(Team.white);
+        const Piece king = King.white;
+        const Piece queen = Queen.white;
 
         expect(king == queen, isFalse);
         expect(king, isNot(equals(queen)));
       });
 
       test('should have different hashCodes', () {
-        const rook = Rook(Team.black);
-        const bishop = Bishop(Team.black);
+        const rook = Rook.black;
+        const bishop = Bishop.black;
 
         expect(rook.hashCode, isNot(equals(bishop.hashCode)));
       });
 
       test('should work for various combinations', () {
         final pieces = [
-          King(Team.white),
-          Queen(Team.white),
-          Rook(Team.white),
-          Bishop(Team.white),
-          Knight(Team.white),
-          Pawn(Team.white),
+          King.white,
+          Queen.white,
+          Rook.white,
+          Bishop.white,
+          Knight.white,
+          Pawn.white,
         ];
 
         for (int i = 0; i < pieces.length; i++) {
@@ -456,7 +437,7 @@ void main() {
 
     group('identical instances', () {
       test('should be equal to itself', () {
-        const piece = Knight(Team.white);
+        const piece = Knight.white;
 
         expect(piece == piece, isTrue);
         expect(piece, equals(piece));
@@ -464,7 +445,7 @@ void main() {
       });
 
       test('should have consistent hashCode', () {
-        const piece = Bishop(Team.black);
+        const piece = Bishop.black;
         final hashCode1 = piece.hashCode;
         final hashCode2 = piece.hashCode;
 
@@ -473,13 +454,13 @@ void main() {
     });
     group('equality with null and other types', () {
       test('should not be equal to null', () {
-        const piece = Pawn(Team.white);
+        const piece = Pawn.white;
 
         expect(piece, isNot(equals(null)));
       });
 
       test('should not be equal to different types', () {
-        const piece = Queen(Team.black);
+        const piece = Queen.black;
 
         expect(piece, isNot(equals("queen")));
         expect(piece, isNot(equals(42)));
@@ -514,12 +495,12 @@ void main() {
     group('equality reflexivity, symmetry, and transitivity', () {
       test('should be reflexive (a == a)', () {
         final pieces = [
-          King(Team.white),
-          Queen(Team.black),
-          Rook(Team.white),
-          Bishop(Team.black),
-          Knight(Team.white),
-          Pawn(Team.black),
+          King.white,
+          Queen.black,
+          Rook.white,
+          Bishop.black,
+          Knight.white,
+          Pawn.black,
         ];
 
         for (final piece in pieces) {
@@ -528,16 +509,16 @@ void main() {
       });
 
       test('should be symmetric (a == b implies b == a)', () {
-        const piece1 = Knight(Team.white);
-        const piece2 = Knight(Team.white);
+        const piece1 = Knight.white;
+        const piece2 = Knight.white;
 
         expect(piece1 == piece2, equals(piece2 == piece1));
       });
 
       test('should be transitive (a == b and b == c implies a == c)', () {
-        const piece1 = Rook(Team.black);
-        const piece2 = Rook(Team.black);
-        const piece3 = Rook(Team.black);
+        const piece1 = Rook.black;
+        const piece2 = Rook.black;
+        const piece3 = Rook.black;
 
         expect(piece1 == piece2, isTrue);
         expect(piece2 == piece3, isTrue);
@@ -547,15 +528,15 @@ void main() {
 
     group('hashCode contract', () {
       test('equal objects should have equal hashCodes', () {
-        const piece1 = Queen(Team.white);
-        const piece2 = Queen(Team.white);
+        const piece1 = Queen.white;
+        const piece2 = Queen.white;
 
         expect(piece1 == piece2, isTrue);
         expect(piece1.hashCode, equals(piece2.hashCode));
       });
 
       test('hashCode should be consistent across multiple calls', () {
-        const piece = King(Team.black);
+        const piece = King.black;
         final hashCodes = List.generate(10, (_) => piece.hashCode);
 
         expect(hashCodes.every((hash) => hash == hashCodes.first), isTrue);
@@ -563,18 +544,18 @@ void main() {
 
       test('different pieces should generally have different hashCodes', () {
         final pieces = [
-          King(Team.white),
-          Queen(Team.white),
-          Rook(Team.white),
-          Bishop(Team.white),
-          Knight(Team.white),
-          Pawn(Team.white),
-          King(Team.black),
-          Queen(Team.black),
-          Rook(Team.black),
-          Bishop(Team.black),
-          Knight(Team.black),
-          Pawn(Team.black),
+          King.white,
+          Queen.white,
+          Rook.white,
+          Bishop.white,
+          Knight.white,
+          Pawn.white,
+          King.black,
+          Queen.black,
+          Rook.black,
+          Bishop.black,
+          Knight.black,
+          Pawn.black,
         ];
 
         final hashCodes = pieces.map((p) => p.hashCode).toSet();
@@ -586,9 +567,9 @@ void main() {
 
     group('Set and Map behavior', () {
       test('should work correctly in Sets', () {
-        final piece1 = Bishop(Team.white);
-        final piece2 = Bishop(Team.white);
-        const piece3 = Bishop(Team.black);
+        final piece1 = Bishop.white;
+        final piece2 = Bishop.white;
+        const piece3 = Bishop.black;
 
         final set = {piece1, piece2, piece3};
 
@@ -599,9 +580,9 @@ void main() {
       });
 
       test('should work correctly as Map keys', () {
-        const piece1 = Pawn(Team.white);
-        const piece2 = Pawn(Team.white);
-        const piece3 = Pawn(Team.black);
+        const piece1 = Pawn.white;
+        const piece2 = Pawn.white;
+        const piece3 = Pawn.black;
 
         final map = <Piece, String>{piece1: 'white pawn', piece3: 'black pawn'};
 
@@ -622,7 +603,7 @@ void main() {
     group('King validPositions', () {
       test('should return all adjacent squares on empty board', () {
         // Define piece instances once
-        const whiteKing = King(Team.white);
+        const whiteKing = King.white;
 
         // Define position instances once
         final d4 = Position.d4; // Center position
@@ -647,9 +628,9 @@ void main() {
 
       test('should not include positions with same team pieces', () {
         // Define piece instances once
-        const whiteKing = King(Team.white);
-        const whitePawn = Pawn(Team.white);
-        const whiteKnight = Knight(Team.white);
+        const whiteKing = King.white;
+        const whitePawn = Pawn.white;
+        const whiteKnight = Knight.white;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -672,9 +653,9 @@ void main() {
 
       test('should include positions with enemy pieces for capture', () {
         // Define piece instances once
-        const whiteKing = King(Team.white);
-        const blackPawn = Pawn(Team.black);
-        const blackKnight = Knight(Team.black);
+        const whiteKing = King.white;
+        const blackPawn = Pawn.black;
+        const blackKnight = Knight.black;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -697,7 +678,7 @@ void main() {
 
       test('should handle edge positions correctly', () {
         // Define piece instances once
-        const whiteKing = King(Team.white);
+        const whiteKing = King.white;
 
         // Define position instances once
         final a1 = Position.a1; // Corner position
@@ -718,7 +699,7 @@ void main() {
     group('Queen validPositions', () {
       test('should return all lines of movement on empty board', () {
         // Define piece instances once
-        const whiteQueen = Queen(Team.white);
+        const whiteQueen = Queen.white;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -748,9 +729,9 @@ void main() {
 
       test('should stop at same team pieces and not include them', () {
         // Define piece instances once
-        const whiteQueen = Queen(Team.white);
-        const whiteRook = Rook(Team.white);
-        const whiteBishop = Bishop(Team.white);
+        const whiteQueen = Queen.white;
+        const whiteRook = Rook.white;
+        const whiteBishop = Bishop.white;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -784,9 +765,9 @@ void main() {
 
       test('should stop at enemy pieces but include them for capture', () {
         // Define piece instances once
-        const whiteQueen = Queen(Team.white);
-        const blackRook = Rook(Team.black);
-        const blackBishop = Bishop(Team.black);
+        const whiteQueen = Queen.white;
+        const blackRook = Rook.black;
+        const blackBishop = Bishop.black;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -825,7 +806,7 @@ void main() {
         'should return all horizontal and vertical lines on empty board',
         () {
           // Define piece instances once
-          const whiteRook = Rook(Team.white);
+          const whiteRook = Rook.white;
 
           // Define position instances once
           final d4 = Position.d4;
@@ -858,8 +839,8 @@ void main() {
 
       test('should stop at same team pieces and not include them', () {
         // Define piece instances once
-        const whiteRook = Rook(Team.white);
-        const whitePawn = Pawn(Team.white);
+        const whiteRook = Rook.white;
+        const whitePawn = Pawn.white;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -884,8 +865,8 @@ void main() {
 
       test('should include enemy pieces for capture', () {
         // Define piece instances once
-        const whiteRook = Rook(Team.white);
-        const blackPawn = Pawn(Team.black);
+        const whiteRook = Rook.white;
+        const blackPawn = Pawn.black;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -909,7 +890,7 @@ void main() {
     group('Bishop validPositions', () {
       test('should return all diagonal lines on empty board', () {
         // Define piece instances once
-        const whiteBishop = Bishop(Team.white);
+        const whiteBishop = Bishop.white;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -941,8 +922,8 @@ void main() {
 
       test('should stop at same team pieces and not include them', () {
         // Define piece instances once
-        const whiteBishop = Bishop(Team.white);
-        const whiteKnight = Knight(Team.white);
+        const whiteBishop = Bishop.white;
+        const whiteKnight = Knight.white;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -967,8 +948,8 @@ void main() {
 
       test('should include enemy pieces for capture', () {
         // Define piece instances once
-        const whiteBishop = Bishop(Team.white);
-        const blackKnight = Knight(Team.black);
+        const whiteBishop = Bishop.white;
+        const blackKnight = Knight.black;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -992,7 +973,7 @@ void main() {
     group('Knight validPositions', () {
       test('should return all L-shaped moves on empty board', () {
         // Define piece instances once
-        const whiteKnight = Knight(Team.white);
+        const whiteKnight = Knight.white;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -1017,9 +998,9 @@ void main() {
 
       test('should not include positions with same team pieces', () {
         // Define piece instances once
-        const whiteKnight = Knight(Team.white);
-        const whitePawn = Pawn(Team.white);
-        const whiteRook = Rook(Team.white);
+        const whiteKnight = Knight.white;
+        const whitePawn = Pawn.white;
+        const whiteRook = Rook.white;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -1042,9 +1023,9 @@ void main() {
 
       test('should include positions with enemy pieces for capture', () {
         // Define piece instances once
-        const whiteKnight = Knight(Team.white);
-        const blackPawn = Pawn(Team.black);
-        const blackRook = Rook(Team.black);
+        const whiteKnight = Knight.white;
+        const blackPawn = Pawn.black;
+        const blackRook = Rook.black;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -1067,7 +1048,7 @@ void main() {
 
       test('should handle edge positions correctly', () {
         // Define piece instances once
-        const whiteKnight = Knight(Team.white);
+        const whiteKnight = Knight.white;
 
         // Define position instances once
         final a1 = Position.a1; // Corner position
@@ -1089,7 +1070,7 @@ void main() {
         'should return forward moves on empty board from initial position',
         () {
           // Define piece instances once
-          const whitePawn = Pawn(Team.white);
+          const whitePawn = Pawn.white;
 
           // Define position instances once
           final e2 = Position.e2; // Initial position for white pawn
@@ -1106,7 +1087,7 @@ void main() {
 
       test('should return only one forward move from non-initial position', () {
         // Define piece instances once
-        const whitePawn = Pawn(Team.white);
+        const whitePawn = Pawn.white;
 
         // Define position instances once
         final e3 = Position.e3; // Non-initial position
@@ -1120,8 +1101,8 @@ void main() {
 
       test('should not move forward if blocked by any piece', () {
         // Define piece instances once
-        const whitePawn = Pawn(Team.white);
-        const blackPawn = Pawn(Team.black);
+        const whitePawn = Pawn.white;
+        const blackPawn = Pawn.black;
 
         // Define position instances once
         final e2 = Position.e2;
@@ -1137,9 +1118,9 @@ void main() {
 
       test('should include diagonal captures of enemy pieces', () {
         // Define piece instances once
-        const whitePawn = Pawn(Team.white);
-        const blackPawn = Pawn(Team.black);
-        const blackKnight = Knight(Team.black);
+        const whitePawn = Pawn.white;
+        const blackPawn = Pawn.black;
+        const blackKnight = Knight.black;
 
         // Define position instances once
         final e4 = Position.e4;
@@ -1162,9 +1143,9 @@ void main() {
 
       test('should not capture same team pieces diagonally', () {
         // Define piece instances once
-        const whitePawn = Pawn(Team.white);
-        const whitePawn2 = Pawn(Team.white);
-        const whiteKnight = Knight(Team.white);
+        const whitePawn = Pawn.white;
+        const whitePawn2 = Pawn.white;
+        const whiteKnight = Knight.white;
 
         // Define position instances once
         final e4 = Position.e4;
@@ -1187,7 +1168,7 @@ void main() {
 
       test('should work correctly for black pawns moving down', () {
         // Define piece instances once
-        const blackPawn = Pawn(Team.black);
+        const blackPawn = Pawn.black;
 
         // Define position instances once
         final e7 = Position.e7; // Initial position for black pawn
@@ -1204,9 +1185,9 @@ void main() {
 
       test('should include diagonal captures for black pawns', () {
         // Define piece instances once
-        const blackPawn = Pawn(Team.black);
-        const whitePawn = Pawn(Team.white);
-        const whiteKnight = Knight(Team.white);
+        const blackPawn = Pawn.black;
+        const whitePawn = Pawn.white;
+        const whiteKnight = Knight.white;
 
         // Define position instances once
         final e5 = Position.e5;
@@ -1231,8 +1212,8 @@ void main() {
         'should not move from initial position if second square is blocked',
         () {
           // Define piece instances once
-          const whitePawn = Pawn(Team.white);
-          const blackPawn = Pawn(Team.black);
+          const whitePawn = Pawn.white;
+          const blackPawn = Pawn.black;
 
           // Define position instances once
           final e2 = Position.e2;
@@ -1257,8 +1238,8 @@ void main() {
         'should enable en passant capture when last move was PawnInitialMove',
         () {
           // Setup: White pawn at e5, black pawn just moved from d7 to d5 (PawnInitialMove)
-          const whitePawn = Pawn(Team.white);
-          const blackPawn = Pawn(Team.black);
+          const whitePawn = Pawn.white;
+          const blackPawn = Pawn.black;
 
           final e5 = Position.e5;
           final d5 = Position.d5;
@@ -1291,8 +1272,8 @@ void main() {
         'should enable en passant capture for black pawn when last move was white PawnInitialMove',
         () {
           // Setup: Black pawn at d4, white pawn just moved from e2 to e4 (PawnInitialMove)
-          const whitePawn = Pawn(Team.white);
-          const blackPawn = Pawn(Team.black);
+          const whitePawn = Pawn.white;
+          const blackPawn = Pawn.black;
 
           final d4 = Position.d4;
           final e4 = Position.e4;
@@ -1325,8 +1306,8 @@ void main() {
         'should not enable en passant when last move was not PawnInitialMove',
         () {
           // Setup: White pawn at e5, black pawn at d5, but last move was regular PawnMove
-          const whitePawn = Pawn(Team.white);
-          const blackPawn = Pawn(Team.black);
+          const whitePawn = Pawn.white;
+          const blackPawn = Pawn.black;
 
           final e5 = Position.e5;
           final d5 = Position.d5;
@@ -1358,8 +1339,8 @@ void main() {
         'should not enable en passant when PawnInitialMove destination is wrong file',
         () {
           // Setup: White pawn at e5, black pawn moved from f7 to f5 (wrong file for en passant)
-          const whitePawn = Pawn(Team.white);
-          const blackPawn = Pawn(Team.black);
+          const whitePawn = Pawn.white;
+          const blackPawn = Pawn.black;
 
           final e5 = Position.e5;
           final g5 = Position.g5;
@@ -1391,9 +1372,9 @@ void main() {
       );
       test('should work with en passant and regular captures together', () {
         // Setup: White pawn at e5 can capture both normally and en passant
-        const whitePawn = Pawn(Team.white);
-        const blackPawn1 = Pawn(Team.black);
-        const blackKnight = Knight(Team.black);
+        const whitePawn = Pawn.white;
+        const blackPawn1 = Pawn.black;
+        const blackKnight = Knight.black;
 
         final e5 = Position.e5;
         final d5 = Position.d5;
@@ -1428,8 +1409,8 @@ void main() {
 
       test('should not enable en passant when no lastMove is provided', () {
         // Setup: White pawn at e5, black pawn at d5, but no lastMove provided
-        const whitePawn = Pawn(Team.white);
-        const blackPawn = Pawn(Team.black);
+        const whitePawn = Pawn.white;
+        const blackPawn = Pawn.black;
 
         final e5 = Position.e5;
         final d5 = Position.d5;
@@ -1452,9 +1433,9 @@ void main() {
 
       test('should handle en passant on both sides of pawn simultaneously', () {
         // Setup: White pawn at e5, black pawns on both sides with valid PawnInitialMoves
-        const whitePawn = Pawn(Team.white);
-        const blackPawn1 = Pawn(Team.black);
-        const blackPawn2 = Pawn(Team.black);
+        const whitePawn = Pawn.white;
+        const blackPawn1 = Pawn.black;
+        const blackPawn2 = Pawn.black;
 
         final e5 = Position.e5;
         final d5 = Position.d5;
@@ -1493,9 +1474,9 @@ void main() {
 
       test('should work correctly for black pawn en passant scenarios', () {
         // Setup: Black pawn at d4, white pawns that could be captured en passant
-        const blackPawn = Pawn(Team.black);
-        const whitePawn1 = Pawn(Team.white);
-        const whitePawn2 = Pawn(Team.white);
+        const blackPawn = Pawn.black;
+        const whitePawn1 = Pawn.white;
+        const whitePawn2 = Pawn.white;
 
         final d4 = Position.d4;
         final c4 = Position.c4;
@@ -1534,9 +1515,9 @@ void main() {
 
       test('should not enable en passant when target square is occupied', () {
         // Setup: White pawn at e5, black pawn moved d7->d5, but d6 is occupied
-        const whitePawn = Pawn(Team.white);
-        const blackPawn1 = Pawn(Team.black);
-        const blackPawn2 = Pawn(Team.black);
+        const whitePawn = Pawn.white;
+        const blackPawn1 = Pawn.black;
+        const blackPawn2 = Pawn.black;
 
         final e5 = Position.e5;
         final d5 = Position.d5;
@@ -1573,11 +1554,11 @@ void main() {
     group('Mixed scenarios', () {
       test('should handle complex board with multiple pieces', () {
         // Define piece instances once
-        const whiteQueen = Queen(Team.white);
-        const blackRook = Rook(Team.black);
-        const whiteBishop = Bishop(Team.white);
-        const blackKnight = Knight(Team.black);
-        const whiteKing = King(Team.white);
+        const whiteQueen = Queen.white;
+        const blackRook = Rook.black;
+        const whiteBishop = Bishop.white;
+        const blackKnight = Knight.black;
+        const whiteKing = King.white;
 
         // Define position instances once
         final d4 = Position.d4;
@@ -1618,9 +1599,9 @@ void main() {
 
       test('should handle edge cases with pieces at board boundaries', () {
         // Define piece instances once
-        const whiteRook = Rook(Team.white);
-        const whitePawn = Pawn(Team.white);
-        const blackQueen = Queen(Team.black);
+        const whiteRook = Rook.white;
+        const whitePawn = Pawn.white;
+        const blackQueen = Queen.black;
 
         // Define position instances once
         final a1 = Position.a1; // Corner position
@@ -1654,7 +1635,7 @@ void main() {
           final state = BoardState.empty();
 
           // Define piece instances once
-          const whiteKing = King(Team.white);
+          const whiteKing = King.white;
 
           // Define position instances once
           final e4 = Position.e4;
@@ -1681,7 +1662,7 @@ void main() {
           final state = BoardState.empty();
 
           // Define piece instances once
-          const whiteQueen = Queen(Team.white);
+          const whiteQueen = Queen.white;
 
           // Define position instances once
           final d4 = Position.d4;
@@ -1719,7 +1700,7 @@ void main() {
           final state = BoardState.empty();
 
           // Define piece instances once
-          const blackRook = Rook(Team.black);
+          const blackRook = Rook.black;
 
           // Define position instances once
           final e5 = Position.e5;
@@ -1744,7 +1725,7 @@ void main() {
 
         test('Bishop in center of empty board', () {
           final state = BoardState.empty();
-          const bishop = Bishop(Team.white);
+          const bishop = Bishop.white;
           final position = Position.d4;
 
           final validPositions = bishop.validPositions(state, position);
@@ -1752,19 +1733,14 @@ void main() {
           // Bishop should move diagonally
           expect(
             validPositions,
-            containsAll([
-              Position.a1,
-              Position.g7,
-              Position.a7,
-              Position.g1,
-            ]),
+            containsAll([Position.a1, Position.g7, Position.a7, Position.g1]),
           );
           expect(validPositions.length, equals(13)); // 3+3+6+1 diagonal moves
         });
 
         test('Knight in center of empty board', () {
           final state = BoardState.empty();
-          const knight = Knight(Team.black);
+          const knight = Knight.black;
           final position = Position.e4;
 
           final validPositions = knight.validPositions(state, position);
@@ -1788,7 +1764,7 @@ void main() {
 
         test('White pawn in center of empty board', () {
           final state = BoardState.empty();
-          const pawn = Pawn(Team.white);
+          const pawn = Pawn.white;
           final position = Position.e4;
 
           final validPositions = pawn.validPositions(state, position);
@@ -1800,7 +1776,7 @@ void main() {
 
         test('Black pawn in center of empty board', () {
           final state = BoardState.empty();
-          const pawn = Pawn(Team.black);
+          const pawn = Pawn.black;
           final position = Position.e5;
 
           final validPositions = pawn.validPositions(state, position);
@@ -1812,37 +1788,25 @@ void main() {
 
         test('White pawn on starting rank', () {
           final state = BoardState.empty();
-          const pawn = Pawn(Team.white);
+          const pawn = Pawn.white;
           final position = Position.e2;
 
           final validPositions = pawn.validPositions(state, position);
 
           // White pawn on starting rank should move 1 or 2 squares forward
-          expect(
-            validPositions,
-            containsAll([
-              Position.e3,
-              Position.e4,
-            ]),
-          );
+          expect(validPositions, containsAll([Position.e3, Position.e4]));
           expect(validPositions.length, equals(2));
         });
 
         test('Black pawn on starting rank', () {
           final state = BoardState.empty();
-          const pawn = Pawn(Team.black);
+          const pawn = Pawn.black;
           final position = Position.d7;
 
           final validPositions = pawn.validPositions(state, position);
 
           // Black pawn on starting rank should move 1 or 2 squares forward
-          expect(
-            validPositions,
-            containsAll([
-              Position.d6,
-              Position.d5,
-            ]),
-          );
+          expect(validPositions, containsAll([Position.d6, Position.d5]));
           expect(validPositions.length, equals(2));
         });
       });
@@ -1851,21 +1815,13 @@ void main() {
         test('Queen blocked by same team pieces', () {
           final state = BoardState.empty();
           // Place white queen at d4
-          state.squares.replace(
-            const Queen(Team.white) > Position.d4,
-          );
+          state.squares.replace(Queen.white > Position.d4);
           // Place white pieces blocking some directions
-          state.squares.replace(
-            const Pawn(Team.white) > Position.d5,
-          ); // Block north
-          state.squares.replace(
-            const Rook(Team.white) > Position.f4,
-          ); // Block east
-          state.squares.replace(
-            const Bishop(Team.white) > Position.e5,
-          ); // Block northeast
+          state.squares.replace(Pawn.white > Position.d5); // Block north
+          state.squares.replace(Rook.white > Position.f4); // Block east
+          state.squares.replace(Bishop.white > Position.e5); // Block northeast
 
-          const queen = Queen(Team.white);
+          const queen = Queen.white;
           final position = Position.d4;
           final validPositions = queen.validPositions(state, position);
 
@@ -1886,15 +1842,11 @@ void main() {
         test('Rook blocked by same team piece', () {
           final state = BoardState.empty();
           // Place black rook at a1
-          state.squares.replace(
-            const Rook(Team.black) > Position.a1,
-          );
+          state.squares.replace(Rook.black > Position.a1);
           // Place black piece blocking horizontal movement
-          state.squares.replace(
-            const Knight(Team.black) > Position.d1,
-          );
+          state.squares.replace(Knight.black > Position.d1);
 
-          const rook = Rook(Team.black);
+          const rook = Rook.black;
           final position = Position.a1;
           final validPositions = rook.validPositions(state, position);
 
@@ -1911,15 +1863,11 @@ void main() {
         test('Bishop blocked by same team piece', () {
           final state = BoardState.empty();
           // Place white bishop at c1
-          state.squares.replace(
-            const Bishop(Team.white) > Position.c1,
-          );
+          state.squares.replace(Bishop.white > Position.c1);
           // Place white piece blocking diagonal
-          state.squares.replace(
-            const Pawn(Team.white) > Position.e3,
-          );
+          state.squares.replace(Pawn.white > Position.e3);
 
-          const bishop = Bishop(Team.white);
+          const bishop = Bishop.white;
           final position = Position.c1;
           final validPositions = bishop.validPositions(state, position);
 
@@ -1934,18 +1882,12 @@ void main() {
         test('Knight not blocked by same team piece (jumps over)', () {
           final state = BoardState.empty();
           // Place black knight at e4
-          state.squares.replace(
-            const Knight(Team.black) > Position.e4,
-          );
+          state.squares.replace(Knight.black > Position.e4);
           // Place black pieces around it
-          state.squares.replace(
-            const Pawn(Team.black) > Position.d4,
-          );
-          state.squares.replace(
-            const Rook(Team.black) > Position.e3,
-          );
+          state.squares.replace(Pawn.black > Position.d4);
+          state.squares.replace(Rook.black > Position.e3);
 
-          const knight = Knight(Team.black);
+          const knight = Knight.black;
           final position = Position.e4;
           final validPositions = knight.validPositions(state, position);
 
@@ -1968,15 +1910,11 @@ void main() {
         test('Pawn blocked by same team piece', () {
           final state = BoardState.empty();
           // Place white pawn at e2
-          state.squares.replace(
-            const Pawn(Team.white) > Position.e2,
-          );
+          state.squares.replace(Pawn.white > Position.e2);
           // Place white piece blocking forward movement
-          state.squares.replace(
-            const Bishop(Team.white) > Position.e3,
-          );
+          state.squares.replace(Bishop.white > Position.e3);
 
-          const pawn = Pawn(Team.white);
+          const pawn = Pawn.white;
           final position = Position.e2;
           final validPositions = pawn.validPositions(state, position);
 
@@ -1989,21 +1927,13 @@ void main() {
         test('Queen can capture enemy pieces', () {
           final state = BoardState.empty();
           // Place white queen at d4
-          state.squares.replace(
-            const Queen(Team.white) > Position.d4,
-          );
+          state.squares.replace(Queen.white > Position.d4);
           // Place black pieces in various directions
-          state.squares.replace(
-            const Pawn(Team.black) > Position.d7,
-          ); // North
-          state.squares.replace(
-            const Rook(Team.black) > Position.g4,
-          ); // East
-          state.squares.replace(
-            const Knight(Team.black) > Position.f6,
-          ); // Northeast
+          state.squares.replace(Pawn.black > Position.d7); // North
+          state.squares.replace(Rook.black > Position.g4); // East
+          state.squares.replace(Knight.black > Position.f6); // Northeast
 
-          const queen = Queen(Team.white);
+          const queen = Queen.white;
           final position = Position.d4;
           final validPositions = queen.validPositions(state, position);
 
@@ -2024,16 +1954,16 @@ void main() {
 
         test('Rook can capture enemy pieces', () {
           final state = BoardState.empty();
-          const rook = Rook(Team.black);
+          const rook = Rook.black;
           final rookPosition = Position.h8;
           // Place black rook at h8
           state.squares.replace(rook > rookPosition);
 
           // Place white pieces to capture
           final bishopPosition = Position.h3;
-          state.squares.replace(const Bishop(Team.white) > bishopPosition);
+          state.squares.replace(Bishop.white > bishopPosition);
           final queenPosition = Position.c8;
-          state.squares.replace(const Queen(Team.white) > queenPosition);
+          state.squares.replace(Queen.white > queenPosition);
 
           final validPositions = rook.validPositions(state, rookPosition);
 
@@ -2049,18 +1979,12 @@ void main() {
         test('Bishop can capture enemy pieces', () {
           final state = BoardState.empty();
           // Place white bishop at f1
-          state.squares.replace(
-            const Bishop(Team.white) > Position.f1,
-          );
+          state.squares.replace(Bishop.white > Position.f1);
           // Place black pieces on diagonals
-          state.squares.replace(
-            const Pawn(Team.black) > Position.h3,
-          );
-          state.squares.replace(
-            const Rook(Team.black) > Position.c4,
-          );
+          state.squares.replace(Pawn.black > Position.h3);
+          state.squares.replace(Rook.black > Position.c4);
 
-          const bishop = Bishop(Team.white);
+          const bishop = Bishop.white;
           final position = Position.f1;
           final validPositions = bishop.validPositions(state, position);
 
@@ -2075,22 +1999,14 @@ void main() {
         test('Knight can capture enemy pieces', () {
           final state = BoardState.empty();
           // Place black knight at e4
-          state.squares.replace(
-            const Knight(Team.black) > Position.e4,
-          );
+          state.squares.replace(Knight.black > Position.e4);
           // Place white pieces at knight's target squares
-          state.squares.replace(
-            const Pawn(Team.white) > Position.f6,
-          );
-          state.squares.replace(
-            const Bishop(Team.white) > Position.c3,
-          );
+          state.squares.replace(Pawn.white > Position.f6);
+          state.squares.replace(Bishop.white > Position.c3);
           // Place black piece at another target square
-          state.squares.replace(
-            const Rook(Team.black) > Position.g5,
-          );
+          state.squares.replace(Rook.black > Position.g5);
 
-          const knight = Knight(Team.black);
+          const knight = Knight.black;
           final position = Position.e4;
           final validPositions = knight.validPositions(state, position);
 
@@ -2105,22 +2021,14 @@ void main() {
         test('King can capture enemy pieces', () {
           final state = BoardState.empty();
           // Place white king at e4
-          state.squares.replace(
-            const King(Team.white) > Position.e4,
-          );
+          state.squares.replace(King.white > Position.e4);
           // Place black pieces around
-          state.squares.replace(
-            const Pawn(Team.black) > Position.e5,
-          );
-          state.squares.replace(
-            const Rook(Team.black) > Position.f4,
-          );
+          state.squares.replace(Pawn.black > Position.e5);
+          state.squares.replace(Rook.black > Position.f4);
           // Place white piece
-          state.squares.replace(
-            const Bishop(Team.white) > Position.d4,
-          );
+          state.squares.replace(Bishop.white > Position.d4);
 
-          const king = King(Team.white);
+          const king = King.white;
           final position = Position.e4;
           final validPositions = king.validPositions(state, position);
 
@@ -2135,22 +2043,14 @@ void main() {
         test('Pawn capture behavior', () {
           final state = BoardState.empty();
           // Place white pawn at e4
-          state.squares.replace(
-            const Pawn(Team.white) > Position.e4,
-          );
+          state.squares.replace(Pawn.white > Position.e4);
           // Place black pieces diagonally (for capture)
-          state.squares.replace(
-            const Knight(Team.black) > Position.d5,
-          );
-          state.squares.replace(
-            const Bishop(Team.black) > Position.f5,
-          );
+          state.squares.replace(Knight.black > Position.d5);
+          state.squares.replace(Bishop.black > Position.f5);
           // Place black piece directly ahead (blocks forward movement)
-          state.squares.replace(
-            const Rook(Team.black) > Position.e5,
-          );
+          state.squares.replace(Rook.black > Position.e5);
 
-          const pawn = Pawn(Team.white);
+          const pawn = Pawn.white;
           final position = Position.e4;
           final validPositions = pawn.validPositions(state, position);
 
@@ -2165,22 +2065,14 @@ void main() {
         test('Black pawn capture behavior', () {
           final state = BoardState.empty();
           // Place black pawn at d5
-          state.squares.replace(
-            const Pawn(Team.black) > Position.d5,
-          );
+          state.squares.replace(Pawn.black > Position.d5);
           // Place white pieces diagonally (for capture)
-          state.squares.replace(
-            const Knight(Team.white) > Position.c4,
-          );
-          state.squares.replace(
-            const Queen(Team.white) > Position.e4,
-          );
+          state.squares.replace(Knight.white > Position.c4);
+          state.squares.replace(Queen.white > Position.e4);
           // Place white piece directly ahead (blocks forward movement)
-          state.squares.replace(
-            const Pawn(Team.white) > Position.d4,
-          );
+          state.squares.replace(Pawn.white > Position.d4);
 
-          const pawn = Pawn(Team.black);
+          const pawn = Pawn.black;
           final position = Position.d5;
           final validPositions = pawn.validPositions(state, position);
 
@@ -2198,8 +2090,8 @@ void main() {
           final state = BoardState.empty();
 
           // Define piece instances once
-          const whiteKing = King(Team.white);
-          const whiteRook = Rook(Team.white);
+          const whiteKing = King.white;
+          const whiteRook = Rook.white;
 
           // Define position instances once
           final e1 = Position.e1;
@@ -2232,9 +2124,9 @@ void main() {
           final state = BoardState.empty();
 
           // Define piece instances once
-          const whiteKing = King(Team.white);
-          const whiteRook = Rook(Team.white);
-          const whiteBishop = Bishop(Team.white);
+          const whiteKing = King.white;
+          const whiteRook = Rook.white;
+          const whiteBishop = Bishop.white;
 
           // Define position instances once
           final e1 = Position.e1;
@@ -2264,7 +2156,7 @@ void main() {
           final state = BoardState.empty();
 
           // Define piece instances once
-          const blackQueen = Queen(Team.black);
+          const blackQueen = Queen.black;
 
           // Define position instances once
           final a1 = Position.a1;
@@ -2289,7 +2181,7 @@ void main() {
           final state = BoardState.empty();
 
           // Define piece instances once
-          const whiteKnight = Knight(Team.white);
+          const whiteKnight = Knight.white;
 
           // Define position instances once
           final a1 = Position.a1;
@@ -2309,11 +2201,11 @@ void main() {
           final state = BoardState.empty();
 
           // Define piece instances once
-          const whiteQueen = Queen(Team.white);
-          const whitePawn = Pawn(Team.white);
-          const blackRook = Rook(Team.black);
-          const whiteBishop = Bishop(Team.white);
-          const blackKnight = Knight(Team.black);
+          const whiteQueen = Queen.white;
+          const whitePawn = Pawn.white;
+          const blackRook = Rook.black;
+          const whiteBishop = Bishop.white;
+          const blackKnight = Knight.black;
 
           // Define position instances once
           final d4 = Position.d4;

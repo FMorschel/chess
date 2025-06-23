@@ -5,6 +5,7 @@ import 'package:chess_logic/src/move/check.dart';
 import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/direction.dart';
 import 'package:chess_logic/src/position/file.dart';
+import 'package:chess_logic/src/position/position.dart';
 import 'package:chess_logic/src/square/piece.dart';
 import 'package:chess_logic/src/square/piece_symbol.dart';
 import 'package:chess_logic/src/square/square.dart';
@@ -37,14 +38,17 @@ class MovementManager {
           );
         }
       }
-      _moveHistory.add(move(movement));
+      move(movement);
     }
   }
 
   late final List<Move> _moveHistory;
   final CheckDetector _checkDetector;
 
-  Map<Team, ({bool queen, bool king})> canCastelling = {};
+  final Map<Team, ({bool queen, bool king})> _canCastelling = {};
+
+  @visibleForTesting
+  Map<Team, ({bool queen, bool king})> get canCastelling => _canCastelling;
 
   BoardState get state => _checkDetector.state;
   List<Move> get moveHistory => List.unmodifiable(_moveHistory);
@@ -59,8 +63,8 @@ class MovementManager {
     if (check != Check.none) {
       move = move.copyWith(check: check);
     }
-    _moveHistory.add(move);
     state.actOn(move);
+    _moveHistory.add(move);
     return move;
   }
 
@@ -102,6 +106,7 @@ class MovementManager {
     switch (piece) {
       case King():
         final positions = piece.validPositions(state, square.position);
+        final kingIsInCheck = _checkDetector.isTeamInCheck(piece.team);
         final (:king, :queen) = canCastelling[square.piece.team]!;
         for (var (position, direction) in piece.rookPositions) {
           final rookDestination = square.position.next(direction);
@@ -112,40 +117,42 @@ class MovementManager {
             continue;
           }
           positions.remove(destination);
-          if (queen && position.file == File.a) {
-            final rook = state[position].piece;
-            if (rook is! Rook || rook.team != piece.team) {
-              continue;
-            }
-            moves.add(
-              QueensideCastling(
-                from: square.position,
-                to: destination,
-                moving: piece,
-                rook: RookMove(
-                  from: position,
-                  to: rookDestination,
-                  moving: rook,
+          if (!kingIsInCheck) {
+            if (queen && position.file == File.a) {
+              final rook = state[position].piece;
+              if (rook is! Rook || rook.team != piece.team) {
+                continue;
+              }
+              moves.add(
+                QueensideCastling(
+                  from: square.position,
+                  to: destination,
+                  moving: piece,
+                  rook: RookMove(
+                    from: position,
+                    to: rookDestination,
+                    moving: rook,
+                  ),
                 ),
-              ),
-            );
-          } else if (king && position.file == File.h) {
-            final rook = state[position].piece;
-            if (rook is! Rook) {
-              continue;
-            }
-            moves.add(
-              KingsideCastling(
-                from: square.position,
-                to: destination,
-                moving: piece,
-                rook: RookMove(
-                  from: position,
-                  to: rookDestination,
-                  moving: rook,
+              );
+            } else if (king && position.file == File.h) {
+              final rook = state[position].piece;
+              if (rook is! Rook) {
+                continue;
+              }
+              moves.add(
+                KingsideCastling(
+                  from: square.position,
+                  to: destination,
+                  moving: piece,
+                  rook: RookMove(
+                    from: position,
+                    to: rookDestination,
+                    moving: rook,
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           }
         }
         for (var position in positions) {
@@ -161,6 +168,7 @@ class MovementManager {
           if (anotherKingSide) {
             continue; // Skip positions that would put own king in check
           }
+          Position? _;
           final capture = state[position].piece;
           if (capture != null) {
             if (capture.team == square.piece.team) {

@@ -92,28 +92,6 @@ void main() {
           }
         }
       });
-      test('should create board with provided history', () {
-        final e2 = Position.e2;
-        final e4 = Position.e4;
-        final e7 = Position.e7;
-        final e5 = Position.e5;
-
-        final moves = [
-          PawnInitialMove(from: e2, to: e4, moving: Pawn(Team.white)),
-          PawnInitialMove(from: e7, to: e5, moving: Pawn(Team.black)),
-        ];
-
-        final board = BoardState(history: moves);
-
-        // Check that moves were applied
-        expect(board[e2].isEmpty, isTrue);
-        expect(board[e4].piece, isA<Pawn>());
-        expect(board[e4].piece!.team, equals(Team.white));
-
-        expect(board[e7].isEmpty, isTrue);
-        expect(board[e5].piece, isA<Pawn>());
-        expect(board[e5].piece!.team, equals(Team.black));
-      });
     });
 
     group('BoardState.clear', () {
@@ -130,19 +108,19 @@ void main() {
     });
     group('BoardState.custom', () {
       test('should create board with custom pieces', () {
-        final e1 = Position.e1;
-        final e8 = Position.e8;
-        final d1 = Position.d1;
-        final d8 = Position.d8;
+        const e1 = Position.e1;
+        const e8 = Position.e8;
+        const d1 = Position.d1;
+        const d8 = Position.d8;
 
-        final customPieces = {
-          e1: King(Team.white),
-          e8: King(Team.black),
-          d1: Queen(Team.white),
-          d8: Queen(Team.black),
-        };
+        const positions = [e1, e8, d1, d8];
 
-        final board = BoardState.custom(customPieces);
+        final board = BoardState.custom({
+          e1: King.white,
+          e8: King.black,
+          d1: Queen.white,
+          d8: Queen.black,
+        });
 
         expect(board[e1].piece, isA<King>());
         expect(board[e1].piece!.team, equals(Team.white));
@@ -157,7 +135,7 @@ void main() {
         for (final file in File.values) {
           for (final rank in Rank.values) {
             final position = Position(file, rank);
-            if (!customPieces.containsKey(position)) {
+            if (!positions.contains(position)) {
               expect(board[position].isEmpty, isTrue);
             }
           }
@@ -199,7 +177,7 @@ void main() {
       test('should move piece from one square to another', () {
         final from = Position.e2;
         final to = Position.e3;
-        final move = PawnMove(from: from, to: to, moving: Pawn(Team.white));
+        final move = PawnMove(from: from, to: to, moving: Pawn.white);
 
         boardState.actOn(move);
 
@@ -213,8 +191,8 @@ void main() {
         final d5 = Position.d5;
 
         // Setup: place a black pawn at d5 and white pawn at e4
-        final blackPawn = Pawn(Team.black);
-        final whitePawn = Pawn(Team.white);
+        final blackPawn = Pawn.black;
+        final whitePawn = Pawn.white;
 
         boardState.squares.replace(OccupiedSquare(d5, blackPawn));
         boardState.squares.replace(OccupiedSquare(e4, whitePawn));
@@ -238,8 +216,8 @@ void main() {
         final d6 = Position.d6;
 
         // Setup: white pawn at e5, black pawn at d5
-        final whitePawn = Pawn(Team.white);
-        final blackPawn = Pawn(Team.black);
+        final whitePawn = Pawn.white;
+        final blackPawn = Pawn.black;
 
         boardState.squares.replace(OccupiedSquare(e5, whitePawn));
         boardState.squares.replace(OccupiedSquare(d5, blackPawn));
@@ -265,7 +243,7 @@ void main() {
         final move = PawnMove(
           from: e4, // Empty square
           to: e5,
-          moving: Pawn(Team.white),
+          moving: Pawn.white,
         );
 
         expect(
@@ -287,7 +265,7 @@ void main() {
         final move = KnightMove(
           from: e2, // Has pawn, not knight
           to: f4,
-          moving: Knight(Team.white),
+          moving: Knight.white,
         );
 
         expect(
@@ -310,9 +288,9 @@ void main() {
         final f3 = Position.f3;
 
         final moves = <Move>[
-          PawnInitialMove(from: e2, to: e4, moving: Pawn(Team.white)),
-          PawnInitialMove(from: d7, to: d5, moving: Pawn(Team.black)),
-          KnightMove(from: g1, to: f3, moving: Knight(Team.white)),
+          PawnInitialMove(from: e2, to: e4, moving: Pawn.white),
+          PawnInitialMove(from: d7, to: d5, moving: Pawn.black),
+          KnightMove(from: g1, to: f3, moving: Knight.white),
         ];
 
         for (final move in moves) {
@@ -333,8 +311,8 @@ void main() {
           final e4 = Position.e4;
           final e5 = Position.e5;
 
-          final whitePawn = Pawn(Team.white);
-          final blackPawn = Pawn(Team.black);
+          final whitePawn = Pawn.white;
+          final blackPawn = Pawn.black;
 
           // Place white pawn at e4 and black pawn at e5
           boardState.squares.replace(OccupiedSquare(e4, whitePawn));
@@ -366,8 +344,8 @@ void main() {
         final e4 = Position.e4;
         final d5 = Position.d5;
 
-        final whitePawn = Pawn(Team.white);
-        final blackPawn = Pawn(Team.black);
+        final whitePawn = Pawn.white;
+        final blackPawn = Pawn.black;
 
         // Place white pawn at e4 and black pawn at d5
         boardState.squares.replace(OccupiedSquare(e4, whitePawn));
@@ -395,7 +373,7 @@ void main() {
       test('should reverse a regular move', () {
         final from = Position.e2;
         final to = Position.e4;
-        final pawn = Pawn(Team.white);
+        final pawn = Pawn.white;
         final move = PawnInitialMove(from: from, to: to, moving: pawn);
 
         // Apply move
@@ -414,8 +392,8 @@ void main() {
         final d5 = Position.d5;
 
         // Setup: place pieces
-        final whitePawn = Pawn(Team.white);
-        final blackPawn = Pawn(Team.black);
+        final whitePawn = Pawn.white;
+        final blackPawn = Pawn.black;
 
         boardState.squares.replace(OccupiedSquare(e4, whitePawn));
         boardState.squares.replace(OccupiedSquare(d5, blackPawn));
@@ -444,8 +422,8 @@ void main() {
         final d6 = Position.d6;
 
         // Setup: place pieces
-        final whitePawn = Pawn(Team.white);
-        final blackPawn = Pawn(Team.black);
+        final whitePawn = Pawn.white;
+        final blackPawn = Pawn.black;
 
         boardState.squares.replace(OccupiedSquare(e5, whitePawn));
         boardState.squares.replace(OccupiedSquare(d5, blackPawn));
@@ -475,18 +453,14 @@ void main() {
         final e4 = Position.e4;
 
         // Setup: make a move first
-        final move = PawnInitialMove(
-          from: e2,
-          to: e4,
-          moving: Pawn(Team.white),
-        );
+        final move = PawnInitialMove(from: e2, to: e4, moving: Pawn.white);
         boardState.actOn(move);
 
         // Try to undo with wrong piece
         final wrongMove = KnightMove(
           from: e2,
           to: Position.f4,
-          moving: Knight(Team.white),
+          moving: Knight.white,
         );
 
         expect(
@@ -507,8 +481,8 @@ void main() {
         final d5 = Position.d5;
 
         final moves = [
-          PawnInitialMove(from: e2, to: e4, moving: Pawn(Team.white)),
-          PawnInitialMove(from: d7, to: d5, moving: Pawn(Team.black)),
+          PawnInitialMove(from: e2, to: e4, moving: Pawn.white),
+          PawnInitialMove(from: d7, to: d5, moving: Pawn.black),
         ];
 
         // Apply moves
@@ -543,12 +517,8 @@ void main() {
         final e1 = Position.e1;
 
         // Make some moves to change the board
-        boardState.actOn(
-          PawnInitialMove(from: e2, to: e4, moving: Pawn(Team.white)),
-        );
-        boardState.actOn(
-          KnightMove(from: g1, to: f3, moving: Knight(Team.white)),
-        );
+        boardState.actOn(PawnInitialMove(from: e2, to: e4, moving: Pawn.white));
+        boardState.actOn(KnightMove(from: g1, to: f3, moving: Knight.white));
 
         // Reset board
         boardState.reset();
@@ -592,8 +562,8 @@ void main() {
 
       test('should clear custom board', () {
         final customBoard = BoardState.custom({
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
+          Position.e1: King.white,
+          Position.e8: King.black,
         });
 
         customBoard.clear();
@@ -613,38 +583,22 @@ void main() {
           PawnInitialMove(
             from: Position.e2,
             to: Position.e4,
-            moving: Pawn(Team.white),
+            moving: Pawn.white,
           ),
           PawnInitialMove(
             from: Position.e7,
             to: Position.e5,
-            moving: Pawn(Team.black),
+            moving: Pawn.black,
           ),
-          BishopMove(
-            from: Position.f1,
-            to: Position.c4,
-            moving: Bishop(Team.white),
-          ),
-          KnightMove(
-            from: Position.b8,
-            to: Position.c6,
-            moving: Knight(Team.black),
-          ),
-          QueenMove(
-            from: Position.d1,
-            to: Position.h5,
-            moving: Queen(Team.white),
-          ),
-          KnightMove(
-            from: Position.g8,
-            to: Position.f6,
-            moving: Knight(Team.black),
-          ),
+          BishopMove(from: Position.f1, to: Position.c4, moving: Bishop.white),
+          KnightMove(from: Position.b8, to: Position.c6, moving: Knight.black),
+          QueenMove(from: Position.d1, to: Position.h5, moving: Queen.white),
+          KnightMove(from: Position.g8, to: Position.f6, moving: Knight.black),
           QueenCaptureMove(
             from: Position.h5,
             to: Position.f7,
-            moving: Queen(Team.white),
-            captured: Pawn(Team.black),
+            moving: Queen.white,
+            captured: Pawn.black,
           ),
         ];
 
@@ -668,13 +622,13 @@ void main() {
         final e7 = Position.e7;
 
         final moves = [
-          PawnInitialMove(from: d2, to: d4, moving: Pawn(Team.white)),
-          PawnInitialMove(from: e7, to: e5, moving: Pawn(Team.black)),
+          PawnInitialMove(from: d2, to: d4, moving: Pawn.white),
+          PawnInitialMove(from: e7, to: e5, moving: Pawn.black),
           PawnCaptureMove(
             from: d4,
             to: e5,
-            moving: Pawn(Team.white),
-            captured: Pawn(Team.black),
+            moving: Pawn.white,
+            captured: Pawn.black,
           ),
         ];
 
@@ -714,10 +668,10 @@ void main() {
         boardState.squares.replace(EmptySquare(g1));
 
         final castlingMove = KingMove.kingsideCastling(
-          king: King(Team.white),
+          king: King.white,
           from: e1,
           to: g1,
-          rook: RookMove(from: h1, to: f1, moving: Rook(Team.white)),
+          rook: RookMove(from: h1, to: f1, moving: Rook.white),
         );
 
         boardState.actOn(castlingMove);
@@ -738,9 +692,9 @@ void main() {
         final emptyBoard = BoardState.empty();
 
         // Place a piece manually
-        emptyBoard.squares.replace(OccupiedSquare(e4, Pawn(Team.white)));
+        emptyBoard.squares.replace(OccupiedSquare(e4, Pawn.white));
 
-        final move = PawnMove(from: e4, to: e5, moving: Pawn(Team.white));
+        final move = PawnMove(from: e4, to: e5, moving: Pawn.white);
 
         emptyBoard.actOn(move);
 
@@ -756,12 +710,12 @@ void main() {
         // Setup: white pawn at e7
         boardState.squares.replace(EmptySquare(e8));
         boardState.squares.replace(EmptySquare(e7));
-        boardState.squares.replace(OccupiedSquare(e7, Pawn(Team.white)));
+        boardState.squares.replace(OccupiedSquare(e7, Pawn.white));
 
         final move = PromotionMove(
           from: e7,
           to: e8,
-          moving: Pawn(Team.white),
+          moving: Pawn.white,
           promotion: PieceSymbol.queen,
         );
 
@@ -777,9 +731,9 @@ void main() {
         final a1 = Position.a1;
         final a2 = Position.a2;
 
-        final singlePieceBoard = BoardState.custom({a1: King(Team.white)});
+        final singlePieceBoard = BoardState.custom({a1: King.white});
 
-        final move = KingMove(from: a1, to: a2, moving: King(Team.white));
+        final move = KingMove(from: a1, to: a2, moving: King.white);
 
         singlePieceBoard.actOn(move);
 
@@ -806,11 +760,7 @@ void main() {
         }
 
         // Make a simple pawn move
-        final move = PawnInitialMove(
-          from: e2,
-          to: e4,
-          moving: Pawn(Team.white),
-        );
+        final move = PawnInitialMove(from: e2, to: e4, moving: Pawn.white);
         boardState.actOn(move);
 
         // Check that all other pieces remain unchanged

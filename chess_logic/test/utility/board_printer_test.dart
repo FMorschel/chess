@@ -54,27 +54,13 @@ void main() {
           expect(result, contains('$rank │ . . . . . . . . │ $rank'));
         }
       });
-
       test('should display custom board position correctly', () {
-        final customPieces = <Position, Piece>{
-          Position.e1: Piece.fromSymbol(
-            PieceSymbol.king,
-            Team.white,
-          ),
-          Position.e8: Piece.fromSymbol(
-            PieceSymbol.king,
-            Team.black,
-          ),
-          Position.d1: Piece.fromSymbol(
-            PieceSymbol.queen,
-            Team.white,
-          ),
-          Position.d8: Piece.fromSymbol(
-            PieceSymbol.queen,
-            Team.black,
-          ),
-        };
-        final boardState = BoardState.custom(customPieces);
+        final boardState = BoardState.custom({
+          Position.e1: Piece.fromSymbol(PieceSymbol.king, Team.white),
+          Position.e8: Piece.fromSymbol(PieceSymbol.king, Team.black),
+          Position.d1: Piece.fromSymbol(PieceSymbol.queen, Team.white),
+          Position.d8: Piece.fromSymbol(PieceSymbol.queen, Team.black),
+        });
         final result = boardPrinter.getBoardString(boardState);
 
         // Check specific pieces
@@ -128,27 +114,13 @@ void main() {
 
         expect(result, equals(expectedLines.join('\n')));
       });
-
       test('should display custom position correctly', () {
-        final customPieces = <Position, Piece>{
-          Position.a1: Piece.fromSymbol(
-            PieceSymbol.rook,
-            Team.white,
-          ),
-          Position.h8: Piece.fromSymbol(
-            PieceSymbol.rook,
-            Team.black,
-          ),
-          Position.e4: Piece.fromSymbol(
-            PieceSymbol.king,
-            Team.white,
-          ),
-          Position.d5: Piece.fromSymbol(
-            PieceSymbol.queen,
-            Team.black,
-          ),
-        };
-        final boardState = BoardState.custom(customPieces);
+        final boardState = BoardState.custom({
+          Position.a1: Piece.fromSymbol(PieceSymbol.rook, Team.white),
+          Position.h8: Piece.fromSymbol(PieceSymbol.rook, Team.black),
+          Position.e4: Piece.fromSymbol(PieceSymbol.king, Team.white),
+          Position.d5: Piece.fromSymbol(PieceSymbol.queen, Team.black),
+        });
         final result = boardPrinter.getCompactBoardString(boardState);
 
         final lines = result.split('\n');
@@ -174,12 +146,10 @@ void main() {
           PieceSymbol.knight: 'N',
           PieceSymbol.pawn: 'P',
         };
-
         for (final entry in whitePieces.entries) {
-          final customPieces = <Position, Piece>{
+          final boardState = BoardState.custom({
             Position.a1: Piece.fromSymbol(entry.key, Team.white),
-          };
-          final boardState = BoardState.custom(customPieces);
+          });
           final result = boardPrinter.getCompactBoardString(boardState);
 
           expect(result, contains(entry.value));
@@ -195,15 +165,10 @@ void main() {
           PieceSymbol.knight: 'n',
           PieceSymbol.pawn: 'p',
         };
-
         for (final entry in blackPieces.entries) {
-          final customPieces = <Position, Piece>{
-            Position.a8: Piece.fromSymbol(
-              entry.key,
-              Team.black,
-            ),
-          };
-          final boardState = BoardState.custom(customPieces);
+          final boardState = BoardState.custom({
+            Position.a8: Piece.fromSymbol(entry.key, Team.black),
+          });
           final result = boardPrinter.getCompactBoardString(boardState);
 
           expect(result, contains(entry.value));
@@ -247,20 +212,14 @@ void main() {
         final result = boardPrinter.getBoardString(boardState);
 
         // Check that file headers appear correctly
-        expect(result, contains('   a b c d e f g h'));
-
-        // For compact board, check that positions correspond to correct files
-        final customPieces = <Position, Piece>{
-          Position.a1: Piece.fromSymbol(
-            PieceSymbol.rook,
-            Team.white,
-          ),
-          Position.h1: Piece.fromSymbol(
-            PieceSymbol.rook,
-            Team.black,
-          ),
-        };
-        final customBoard = BoardState.custom(customPieces);
+        expect(
+          result,
+          contains('   a b c d e f g h'),
+        ); // For compact board, check that positions correspond to correct files
+        final customBoard = BoardState.custom({
+          Position.a1: Piece.fromSymbol(PieceSymbol.rook, Team.white),
+          Position.h1: Piece.fromSymbol(PieceSymbol.rook, Team.black),
+        });
         final compactResult = boardPrinter.getCompactBoardString(customBoard);
 
         final lines = compactResult.split('\n');

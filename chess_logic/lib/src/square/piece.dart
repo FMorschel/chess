@@ -7,19 +7,25 @@ import 'package:chess_logic/src/square/piece_symbol.dart';
 import 'package:chess_logic/src/square/piece_value.dart';
 import 'package:chess_logic/src/square/square.dart';
 import 'package:chess_logic/src/team/team.dart';
-import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-sealed class PromotionPiece extends Piece {
-  const PromotionPiece(super.team);
-}
+sealed class PromotionPiece with Piece {}
 
-sealed class SlidingPiece extends Piece {
-  const SlidingPiece(super.team);
-}
+sealed class SlidingPiece implements PromotionPiece {}
 
-final class Bishop extends PromotionPiece implements SlidingPiece {
-  const Bishop(super.team);
+enum Bishop with Piece implements SlidingPiece {
+  white._(Team.white),
+  black._(Team.black);
+
+  const Bishop._(this.team);
+
+  factory Bishop(Team team) => switch (team) {
+    Team.white => Bishop.white,
+    Team.black => Bishop.black,
+  };
+
+  @override
+  final Team team;
 
   @override
   PieceSymbol get symbol => PieceSymbol.bishop;
@@ -33,8 +39,19 @@ final class Bishop extends PromotionPiece implements SlidingPiece {
   List<Direction> get _validDirections => _directions;
 }
 
-final class King extends Piece {
-  const King(super.team);
+enum King with Piece {
+  white._(Team.white),
+  black._(Team.black);
+
+  const King._(this.team);
+
+  factory King(Team team) => switch (team) {
+    Team.white => King.white,
+    Team.black => King.black,
+  };
+
+  @override
+  final Team team;
 
   @override
   PieceSymbol get symbol => PieceSymbol.king;
@@ -106,8 +123,19 @@ final class King extends Piece {
   int get value => PieceValue.king.points;
 }
 
-final class Knight extends PromotionPiece {
-  const Knight(super.team);
+enum Knight with Piece implements PromotionPiece {
+  white._(Team.white),
+  black._(Team.black);
+
+  const Knight._(this.team);
+
+  factory Knight(Team team) => switch (team) {
+    Team.white => Knight.white,
+    Team.black => Knight.black,
+  };
+
+  @override
+  final Team team;
 
   @override
   PieceSymbol get symbol => PieceSymbol.knight;
@@ -124,8 +152,19 @@ final class Knight extends PromotionPiece {
   int get value => PieceValue.knight.points;
 }
 
-final class Pawn extends Piece {
-  const Pawn(super.team);
+enum Pawn with Piece {
+  white._(Team.white),
+  black._(Team.black);
+
+  const Pawn._(this.team);
+
+  factory Pawn(Team team) => switch (team) {
+    Team.white => Pawn.white,
+    Team.black => Pawn.black,
+  };
+
+  @override
+  final Team team;
 
   @override
   PieceSymbol get symbol => PieceSymbol.pawn;
@@ -192,9 +231,7 @@ final class Pawn extends Piece {
   int get value => PieceValue.pawn.points;
 }
 
-sealed class Piece extends Equatable {
-  const Piece(this.team);
-
+abstract mixin class Piece implements Enum {
   factory Piece.import(String string) {
     final match = _importRegex.firstMatch(string);
     if (match == null) {
@@ -220,7 +257,7 @@ sealed class Piece extends Equatable {
 
   static final _importRegex = RegExp('^(White|Black) - ([KQRBNP])\$');
 
-  final Team team;
+  Team get team;
 
   PieceSymbol get symbol;
 
@@ -234,9 +271,6 @@ sealed class Piece extends Equatable {
   List<Direction> get _validDirections;
 
   bool get _shouldIteratePositions => true;
-
-  @override
-  List<Object?> get props => [symbol, team];
 
   @mustCallSuper
   List<Position> validPositions(BoardState state, Position position) {
@@ -265,8 +299,19 @@ sealed class Piece extends Equatable {
   String toString() => symbol.name;
 }
 
-final class Queen extends PromotionPiece implements SlidingPiece {
-  const Queen(super.team);
+enum Queen with Piece implements SlidingPiece {
+  white._(Team.white),
+  black._(Team.black);
+
+  const Queen._(this.team);
+
+  factory Queen(Team team) => switch (team) {
+    Team.white => Queen.white,
+    Team.black => Queen.black,
+  };
+
+  @override
+  final Team team;
 
   @override
   PieceSymbol get symbol => PieceSymbol.queen;
@@ -280,8 +325,19 @@ final class Queen extends PromotionPiece implements SlidingPiece {
   int get value => PieceValue.queen.points;
 }
 
-final class Rook extends PromotionPiece implements SlidingPiece {
-  const Rook(super.team);
+enum Rook with Piece implements SlidingPiece {
+  white._(Team.white),
+  black._(Team.black);
+
+  const Rook._(this.team);
+
+  factory Rook(Team team) => switch (team) {
+    Team.white => Rook.white,
+    Team.black => Rook.black,
+  };
+
+  @override
+  final Team team;
 
   @override
   PieceSymbol get symbol => PieceSymbol.rook;

@@ -235,6 +235,7 @@ sealed class Move<P extends Piece> extends Equatable
             check: check,
             ambiguous: ambiguous,
           ),
+          _ => Move.create(moving: moving, from: from, to: to),
         }
         as Move<P>;
   }
@@ -354,6 +355,14 @@ sealed class CaptureMove<P extends Piece, C extends Piece> extends Move<P> {
             from: from,
             to: to,
             check: check,
+          ),
+          _ => CaptureMove<P, C>.create(
+            moving: moving,
+            captured: captured,
+            from: from,
+            to: to,
+            check: check,
+            ambiguous: ambiguous,
           ),
         }
         as CaptureMove<P, C>;

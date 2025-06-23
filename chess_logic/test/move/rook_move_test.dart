@@ -3,12 +3,11 @@ import 'package:chess_logic/src/move/check.dart';
 import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/position.dart';
 import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/team/team.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('RookMove', () {
-    final whiteRook = Rook(Team.white);
+    final whiteRook = Rook.white;
     final from = Position.a1;
     final to = Position.a4;
 
@@ -22,11 +21,7 @@ void main() {
 
     test('throws assertion error for invalid move', () {
       expect(
-        () => RookMove(
-          from: from,
-          to: Position.b2,
-          moving: whiteRook,
-        ),
+        () => RookMove(from: from, to: Position.b2, moving: whiteRook),
         throwsA(isA<AssertionError>()),
       );
     });
@@ -96,10 +91,10 @@ void main() {
   });
 
   group('RookCaptureMove', () {
-    final whiteRook = Rook(Team.white);
+    final whiteRook = Rook.white;
     final from = Position.a1;
     final to = Position.a4;
-    final captured = Pawn(Team.black);
+    final captured = Pawn.black;
 
     test('stores all fields correctly', () {
       final move = RookCaptureMove(

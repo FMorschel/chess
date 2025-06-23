@@ -8,15 +8,11 @@ import 'package:chess_logic/src/square/square.dart';
 import 'package:chess_logic/src/team/team.dart';
 import 'package:chess_logic/src/utility/board_printer.dart';
 import 'package:chess_logic/src/utility/extensions.dart';
+import 'package:meta/meta.dart';
 
 class BoardState {
-  BoardState({List<Move>? history}) : squares = _emptySquares {
+  BoardState() : squares = _emptySquares {
     reset();
-    if (history != null) {
-      for (var move in history) {
-        actOn(move);
-      }
-    }
   }
 
   BoardState.empty() : squares = _emptySquares;
@@ -41,6 +37,16 @@ class BoardState {
     }
   }
 
+  /// Creates a new BoardState with the given move applied, without modifying
+  /// the current state.
+  ///
+  /// This allows you to preview what the board would look like after a move.
+  BoardState move(Move move) {
+    final newState = BoardState._copy(this);
+    newState.actOn(move);
+    return newState;
+  }
+
   static List<Square> get _emptySquares => [
     for (var file in File.values)
       for (var rank in Rank.values) EmptySquare(Position(file, rank)),
@@ -52,14 +58,6 @@ class BoardState {
 
   List<OccupiedSquare> get occupiedSquares =>
       squares.whereType<OccupiedSquare>().toList();
-
-  /// Creates a new BoardState with the given move applied, without modifying the current state.
-  /// This allows you to preview what the board would look like after a move.
-  BoardState move(Move move) {
-    final newState = BoardState._copy(this);
-    newState.actOn(move);
-    return newState;
-  }
 
   void actOn(Move move) {
     if (this[move.from].piece != move.moving) {
@@ -75,7 +73,8 @@ class BoardState {
     Square newSquare = this[move.from].removePiece();
     squares.replace(newSquare);
 
-    // Handle promotion moves - create the promoted piece instead of moving the pawn
+    // Handle promotion moves - create the promoted piece instead of moving the
+    // pawn
     if (move is PromotionMove) {
       final promotedPiece = Piece.fromSymbol(move.promotion, move.moving.team);
       newSquare = this[move.to].replacePiece(promotedPiece);
@@ -92,18 +91,7 @@ class BoardState {
 
     if (move is CastlingMove) {
       // Handle castling move
-      final rookPosition = move.rook.from;
-      final rookSquare = this[rookPosition];
-      final rookPiece = rookSquare.piece;
-      if (rookPiece == null || rookPiece.symbol != PieceSymbol.rook) {
-        throw ArgumentError('No rook at $rookPosition for castling.');
-      }
-      // Move the rook to the new position
-      final newRookSquare = this[move.rook.to].replacePiece(rookPiece);
-      squares.replace(newRookSquare);
-      // Remove the rook from its original position
-      final clearedRookSquare = rookSquare.removePiece();
-      squares.replace(clearedRookSquare);
+      actOn(move.rook);
     }
   }
 
@@ -134,6 +122,7 @@ class BoardState {
           rookSquare.piece!.symbol != PieceSymbol.rook) {
         throw ArgumentError('No rook at ${move.rook.to} for castling.');
       }
+      undo(move.rook);
     }
     if (this[move.to].piece != move.moving) {
       throw ArgumentError(
@@ -155,6 +144,7 @@ class BoardState {
   Square operator [](Position position) =>
       squares.firstWhere((square) => square.position == position);
 
+  @visibleForTesting
   void reset() {
     clear();
     for (var file in File.values) {
@@ -175,12 +165,18 @@ class BoardState {
     }
   }
 
+  @visibleForTesting
   void clear() {
     for (var square in squares) {
       final newSquare = square.removePiece();
       squares.replace(newSquare);
     }
   }
+
+  Map<Position, Piece> get export => {
+    for (var square in occupiedSquares)
+      square.position: square.piece,
+  };
 
   @override
   String toString({bool complete = false}) => complete

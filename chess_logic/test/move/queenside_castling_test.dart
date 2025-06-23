@@ -2,16 +2,15 @@ import 'package:chess_logic/src/move/check.dart';
 import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/position.dart';
 import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/team/team.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('QueensideCastling', () {
-    final whiteKing = King(Team.white);
+    final whiteKing = King.white;
     final kingFrom = Position.e1;
     final kingTo = Position.c1;
     final rookMove = RookMove(
-      moving: Rook(Team.white),
+      moving: Rook.white,
       from: Position.a1,
       to: Position.d1,
     );
@@ -33,7 +32,7 @@ void main() {
     group('invalid rook', () {
       test('position', () {
         final rookMove = RookMove(
-          moving: Rook(Team.white),
+          moving: Rook.white,
           from: Position.h1,
           to: Position.f1,
         );
@@ -49,7 +48,7 @@ void main() {
       });
       test('team', () {
         final rookMove = RookMove(
-          moving: Rook(Team.black),
+          moving: Rook.black,
           from: Position.a1,
           to: Position.d1,
         );

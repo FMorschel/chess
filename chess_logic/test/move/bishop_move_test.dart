@@ -3,12 +3,11 @@ import 'package:chess_logic/src/move/check.dart';
 import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/position.dart';
 import 'package:chess_logic/src/square/piece.dart';
-import 'package:chess_logic/src/team/team.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('BishopMove', () {
-    final whiteBishop = Bishop(Team.white);
+    final whiteBishop = Bishop.white;
     final from = Position.c1;
     final to = Position.f4;
 
@@ -22,11 +21,7 @@ void main() {
 
     test('throws assertion error for invalid move', () {
       expect(
-        () => BishopMove(
-          from: from,
-          to: Position.f3,
-          moving: whiteBishop,
-        ),
+        () => BishopMove(from: from, to: Position.f3, moving: whiteBishop),
         throwsA(isA<AssertionError>()),
       );
     });
@@ -96,10 +91,10 @@ void main() {
   });
 
   group('BishopCaptureMove', () {
-    final whiteBishop = Bishop(Team.white);
+    final whiteBishop = Bishop.white;
     final from = Position.c1;
     final to = Position.f4;
-    final captured = Pawn(Team.black);
+    final captured = Pawn.black;
 
     test('stores all fields correctly', () {
       final move = BishopCaptureMove(

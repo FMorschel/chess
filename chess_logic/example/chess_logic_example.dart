@@ -18,38 +18,38 @@ void main() {
     PawnInitialMove(
       from: Position(File.e, Rank.two),
       to: Position(File.e, Rank.four),
-      moving: Pawn(Team.white),
+      moving: Pawn.white,
     ),
     PawnInitialMove(
       from: Position(File.e, Rank.seven),
       to: Position(File.e, Rank.five),
-      moving: Pawn(Team.black),
+      moving: Pawn.black,
     ),
     BishopMove(
       from: Position(File.f, Rank.one),
       to: Position(File.c, Rank.four),
-      moving: Bishop(Team.white),
+      moving: Bishop.white,
     ),
     KnightMove(
       from: Position(File.b, Rank.eight),
       to: Position(File.c, Rank.six),
-      moving: Knight(Team.black),
+      moving: Knight.black,
     ),
     QueenMove(
       from: Position(File.d, Rank.one),
       to: Position(File.h, Rank.five),
-      moving: Queen(Team.white),
+      moving: Queen.white,
     ),
     KnightMove(
       from: Position(File.g, Rank.eight),
       to: Position(File.f, Rank.six),
-      moving: Knight(Team.black),
+      moving: Knight.black,
     ),
     QueenCaptureMove(
       from: Position(File.h, Rank.five),
       to: Position(File.f, Rank.seven),
-      moving: Queen(Team.white),
-      captured: Pawn(Team.black),
+      moving: Queen.white,
+      captured: Pawn.black,
     ),
   ];
 

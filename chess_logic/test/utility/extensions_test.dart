@@ -20,8 +20,8 @@ void main() {
 
         test('should return correct total value for single capture', () {
           final capture = _createCapture(
-            captured: Pawn(Team.black),
-            captor: Queen(Team.white),
+            captured: Pawn.black,
+            captor: Queen.white,
           );
           final captures = [capture];
 
@@ -30,16 +30,16 @@ void main() {
 
         test('should return correct total value for multiple captures', () {
           final pawnCapture = _createCapture(
-            captured: Pawn(Team.black),
-            captor: Queen(Team.white),
+            captured: Pawn.black,
+            captor: Queen.white,
           );
           final rookCapture = _createCapture(
-            captured: Rook(Team.black),
-            captor: Queen(Team.white),
+            captured: Rook.black,
+            captor: Queen.white,
           );
           final queenCapture = _createCapture(
-            captured: Queen(Team.black),
-            captor: Rook(Team.white),
+            captured: Queen.black,
+            captor: Rook.white,
           );
           final captures = [pawnCapture, rookCapture, queenCapture];
 
@@ -49,12 +49,12 @@ void main() {
 
         test('should handle captures with zero value pieces correctly', () {
           final kingCapture = _createCapture(
-            captured: King(Team.black),
-            captor: Queen(Team.white),
+            captured: King.black,
+            captor: Queen.white,
           );
           final pawnCapture = _createCapture(
-            captured: Pawn(Team.black),
-            captor: Queen(Team.white),
+            captured: Pawn.black,
+            captor: Queen.white,
           );
           final captures = [kingCapture, pawnCapture];
 
@@ -64,12 +64,12 @@ void main() {
 
         test('should work with Set<Capture>', () {
           final capture1 = _createCapture(
-            captured: Pawn(Team.black),
-            captor: Queen(Team.white),
+            captured: Pawn.black,
+            captor: Queen.white,
           );
           final capture2 = _createCapture(
-            captured: Rook(Team.black),
-            captor: Bishop(Team.white),
+            captured: Rook.black,
+            captor: Bishop.white,
           );
           final capturesSet = {capture1, capture2};
 
@@ -84,9 +84,9 @@ void main() {
       setUp(() {
         squares = [
           EmptySquare(Position.a1),
-          OccupiedSquare(Position.b1, Rook(Team.white)),
+          OccupiedSquare(Position.b1, Rook.white),
           EmptySquare(Position.c1),
-          OccupiedSquare(Position.d1, Queen(Team.white)),
+          OccupiedSquare(Position.d1, Queen.white),
         ];
       });
 
@@ -135,10 +135,7 @@ void main() {
 
       group('replace', () {
         test('should replace square at existing position', () {
-          final newSquare = OccupiedSquare(
-            Position.a1,
-            Pawn(Team.black),
-          );
+          final newSquare = OccupiedSquare(Position.a1, Pawn.black);
 
           squares.replace(newSquare);
 
@@ -157,10 +154,7 @@ void main() {
         });
 
         test('should replace empty square with occupied square', () {
-          final newSquare = OccupiedSquare(
-            Position.c1,
-            Knight(Team.black),
-          );
+          final newSquare = OccupiedSquare(Position.c1, Knight.black);
 
           squares.replace(newSquare);
 
@@ -180,10 +174,7 @@ void main() {
 
         test('should maintain list length after replacement', () {
           final originalLength = squares.length;
-          final newSquare = OccupiedSquare(
-            Position.a1,
-            Bishop(Team.white),
-          );
+          final newSquare = OccupiedSquare(Position.a1, Bishop.white);
 
           squares.replace(newSquare);
 
@@ -215,12 +206,12 @@ void main() {
             PawnInitialMove(
               from: Position.e2,
               to: Position.e4,
-              moving: Pawn(Team.white),
+              moving: Pawn.white,
             ),
             KnightMove(
               from: Position.b1,
               to: Position.c3,
-              moving: Knight(Team.white),
+              moving: Knight.white,
             ),
           ];
 
@@ -233,8 +224,8 @@ void main() {
           final captureMove = PawnCaptureMove(
             from: Position.e5,
             to: Position.d6,
-            moving: Pawn(Team.white),
-            captured: Pawn(Team.black),
+            moving: Pawn.white,
+            captured: Pawn.black,
           );
           final moves = [captureMove];
 
@@ -251,14 +242,14 @@ void main() {
           final whiteCaptureMove = PawnCaptureMove(
             from: Position.e5,
             to: Position.d6,
-            moving: Pawn(Team.white),
-            captured: Pawn(Team.black),
+            moving: Pawn.white,
+            captured: Pawn.black,
           );
           final blackCaptureMove = PawnCaptureMove(
             from: Position.d6,
             to: Position.e5,
-            moving: Pawn(Team.black),
-            captured: Rook(Team.white),
+            moving: Pawn.black,
+            captured: Rook.white,
           );
           final moves = [whiteCaptureMove, blackCaptureMove];
 
@@ -281,14 +272,14 @@ void main() {
           final captureMove1 = PawnCaptureMove(
             from: Position.e5,
             to: Position.d6,
-            moving: Pawn(Team.white),
-            captured: Pawn(Team.black),
+            moving: Pawn.white,
+            captured: Pawn.black,
           );
           final captureMove2 = QueenCaptureMove(
             from: Position.d1,
             to: Position.d6,
-            moving: Queen(Team.white),
-            captured: Rook(Team.black),
+            moving: Queen.white,
+            captured: Rook.black,
           );
           final moves = <CaptureMove>[captureMove1, captureMove2];
 
@@ -304,13 +295,13 @@ void main() {
           final regularMove = PawnInitialMove(
             from: Position.e2,
             to: Position.e4,
-            moving: Pawn(Team.white),
+            moving: Pawn.white,
           );
           final captureMove = PawnCaptureMove(
             from: Position.e5,
             to: Position.d6,
-            moving: Pawn(Team.white),
-            captured: Pawn(Team.black),
+            moving: Pawn.white,
+            captured: Pawn.black,
           );
           final moves = [regularMove, captureMove];
 
@@ -325,20 +316,20 @@ void main() {
           final pawnCapture = PawnCaptureMove(
             from: Position.e5,
             to: Position.d6,
-            moving: Pawn(Team.white),
-            captured: Pawn(Team.black),
+            moving: Pawn.white,
+            captured: Pawn.black,
           );
           final queenCapture = QueenCaptureMove(
             from: Position.d1,
             to: Position.h5,
-            moving: Queen(Team.white),
-            captured: Bishop(Team.black),
+            moving: Queen.white,
+            captured: Bishop.black,
           );
           final rookCapture = RookCaptureMove(
             from: Position.a1,
             to: Position.a8,
-            moving: Rook(Team.white),
-            captured: Knight(Team.black),
+            moving: Rook.white,
+            captured: Knight.black,
           );
           final moves = <CaptureMove>[pawnCapture, queenCapture, rookCapture];
 
@@ -400,8 +391,8 @@ void main() {
 
         test('should not add teams that already exist', () {
           final capture = _createCapture(
-            captured: Pawn(Team.black),
-            captor: Queen(Team.white),
+            captured: Pawn.black,
+            captor: Queen.white,
           );
           final whiteScore = TeamScore(Team.white, captures: [capture]);
           final teamScores = [whiteScore];
@@ -441,8 +432,8 @@ void main() {
           'should preserve existing team scores when adding missing teams',
           () {
             final capture1 = _createCapture(
-              captured: Pawn(Team.black),
-              captor: Queen(Team.white),
+              captured: Pawn.black,
+              captor: Queen.white,
             );
 
             final whiteScore = TeamScore(Team.white, captures: [capture1]);
@@ -566,8 +557,8 @@ void main() {
 
           // Modify one score
           final capture = _createCapture(
-            captured: Pawn(Team.black),
-            captor: Queen(Team.white),
+            captured: Pawn.black,
+            captor: Queen.white,
           );
           result.first.capture(capture);
 

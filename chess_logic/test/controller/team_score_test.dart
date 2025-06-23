@@ -24,8 +24,8 @@ void main() {
       });
       test('should create TeamScore with initial captures', () {
         final capture = _createCapture(
-          captured: Pawn(Team.black),
-          captor: Queen(Team.white),
+          captured: Pawn.black,
+          captor: Queen.white,
         );
         final score = TeamScore(team, captures: [capture]);
 
@@ -38,8 +38,8 @@ void main() {
     group('capture', () {
       test('should add capture for same team', () {
         final capture = _createCapture(
-          captured: Pawn(Team.black),
-          captor: Queen(Team.white),
+          captured: Pawn.black,
+          captor: Queen.white,
         );
 
         teamScore.capture(capture);
@@ -51,8 +51,8 @@ void main() {
 
       test('should throw ArgumentError for different team', () {
         final capture = _createCapture(
-          captured: Pawn(Team.white),
-          captor: Queen(Team.black),
+          captured: Pawn.white,
+          captor: Queen.black,
         );
 
         expect(
@@ -68,12 +68,12 @@ void main() {
       });
       test('should accumulate multiple captures', () {
         final pawnCapture = _createCapture(
-          captured: Pawn(Team.black),
-          captor: Queen(Team.white),
+          captured: Pawn.black,
+          captor: Queen.white,
         );
         final rookCapture = _createCapture(
-          captured: Rook(Team.black),
-          captor: Queen(Team.white),
+          captured: Rook.black,
+          captor: Queen.white,
         );
 
         teamScore.capture(pawnCapture);
@@ -87,8 +87,8 @@ void main() {
     group('capturedPieces', () {
       test('should return immutable list', () {
         final capture = _createCapture(
-          captured: Pawn(Team.black),
-          captor: Queen(Team.white),
+          captured: Pawn.black,
+          captor: Queen.white,
         );
         teamScore.capture(capture);
 
@@ -102,16 +102,16 @@ void main() {
 
       test('should maintain correct order of captures', () {
         final pawnCapture = _createCapture(
-          captured: Pawn(Team.black),
-          captor: Queen(Team.white),
+          captured: Pawn.black,
+          captor: Queen.white,
         );
         final rookCapture = _createCapture(
-          captured: Rook(Team.black),
-          captor: Queen(Team.white),
+          captured: Rook.black,
+          captor: Queen.white,
         );
         final bishopCapture = _createCapture(
-          captured: Bishop(Team.black),
-          captor: Queen(Team.white),
+          captured: Bishop.black,
+          captor: Queen.white,
         );
 
         teamScore.capture(pawnCapture);
@@ -131,8 +131,8 @@ void main() {
       });
       test('should calculate correct total for single capture', () {
         final queenCapture = _createCapture(
-          captured: Queen(Team.black),
-          captor: Rook(Team.white),
+          captured: Queen.black,
+          captor: Rook.white,
         );
         teamScore.capture(queenCapture);
 
@@ -141,26 +141,20 @@ void main() {
 
       test('should calculate correct total for multiple captures', () {
         final captures = [
+          _createCapture(captured: Queen.black, captor: Rook.white), // 9 points
           _createCapture(
-            captured: Queen(Team.black),
-            captor: Rook(Team.white),
-          ), // 9 points
-          _createCapture(
-            captured: Rook(Team.black),
-            captor: Bishop(Team.white),
+            captured: Rook.black,
+            captor: Bishop.white,
           ), // 5 points
           _createCapture(
-            captured: Bishop(Team.black),
-            captor: Knight(Team.white),
+            captured: Bishop.black,
+            captor: Knight.white,
           ), // 3 points
           _createCapture(
-            captured: Knight(Team.black),
-            captor: Pawn(Team.white),
+            captured: Knight.black,
+            captor: Pawn.white,
           ), // 3 points
-          _createCapture(
-            captured: Pawn(Team.black),
-            captor: Queen(Team.white),
-          ), // 1 point
+          _createCapture(captured: Pawn.black, captor: Queen.white), // 1 point
         ];
 
         for (final capture in captures) {
@@ -172,8 +166,8 @@ void main() {
 
       test('should handle king captures (value 0)', () {
         final kingCapture = _createCapture(
-          captured: King(Team.black),
-          captor: Queen(Team.white),
+          captured: King.black,
+          captor: Queen.white,
         );
         teamScore.capture(kingCapture);
 
@@ -189,12 +183,12 @@ void main() {
       });
       test('should compare scores correctly with > operator', () {
         final highValueCapture = _createCapture(
-          captured: Queen(Team.black),
-          captor: Rook(Team.white),
+          captured: Queen.black,
+          captor: Rook.white,
         );
         final lowValueCapture = _createCapture(
-          captured: Pawn(Team.white),
-          captor: Queen(Team.black),
+          captured: Pawn.white,
+          captor: Queen.black,
         );
 
         teamScore.capture(highValueCapture); // 9 points
@@ -206,12 +200,12 @@ void main() {
 
       test('should compare scores correctly with < operator', () {
         final highValueCapture = _createCapture(
-          captured: Queen(Team.white),
-          captor: Rook(Team.black),
+          captured: Queen.white,
+          captor: Rook.black,
         );
         final lowValueCapture = _createCapture(
-          captured: Pawn(Team.black),
-          captor: Queen(Team.white),
+          captured: Pawn.black,
+          captor: Queen.white,
         );
 
         teamScore.capture(lowValueCapture); // 1 point
@@ -223,12 +217,12 @@ void main() {
 
       test('should handle equal scores', () {
         final capture1 = _createCapture(
-          captured: Rook(Team.black),
-          captor: Queen(Team.white),
+          captured: Rook.black,
+          captor: Queen.white,
         );
         final capture2 = _createCapture(
-          captured: Rook(Team.white),
-          captor: Queen(Team.black),
+          captured: Rook.white,
+          captor: Queen.black,
         );
 
         teamScore.capture(capture1); // 5 points
@@ -246,12 +240,12 @@ void main() {
       });
       test('should display correct format with captures', () {
         final pawnCapture = _createCapture(
-          captured: Pawn(Team.black),
-          captor: Queen(Team.white),
+          captured: Pawn.black,
+          captor: Queen.white,
         );
         final rookCapture = _createCapture(
-          captured: Rook(Team.black),
-          captor: Queen(Team.white),
+          captured: Rook.black,
+          captor: Queen.white,
         );
 
         teamScore.capture(pawnCapture);
@@ -264,8 +258,8 @@ void main() {
       test('should work with black team', () {
         final blackScore = TeamScore(Team.black);
         final capture = _createCapture(
-          captured: Queen(Team.white),
-          captor: Rook(Team.black),
+          captured: Queen.white,
+          captor: Rook.black,
         );
         blackScore.capture(capture);
 
@@ -284,8 +278,8 @@ void main() {
 
       test('should be equal with same team and same captures', () {
         final capture = _createCapture(
-          captured: Pawn(Team.black),
-          captor: Queen(Team.white),
+          captured: Pawn.black,
+          captor: Queen.white,
         );
 
         teamScore.capture(capture);
@@ -304,12 +298,12 @@ void main() {
       });
       test('should not be equal with different captures', () {
         final pawnCapture = _createCapture(
-          captured: Pawn(Team.black),
-          captor: Queen(Team.white),
+          captured: Pawn.black,
+          captor: Queen.white,
         );
         final rookCapture = _createCapture(
-          captured: Rook(Team.black),
-          captor: Queen(Team.white),
+          captured: Rook.black,
+          captor: Queen.white,
         );
 
         teamScore.capture(pawnCapture);
@@ -325,8 +319,8 @@ void main() {
       test('should handle many captures of same piece type', () {
         for (int i = 0; i < 8; i++) {
           final pawnCapture = _createCapture(
-            captured: Pawn(Team.black),
-            captor: Queen(Team.white),
+            captured: Pawn.black,
+            captor: Queen.white,
           );
           teamScore.capture(pawnCapture);
         }
@@ -338,21 +332,12 @@ void main() {
 
       test('should handle all piece types', () {
         final captures = [
-          _createCapture(captured: King(Team.black), captor: Queen(Team.white)),
-          _createCapture(captured: Queen(Team.black), captor: Rook(Team.white)),
-          _createCapture(
-            captured: Rook(Team.black),
-            captor: Bishop(Team.white),
-          ),
-          _createCapture(
-            captured: Bishop(Team.black),
-            captor: Knight(Team.white),
-          ),
-          _createCapture(
-            captured: Knight(Team.black),
-            captor: Pawn(Team.white),
-          ),
-          _createCapture(captured: Pawn(Team.black), captor: King(Team.white)),
+          _createCapture(captured: King.black, captor: Queen.white),
+          _createCapture(captured: Queen.black, captor: Rook.white),
+          _createCapture(captured: Rook.black, captor: Bishop.white),
+          _createCapture(captured: Bishop.black, captor: Knight.white),
+          _createCapture(captured: Knight.black, captor: Pawn.white),
+          _createCapture(captured: Pawn.black, captor: King.white),
         ];
 
         for (final capture in captures) {
@@ -372,30 +357,12 @@ void main() {
       test('should work with complex capture scenarios', () {
         // Simulate a complex game with many captures
         final captures = [
-          _createCapture(
-            captured: Pawn(Team.black),
-            captor: Pawn(Team.white),
-          ), // 1
-          _createCapture(
-            captured: Knight(Team.black),
-            captor: Bishop(Team.white),
-          ), // 3
-          _createCapture(
-            captured: Bishop(Team.black),
-            captor: Knight(Team.white),
-          ), // 3
-          _createCapture(
-            captured: Rook(Team.black),
-            captor: Rook(Team.white),
-          ), // 5
-          _createCapture(
-            captured: Queen(Team.black),
-            captor: Queen(Team.white),
-          ), // 9
-          _createCapture(
-            captured: Pawn(Team.black),
-            captor: Rook(Team.white),
-          ), // 1
+          _createCapture(captured: Pawn.black, captor: Pawn.white), // 1
+          _createCapture(captured: Knight.black, captor: Bishop.white), // 3
+          _createCapture(captured: Bishop.black, captor: Knight.white), // 3
+          _createCapture(captured: Rook.black, captor: Rook.white), // 5
+          _createCapture(captured: Queen.black, captor: Queen.white), // 9
+          _createCapture(captured: Pawn.black, captor: Rook.white), // 1
         ];
 
         for (final capture in captures) {
@@ -410,11 +377,8 @@ void main() {
     group('integration with extensions', () {
       test('should work with totalValue extension', () {
         final captures = [
-          _createCapture(captured: Queen(Team.black), captor: Rook(Team.white)),
-          _createCapture(
-            captured: Rook(Team.black),
-            captor: Bishop(Team.white),
-          ),
+          _createCapture(captured: Queen.black, captor: Rook.white),
+          _createCapture(captured: Rook.black, captor: Bishop.white),
         ];
 
         for (final capture in captures) {

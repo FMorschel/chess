@@ -55,12 +55,11 @@ void main() {
       });
 
       test('should disable castling when king has moved in history', () {
-        final kingMove = KingMove(
-          from: Position.e1,
-          to: Position.e2,
-          moving: King(Team.white),
-        );
-        final history = [kingMove];
+        final history = <Move>[
+          PawnMove(from: Position.e2, to: Position.e3, moving: Pawn.white),
+          PawnMove(from: Position.e7, to: Position.e6, moving: Pawn.black),
+          KingMove(from: Position.e1, to: Position.e2, moving: King.white),
+        ];
 
         final manager = MovementManager(boardState, history, teams);
 
@@ -71,12 +70,11 @@ void main() {
       });
 
       test('should disable queenside castling when a-file rook has moved', () {
-        final rookMove = RookMove(
-          from: Position.a1,
-          to: Position.a2,
-          moving: Rook(Team.white),
-        );
-        final history = [rookMove];
+        final history = <Move>[
+          PawnMove(from: Position.a2, to: Position.a3, moving: Pawn.white),
+          PawnMove(from: Position.a7, to: Position.a6, moving: Pawn.black),
+          RookMove(from: Position.a1, to: Position.a2, moving: Rook.white),
+        ];
 
         final manager = MovementManager(boardState, history, teams);
 
@@ -87,12 +85,11 @@ void main() {
       });
 
       test('should disable kingside castling when h-file rook has moved', () {
-        final rookMove = RookMove(
-          from: Position.h1,
-          to: Position.h2,
-          moving: Rook(Team.white),
-        );
-        final history = [rookMove];
+        final history = <Move>[
+          PawnMove(from: Position.h2, to: Position.h3, moving: Pawn.white),
+          PawnMove(from: Position.h7, to: Position.h6, moving: Pawn.black),
+          RookMove(from: Position.h1, to: Position.h2, moving: Rook.white),
+        ];
 
         final manager = MovementManager(boardState, history, teams);
 
@@ -108,7 +105,7 @@ void main() {
         final move = PawnMove(
           from: Position.e2,
           to: Position.e3,
-          moving: Pawn(Team.white),
+          moving: Pawn.white,
         );
         final history = [move];
         final manager = MovementManager(boardState, history, teams);
@@ -148,7 +145,7 @@ void main() {
 
       test('should return pawn moves for pawn', () {
         final pawnPosition = Position.e2;
-        final pawn = Pawn(Team.white);
+        final pawn = Pawn.white;
         final square = OccupiedSquare(pawnPosition, pawn);
         final manager = MovementManager(boardState, [], teams);
 
@@ -162,9 +159,9 @@ void main() {
       test('should return king moves including castling when available', () {
         // Create empty board with just kings and rooks for castling
         final customBoard = BoardState.custom({
-          Position.e1: King(Team.white),
-          Position.a1: Rook(Team.white),
-          Position.h1: Rook(Team.white),
+          Position.e1: King.white,
+          Position.a1: Rook.white,
+          Position.h1: Rook.white,
         });
 
         final kingSquare = customBoard[Position.e1];
@@ -179,15 +176,15 @@ void main() {
 
       test('should not include castling when king has moved', () {
         final customBoard = BoardState.custom({
-          Position.e1: King(Team.white),
-          Position.a1: Rook(Team.white),
-          Position.h1: Rook(Team.white),
+          Position.e1: King.white,
+          Position.a1: Rook.white,
+          Position.h1: Rook.white,
         });
 
         final kingMove = KingMove(
           from: Position.e1,
           to: Position.f1,
-          moving: King(Team.white),
+          moving: King.white,
         );
 
         final kingSquare = customBoard[Position.e1];
@@ -200,8 +197,8 @@ void main() {
 
       test('should generate capture moves for pieces', () {
         final customBoard = BoardState.custom({
-          Position.e4: Queen(Team.white),
-          Position.e7: Pawn(Team.black),
+          Position.e4: Queen.white,
+          Position.e7: Pawn.black,
         });
 
         final queenSquare = customBoard[Position.e4];
@@ -215,14 +212,14 @@ void main() {
       test('should handle en passant detection', () {
         // Place white pawn at e5, black pawn at d5 after initial move
         final customBoard = BoardState.custom({
-          Position.e5: Pawn(Team.white),
-          Position.d5: Pawn(Team.black),
+          Position.e5: Pawn.white,
+          Position.d7: Pawn.black,
         });
 
         final lastMove = PawnInitialMove(
           from: Position.d7,
           to: Position.d5,
-          moving: Pawn(Team.black),
+          moving: Pawn.black,
         );
 
         final pawnSquare = customBoard[Position.e5];
@@ -239,9 +236,7 @@ void main() {
       });
 
       test('should generate regular moves for non-special pieces', () {
-        final customBoard = BoardState.custom({
-          Position.d4: Knight(Team.white),
-        });
+        final customBoard = BoardState.custom({Position.d4: Knight.white});
 
         final knightSquare = customBoard[Position.d4];
         final manager = MovementManager(customBoard, [], teams);
@@ -265,9 +260,9 @@ void main() {
       test('should filter out moves that would put own king in check', () {
         // Create a scenario where moving a piece would expose the king to check
         final customBoard = BoardState.custom({
-          Position.e1: King(Team.white),
-          Position.e2: Knight(Team.white),
-          Position.e8: Rook(Team.black),
+          Position.e1: King.white,
+          Position.e2: Knight.white,
+          Position.e8: Rook.black,
         });
 
         final knightSquare = customBoard[Position.e2];
@@ -283,9 +278,9 @@ void main() {
       test('should include check status in returned moves', () {
         // Create a scenario where a queen can give check to the enemy king
         final customBoard = BoardState.custom({
-          Position.d4: Queen(Team.white),
-          Position.d8: King(Team.black),
-          Position.e1: King(Team.white), // Need own king for valid board
+          Position.d4: Queen.white,
+          Position.d8: King.black,
+          Position.e1: King.white, // Need own king for valid board
         });
 
         final queenSquare = customBoard[Position.d4];
@@ -310,9 +305,9 @@ void main() {
       });
       test('should preserve valid moves without check', () {
         final customBoard = BoardState.custom({
-          Position.d4: Knight(Team.white),
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
+          Position.d4: Knight.white,
+          Position.e1: King.white,
+          Position.e8: King.black,
         });
 
         final knightSquare = customBoard[Position.d4];
@@ -339,10 +334,10 @@ void main() {
     group('castling logic integration', () {
       test('should handle complex castling scenarios', () {
         final customBoard = BoardState.custom({
-          Position.e1: King(Team.white),
-          Position.a1: Rook(Team.white),
-          Position.h1: Rook(Team.white),
-          Position.e8: King(Team.black),
+          Position.e1: King.white,
+          Position.a1: Rook.white,
+          Position.h1: Rook.white,
+          Position.e8: King.black,
         });
 
         final kingSquare = customBoard[Position.e1];
@@ -355,13 +350,153 @@ void main() {
 
         expect(castlingMoves, hasLength(2));
       });
+
+      test('should not allow castling when king is in check', () {
+        final customBoard = BoardState.custom({
+          Position.e1: King.white,
+          Position.a1: Rook.white,
+          Position.h1: Rook.white,
+          Position.e8: Rook.black, // Attacking the white king
+        });
+
+        final kingSquare = customBoard[Position.e1];
+        final manager = MovementManager(customBoard, [], teams);
+
+        final moves = manager.possibleMovesWithCheck(kingSquare);
+        final castlingMoves = moves.where(
+          (move) => move is KingsideCastling || move is QueensideCastling,
+        );
+
+        expect(
+          castlingMoves,
+          isEmpty,
+          reason: 'Should not allow castling when king is in check',
+        );
+      });
+
+      test(
+        'should not allow kingside castling when it would put king in check',
+        () {
+          final customBoard = BoardState.custom({
+            Position.e1: King.white,
+            Position.a1: Rook.white,
+            Position.h1: Rook.white,
+            Position.g8: Rook.black, // Would attack king at g1 after castling
+          });
+
+          final kingSquare = customBoard[Position.e1];
+          final manager = MovementManager(customBoard, [], teams);
+
+          final moves = manager.possibleMovesWithCheck(kingSquare);
+          final kingsideCastling = moves.whereType<KingsideCastling>();
+          final queensideCastling = moves.whereType<QueensideCastling>();
+
+          expect(
+            kingsideCastling,
+            isEmpty,
+            reason:
+                'Should not allow kingside castling when it would put king in check',
+          );
+          expect(
+            queensideCastling,
+            isNotEmpty,
+            reason: 'Queenside castling should still be available',
+          );
+        },
+      );
+
+      test(
+        'should not allow queenside castling when it would put king in check',
+        () {
+          final customBoard = BoardState.custom({
+            Position.e1: King.white,
+            Position.a1: Rook.white,
+            Position.h1: Rook.white,
+            Position.c8: Rook.black, // Would attack king at c1 after castling
+          });
+
+          final kingSquare = customBoard[Position.e1];
+          final manager = MovementManager(customBoard, [], teams);
+
+          final moves = manager.possibleMovesWithCheck(kingSquare);
+          final kingsideCastling = moves.whereType<KingsideCastling>();
+          final queensideCastling = moves.whereType<QueensideCastling>();
+
+          expect(
+            queensideCastling,
+            isEmpty,
+            reason:
+                'Should not allow queenside castling when it would put king in check',
+          );
+          expect(
+            kingsideCastling,
+            isNotEmpty,
+            reason: 'Kingside castling should still be available',
+          );
+        },
+      );
+
+      test(
+        'should allow castling when enemy pieces do not threaten castling path',
+        () {
+          final customBoard = BoardState.custom({
+            Position.e1: King.white,
+            Position.a1: Rook.white,
+            Position.h1: Rook.white,
+            Position.a8: Rook.black, // Not threatening castling path
+            Position.h8: Rook.black, // Not threatening castling path
+          });
+
+          final kingSquare = customBoard[Position.e1];
+          final manager = MovementManager(customBoard, [], teams);
+
+          final moves = manager.possibleMovesWithCheck(kingSquare);
+          final kingsideCastling = moves.whereType<KingsideCastling>();
+          final queensideCastling = moves.whereType<QueensideCastling>();
+
+          expect(
+            kingsideCastling,
+            isNotEmpty,
+            reason: 'Kingside castling should be available when path is safe',
+          );
+          expect(
+            queensideCastling,
+            isNotEmpty,
+            reason: 'Queenside castling should be available when path is safe',
+          );
+        },
+      );
+
+      test('should work for black king castling restrictions', () {
+        final customBoard = BoardState.custom({
+          Position.e8: King.black,
+          Position.a8: Rook.black,
+          Position.h8: Rook.black,
+          Position.e1: Rook.white, // Attacking the black king
+        });
+
+        final kingSquare = customBoard[Position.e8];
+        final manager = MovementManager(customBoard, [], teams);
+
+        final moves = manager.possibleMovesWithCheck(kingSquare);
+        final castlingMoves = moves.where(
+          (move) => move is KingsideCastling || move is QueensideCastling,
+        );
+
+        expect(
+          castlingMoves,
+          isEmpty,
+          reason: 'Black king should not be able to castle when in check',
+        );
+      });
+
       test('should prevent castling through check', () {
         final customBoard = BoardState.custom({
-          Position.e1: King(Team.white),
-          Position.a1: Rook(Team.white),
-          Position.h1: Rook(Team.white),
-          Position.e8: King(Team.black),
-          Position.f8: Rook(Team.black), // Attacks f1
+          Position.e1: King.white,
+          Position.a1: Rook.white,
+          Position.h1: Rook.white,
+          Position.e8: King.black,
+          Position.f8: Rook.black, // Attacks f1
         });
 
         final kingSquare = customBoard[Position.e1];
@@ -378,20 +513,22 @@ void main() {
     group('en passant integration', () {
       test('should detect en passant opportunity correctly', () {
         final customBoard = BoardState.custom({
-          Position.e5: Pawn(Team.white),
-          Position.d5: Pawn(Team.black),
+          Position.e5: Pawn.white,
+          Position.d7: Pawn.black,
         });
 
         final lastMove = PawnInitialMove(
           from: Position.d7,
           to: Position.d5,
-          moving: Pawn(Team.black),
+          moving: Pawn.black,
         );
 
         final pawnSquare = customBoard[Position.e5];
         final manager = MovementManager(customBoard, [lastMove], teams);
 
-        final moves = manager.possibleMoves(pawnSquare);
+        final moves = manager
+            .possibleMoves(pawnSquare)
+            .whereType<EnPassantMove>();
 
         // En passant should be available, but let's just check moves are generated
         expect(moves, isNotEmpty, reason: 'Pawn should have moves available');
@@ -400,14 +537,14 @@ void main() {
         'should not allow en passant when last move was not pawn initial move',
         () {
           final customBoard = BoardState.custom({
-            Position.e5: Pawn(Team.white),
-            Position.d5: Pawn(Team.black),
+            Position.e5: Pawn.white,
+            Position.d6: Pawn.black,
           });
 
           final lastMove = PawnMove(
             from: Position.d6,
             to: Position.d5,
-            moving: Pawn(Team.black),
+            moving: Pawn.black,
           );
 
           final pawnSquare = customBoard[Position.e5];
@@ -426,25 +563,24 @@ void main() {
         // but can escape by capturing en passant
         final customBoard = BoardState.custom({
           // White pieces
-          Position.e4: King(Team.white),
-          Position.e5: Pawn(Team.white),
-
+          Position.e4: King.white,
+          Position.e5: Pawn.white,
           // Black pieces
-          Position.d8: Rook(Team.black),
-          Position.h6: Bishop(Team.black),
-          Position.g6: Pawn(Team.black),
-          Position.f5: Pawn(Team.black), // After moving from f7
-          Position.g4: Pawn(Team.black),
-          Position.d3: Pawn(Team.black),
+          Position.d8: Rook.black,
+          Position.h6: Bishop.black,
+          Position.g6: Pawn.black,
+          Position.f7: Pawn.black,
+          Position.g4: Pawn.black,
+          Position.d3: Pawn.black,
           // Black king (required)
-          Position.a8: King(Team.black),
+          Position.a8: King.black,
         });
 
         // Simulate the black pawn having just moved from f7 to f5 (enabling en passant)
         final lastMove = PawnInitialMove(
           from: Position.f7,
           to: Position.f5,
-          moving: Pawn(Team.black),
+          moving: Pawn.black,
         );
 
         final pawnSquare = customBoard[Position.e5];
@@ -467,8 +603,8 @@ void main() {
     group('edge cases', () {
       test('should handle board with only kings', () {
         final customBoard = BoardState.custom({
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
+          Position.e1: King.white,
+          Position.e8: King.black,
         });
 
         final kingSquare = customBoard[Position.e1];
@@ -482,10 +618,10 @@ void main() {
       test('should handle piece with no valid moves', () {
         // Surround a piece so it has no valid moves
         final customBoard = BoardState.custom({
-          Position.e4: Pawn(Team.white),
-          Position.d5: Pawn(Team.white),
-          Position.e5: Pawn(Team.white),
-          Position.f5: Pawn(Team.white),
+          Position.e4: Pawn.white,
+          Position.d5: Pawn.white,
+          Position.e5: Pawn.white,
+          Position.f5: Pawn.white,
         });
 
         final pawnSquare = customBoard[Position.e4];
@@ -499,15 +635,15 @@ void main() {
     group('possibleMoves with untracked parameter', () {
       test('should use untracked move for en passant calculation', () {
         final customBoard = BoardState.custom({
-          Position.e5: Pawn(Team.white),
-          Position.d5: Pawn(Team.black),
+          Position.e5: Pawn.white,
+          Position.d5: Pawn.black,
         });
 
         // No moves in history, but provide untracked pawn initial move
         final untrackedMove = PawnInitialMove(
           from: Position.d7,
           to: Position.d5,
-          moving: Pawn(Team.black),
+          moving: Pawn.black,
         );
 
         final pawnSquare = customBoard[Position.e5];
@@ -533,23 +669,23 @@ void main() {
         'should prioritize untracked move over move history for en passant',
         () {
           final customBoard = BoardState.custom({
-            Position.e5: Pawn(Team.white),
-            Position.d5: Pawn(Team.black),
-            Position.f5: Pawn(Team.black),
+            Position.e5: Pawn.white,
+            Position.d6: Pawn.black,
+            Position.f7: Pawn.black,
           });
 
           // History has a regular pawn move (not initial)
           final historyMove = PawnMove(
             from: Position.d6,
             to: Position.d5,
-            moving: Pawn(Team.black),
+            moving: Pawn.black,
           );
 
           // But untracked has an initial pawn move for different pawn
           final untrackedMove = PawnInitialMove(
             from: Position.f7,
             to: Position.f5,
-            moving: Pawn(Team.black),
+            moving: Pawn.black,
           );
 
           final pawnSquare = customBoard[Position.e5];
@@ -577,15 +713,15 @@ void main() {
         'should ignore untracked move if not pawn initial move for en passant',
         () {
           final customBoard = BoardState.custom({
-            Position.e5: Pawn(Team.white),
-            Position.d5: Pawn(Team.black),
+            Position.e5: Pawn.white,
+            Position.d5: Pawn.black,
           });
 
           // Untracked move is regular pawn move, not initial
           final untrackedMove = PawnMove(
             from: Position.d6,
             to: Position.d5,
-            moving: Pawn(Team.black),
+            moving: Pawn.black,
           );
 
           final pawnSquare = customBoard[Position.e5];
@@ -609,14 +745,14 @@ void main() {
         'should work without untracked parameter (backward compatibility)',
         () {
           final customBoard = BoardState.custom({
-            Position.e5: Pawn(Team.white),
-            Position.d5: Pawn(Team.black),
+            Position.e5: Pawn.white,
+            Position.d7: Pawn.black,
           });
 
           final historyMove = PawnInitialMove(
             from: Position.d7,
             to: Position.d5,
-            moving: Pawn(Team.black),
+            moving: Pawn.black,
           );
 
           final pawnSquare = customBoard[Position.e5];
@@ -636,15 +772,13 @@ void main() {
       );
 
       test('should handle untracked move with different piece types', () {
-        final customBoard = BoardState.custom({
-          Position.e4: Knight(Team.white),
-        });
+        final customBoard = BoardState.custom({Position.e4: Knight.white});
 
         // Untracked move with a knight (should not affect knight logic)
         final untrackedMove = Move.create(
           from: Position.f3,
           to: Position.e5,
-          moving: Knight(Team.black),
+          moving: Knight.black,
         );
 
         final knightSquare = customBoard[Position.e4];
@@ -665,14 +799,14 @@ void main() {
 
       test('should handle en passant with untracked move on queenside', () {
         final customBoard = BoardState.custom({
-          Position.c5: Pawn(Team.white),
-          Position.b5: Pawn(Team.black),
+          Position.c5: Pawn.white,
+          Position.b5: Pawn.black,
         });
 
         final untrackedMove = PawnInitialMove(
           from: Position.b7,
           to: Position.b5,
-          moving: Pawn(Team.black),
+          moving: Pawn.black,
         );
 
         final pawnSquare = customBoard[Position.c5];
@@ -689,7 +823,7 @@ void main() {
       });
 
       test('should handle null untracked move', () {
-        final customBoard = BoardState.custom({Position.e2: Pawn(Team.white)});
+        final customBoard = BoardState.custom({Position.e2: Pawn.white});
 
         final pawnSquare = customBoard[Position.e2];
         final manager = MovementManager(customBoard, [], teams);
@@ -704,14 +838,14 @@ void main() {
         'should use untracked move for black pawn en passant from rank 4',
         () {
           final customBoard = BoardState.custom({
-            Position.d4: Pawn(Team.black),
-            Position.e4: Pawn(Team.white),
+            Position.d4: Pawn.black,
+            Position.e4: Pawn.white,
           });
 
           final untrackedMove = PawnInitialMove(
             from: Position.e2,
             to: Position.e4,
-            moving: Pawn(Team.white),
+            moving: Pawn.white,
           );
 
           final pawnSquare = customBoard[Position.d4];
@@ -730,15 +864,15 @@ void main() {
 
       test('should not affect non-pawn moves with untracked pawn move', () {
         final customBoard = BoardState.custom({
-          Position.e1: King(Team.white),
-          Position.a1: Rook(Team.white),
-          Position.h1: Rook(Team.white),
+          Position.e1: King.white,
+          Position.a1: Rook.white,
+          Position.h1: Rook.white,
         });
 
         final untrackedMove = PawnInitialMove(
           from: Position.e7,
           to: Position.e5,
-          moving: Pawn(Team.black),
+          moving: Pawn.black,
         );
 
         final kingSquare = customBoard[Position.e1];
@@ -763,7 +897,7 @@ void main() {
         final move = PawnInitialMove(
           from: Position.e2,
           to: Position.e4,
-          moving: Pawn(Team.white),
+          moving: Pawn.white,
         );
 
         // Verify initial state
@@ -789,13 +923,13 @@ void main() {
         final firstMove = PawnInitialMove(
           from: Position.e2,
           to: Position.e4,
-          moving: Pawn(Team.white),
+          moving: Pawn.white,
         );
 
         final secondMove = PawnInitialMove(
           from: Position.e7,
           to: Position.e5,
-          moving: Pawn(Team.black),
+          moving: Pawn.black,
         );
 
         // Execute first move
@@ -815,8 +949,8 @@ void main() {
       test('should handle capture moves correctly', () {
         // Set up a custom board with pieces that can capture
         final customBoard = BoardState.custom({
-          Position.e4: Pawn(Team.white),
-          Position.d5: Pawn(Team.black),
+          Position.e4: Pawn.white,
+          Position.d5: Pawn.black,
         });
 
         final manager = MovementManager(customBoard, [], teams);
@@ -824,8 +958,8 @@ void main() {
         final captureMove = PawnCaptureMove(
           from: Position.e4,
           to: Position.d5,
-          moving: Pawn(Team.white),
-          captured: Pawn(Team.black),
+          moving: Pawn.white,
+          captured: Pawn.black,
         );
 
         // Verify initial state
@@ -849,8 +983,8 @@ void main() {
       test('should handle castling moves', () {
         // Set up board for castling
         final customBoard = BoardState.custom({
-          Position.e1: King(Team.white),
-          Position.h1: Rook(Team.white),
+          Position.e1: King.white,
+          Position.h1: Rook.white,
         });
 
         final manager = MovementManager(customBoard, [], teams);
@@ -858,11 +992,11 @@ void main() {
         final castlingMove = KingsideCastling(
           from: Position.e1,
           to: Position.g1,
-          moving: King(Team.white),
+          moving: King.white,
           rook: RookMove(
             from: Position.h1,
             to: Position.f1,
-            moving: Rook(Team.white),
+            moving: Rook.white,
           ),
         );
 
@@ -885,7 +1019,7 @@ void main() {
         final move = PawnInitialMove(
           from: Position.e2,
           to: Position.e4,
-          moving: Pawn(Team.white),
+          moving: Pawn.white,
         );
 
         // Get reference to history before move
@@ -909,7 +1043,7 @@ void main() {
         final existingMove = PawnInitialMove(
           from: Position.d2,
           to: Position.d4,
-          moving: Pawn(Team.white),
+          moving: Pawn.white,
         );
 
         final manager = MovementManager(boardState, [existingMove], teams);
@@ -921,7 +1055,7 @@ void main() {
         final newMove = PawnInitialMove(
           from: Position.e7,
           to: Position.e5,
-          moving: Pawn(Team.black),
+          moving: Pawn.black,
         );
 
         // Execute new move
@@ -942,38 +1076,34 @@ void main() {
             PawnInitialMove(
               from: Position.e2,
               to: Position.e4,
-              moving: Pawn(Team.white),
+              moving: Pawn.white,
             ),
             PawnInitialMove(
               from: Position.e7,
               to: Position.e5,
-              moving: Pawn(Team.black),
+              moving: Pawn.black,
             ),
             BishopMove(
               from: Position.f1,
               to: Position.c4,
-              moving: Bishop(Team.white),
+              moving: Bishop.white,
             ),
             KnightMove(
               from: Position.b8,
               to: Position.c6,
-              moving: Knight(Team.black),
+              moving: Knight.black,
             ),
-            QueenMove(
-              from: Position.d1,
-              to: Position.h5,
-              moving: Queen(Team.white),
-            ),
+            QueenMove(from: Position.d1, to: Position.h5, moving: Queen.white),
             KnightMove(
               from: Position.g8,
               to: Position.f6,
-              moving: Knight(Team.black),
+              moving: Knight.black,
             ),
             QueenCaptureMove(
               from: Position.h5,
               to: Position.f7,
-              moving: Queen(Team.white),
-              captured: Pawn(Team.black),
+              moving: Queen.white,
+              captured: Pawn.black,
             ),
           ];
 

@@ -4,12 +4,11 @@ import 'package:chess_logic/src/move/move.dart';
 import 'package:chess_logic/src/position/position.dart';
 import 'package:chess_logic/src/square/piece.dart';
 import 'package:chess_logic/src/square/piece_symbol.dart';
-import 'package:chess_logic/src/team/team.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('PromotionMove', () {
-    final whitePawn = Pawn(Team.white);
+    final whitePawn = Pawn.white;
     final from = Position.e7;
     final to = Position.e8;
 
@@ -123,10 +122,10 @@ void main() {
   });
 
   group('PromotionCaptureMove', () {
-    final whitePawn = Pawn(Team.white);
+    final whitePawn = Pawn.white;
     final from = Position.e7;
     final to = Position.d8;
-    final captured = Rook(Team.black);
+    final captured = Rook.black;
 
     test('stores all fields correctly', () {
       final move = PromotionCaptureMove(

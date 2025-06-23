@@ -16,12 +16,11 @@ void main() {
     group('moveWouldCreateCheck', () {
       test('should return empty map when no check occurs', () {
         // Setup: King and queen in safe positions
-        final customPieces = {
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
-          Position.d1: Queen(Team.white),
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.e1: King.white,
+          Position.e8: King.black,
+          Position.d1: Queen.white,
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -32,7 +31,7 @@ void main() {
         final move = QueenMove(
           from: Position.d1,
           to: Position.d4,
-          moving: Queen(Team.white),
+          moving: Queen.white,
         );
 
         final result = checkDetector.moveWouldCreateCheck(move);
@@ -44,15 +43,12 @@ void main() {
         'should return check status when king is in check but not checkmate',
         () {
           // Setup: Simple check scenario
-          final customPieces = {
-            Position.e1: King(Team.white),
-            Position.e8: King(Team.black),
-            Position.d1: Queen(Team.white),
-            Position.a8: Rook(
-              Team.black,
-            ), // Black has escape moves
-          };
-          boardState = BoardState.custom(customPieces);
+          boardState = BoardState.custom({
+            Position.e1: King.white,
+            Position.e8: King.black,
+            Position.d1: Queen.white,
+            Position.a8: Rook.black, // Black has escape moves
+          });
           checkDetector = MovementManager(
             boardState,
             const [],
@@ -63,7 +59,7 @@ void main() {
           final move = QueenMove(
             from: Position.d1,
             to: Position.d8,
-            moving: Queen(Team.white),
+            moving: Queen.white,
           );
 
           final result = checkDetector.moveWouldCreateCheck(move);
@@ -75,15 +71,14 @@ void main() {
       );
       test('should return checkmate status when king is in checkmate', () {
         // Setup: Back rank mate scenario
-        final customPieces = {
-          Position.g1: King(Team.white),
-          Position.g8: King(Team.black),
-          Position.f7: Pawn(Team.black),
-          Position.g7: Pawn(Team.black),
-          Position.h7: Pawn(Team.black),
-          Position.d1: Queen(Team.white),
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.g1: King.white,
+          Position.g8: King.black,
+          Position.f7: Pawn.black,
+          Position.g7: Pawn.black,
+          Position.h7: Pawn.black,
+          Position.d1: Queen.white,
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -94,7 +89,7 @@ void main() {
         final move = QueenMove(
           from: Position.d1,
           to: Position.d8,
-          moving: Queen(Team.white),
+          moving: Queen.white,
         );
 
         final result = checkDetector.moveWouldCreateCheck(move);
@@ -105,13 +100,12 @@ void main() {
       });
       test('should handle rook giving check', () {
         // Setup: Rook check scenario
-        final customPieces = {
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
-          Position.a1: Rook(Team.white),
-          Position.d7: Queen(Team.black),
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.e1: King.white,
+          Position.e8: King.black,
+          Position.a1: Rook.white,
+          Position.d7: Queen.black,
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -122,7 +116,7 @@ void main() {
         final move = RookMove(
           from: Position.a1,
           to: Position.a8,
-          moving: Rook(Team.white),
+          moving: Rook.white,
         );
 
         final result = checkDetector.moveWouldCreateCheck(move);
@@ -130,15 +124,13 @@ void main() {
         // Assert
         expect(result, containsPair(Team.black, Check.check));
       });
-
       test('should handle bishop giving check', () {
         // Setup: Bishop check scenario
-        final customPieces = {
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
-          Position.c1: Bishop(Team.white),
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.e1: King.white,
+          Position.e8: King.black,
+          Position.c1: Bishop.white,
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -149,7 +141,7 @@ void main() {
         final move = BishopMove(
           from: Position.c1,
           to: Position.a3,
-          moving: Bishop(Team.white),
+          moving: Bishop.white,
         );
 
         final result = checkDetector.moveWouldCreateCheck(move);
@@ -159,12 +151,11 @@ void main() {
       });
       test('should handle knight giving check', () {
         // Setup: Knight check scenario
-        final customPieces = {
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
-          Position.e6: Knight(Team.white),
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.e1: King.white,
+          Position.e8: King.black,
+          Position.e6: Knight.white,
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -175,7 +166,7 @@ void main() {
         final move = KnightMove(
           from: Position.e6,
           to: Position.c7,
-          moving: Knight(Team.white),
+          moving: Knight.white,
         );
 
         final result = checkDetector.moveWouldCreateCheck(move);
@@ -183,15 +174,13 @@ void main() {
         // Assert
         expect(result, containsPair(Team.black, Check.check));
       });
-
       test('should handle pawn giving check', () {
         // Setup: Pawn check scenario
-        final customPieces = {
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
-          Position.d6: Pawn(Team.white),
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.e1: King.white,
+          Position.e8: King.black,
+          Position.d6: Pawn.white,
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -202,7 +191,7 @@ void main() {
         final move = PawnMove(
           from: Position.d6,
           to: Position.d7,
-          moving: Pawn(Team.white),
+          moving: Pawn.white,
         );
 
         final result = checkDetector.moveWouldCreateCheck(move);
@@ -212,15 +201,12 @@ void main() {
       });
       test('should handle discovered check', () {
         // Setup: Discovered check scenario
-        final customPieces = {
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
-          Position.e4: Bishop(Team.white), // Blocking piece
-          Position.e2: Queen(
-            Team.white,
-          ), // Behind blocking piece
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.e1: King.white,
+          Position.e8: King.black,
+          Position.e4: Bishop.white, // Blocking piece
+          Position.e2: Queen.white, // Behind blocking piece
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -231,7 +217,7 @@ void main() {
         final move = BishopMove(
           from: Position.e4,
           to: Position.d3,
-          moving: Bishop(Team.white),
+          moving: Bishop.white,
         );
 
         final result = checkDetector.moveWouldCreateCheck(move);
@@ -239,15 +225,13 @@ void main() {
         // Assert
         expect(result, containsPair(Team.black, Check.check));
       });
-
       test('should correctly restore board state after check detection', () {
         // Setup: Initial position
-        final customPieces = {
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
-          Position.d1: Queen(Team.white),
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.e1: King.white,
+          Position.e8: King.black,
+          Position.d1: Queen.white,
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -255,39 +239,30 @@ void main() {
         ).checkDetector;
 
         // Store initial state
-        final initialQueenPosition =
-            boardState[Position.d1].piece;
-        final initialTargetSquare =
-            boardState[Position.d4].piece;
+        final initialQueenPosition = boardState[Position.d1].piece;
+        final initialTargetSquare = boardState[Position.d4].piece;
 
         // Act: Detect check for a move
         final move = QueenMove(
           from: Position.d1,
           to: Position.d4,
-          moving: Queen(Team.white),
+          moving: Queen.white,
         );
 
         checkDetector.moveWouldCreateCheck(move);
 
         // Assert: Board state should be restored
-        expect(
-          boardState[Position.d1].piece,
-          equals(initialQueenPosition),
-        );
-        expect(
-          boardState[Position.d4].piece,
-          equals(initialTargetSquare),
-        );
+        expect(boardState[Position.d1].piece, equals(initialQueenPosition));
+        expect(boardState[Position.d4].piece, equals(initialTargetSquare));
       });
       test('should handle capture moves in check detection', () {
         // Setup: Capture scenario
-        final customPieces = {
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
-          Position.d1: Queen(Team.white),
-          Position.d8: Queen(Team.black),
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.e1: King.white,
+          Position.e8: King.black,
+          Position.d1: Queen.white,
+          Position.d8: Queen.black,
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -298,8 +273,8 @@ void main() {
         final move = QueenCaptureMove(
           from: Position.d1,
           to: Position.d8,
-          moving: Queen(Team.white),
-          captured: Queen(Team.black),
+          moving: Queen.white,
+          captured: Queen.black,
         );
 
         final result = checkDetector.moveWouldCreateCheck(move);
@@ -307,16 +282,14 @@ void main() {
         // Assert
         expect(result, containsPair(Team.black, Check.check));
       });
-
       test('should handle moves that block check', () {
         // Setup: King in check, piece can block
-        final customPieces = {
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
-          Position.h8: Queen(Team.white), // Giving check
-          Position.e7: Bishop(Team.black), // Can block
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.e1: King.white,
+          Position.e8: King.black,
+          Position.h8: Queen.white, // Giving check
+          Position.e7: Bishop.black, // Can block
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -327,7 +300,7 @@ void main() {
         final move = BishopMove(
           from: Position.e7,
           to: Position.f8,
-          moving: Bishop(Team.black),
+          moving: Bishop.black,
         );
 
         final result = checkDetector.moveWouldCreateCheck(move);
@@ -346,7 +319,7 @@ void main() {
         final move = PawnInitialMove(
           from: Position.e2,
           to: Position.e4,
-          moving: Pawn(Team.white),
+          moving: Pawn.white,
         );
 
         expect(
@@ -354,14 +327,12 @@ void main() {
           throwsArgumentError,
         );
       });
-
       test('should handle king-only positions', () {
         // Setup: Only kings on the board
-        final customPieces = {
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.e1: King.white,
+          Position.e8: King.black,
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -372,7 +343,7 @@ void main() {
         final move = KingMove(
           from: Position.e1,
           to: Position.f1,
-          moving: King(Team.white),
+          moving: King.white,
         );
 
         final result = checkDetector.moveWouldCreateCheck(move);
@@ -389,39 +360,18 @@ void main() {
           PawnInitialMove(
             from: Position.e2,
             to: Position.e4,
-            moving: Pawn(Team.white),
+            moving: Pawn.white,
           ),
           PawnInitialMove(
             from: Position.e7,
             to: Position.e5,
-            moving: Pawn(Team.black),
+            moving: Pawn.black,
           ),
-          BishopMove(
-            from: Position.f1,
-            to: Position.c4,
-            moving: Bishop(Team.white),
-          ),
-          KnightMove(
-            from: Position.b8,
-            to: Position.c6,
-            moving: Knight(Team.black),
-          ),
-          QueenMove(
-            from: Position.d1,
-            to: Position.h5,
-            moving: Queen(Team.white),
-          ),
-          KnightMove(
-            from: Position.g8,
-            to: Position.f6,
-            moving: Knight(Team.black),
-          ),
+          BishopMove(from: Position.f1, to: Position.c4, moving: Bishop.white),
+          KnightMove(from: Position.b8, to: Position.c6, moving: Knight.black),
+          QueenMove(from: Position.d1, to: Position.h5, moving: Queen.white),
+          KnightMove(from: Position.g8, to: Position.f6, moving: Knight.black),
         ];
-
-        // Apply all moves except the final checkmate move
-        for (final move in scholarsMateSequence) {
-          boardState.actOn(move);
-        }
 
         checkDetector = MovementManager(
           boardState,
@@ -433,8 +383,8 @@ void main() {
         final checkmateMove = QueenCaptureMove(
           from: Position.h5,
           to: Position.f7,
-          moving: Queen(Team.white),
-          captured: Pawn(Team.black),
+          moving: Queen.white,
+          captured: Pawn.black,
         );
 
         final result = checkDetector.moveWouldCreateCheck(checkmateMove);
@@ -447,15 +397,14 @@ void main() {
     group('performance and correctness', () {
       test('should handle multiple consecutive check detections', () {
         // Setup: Standard starting position with some moves
-        final customPieces = {
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
-          Position.d1: Queen(Team.white),
-          Position.d8: Queen(Team.black),
-          Position.a1: Rook(Team.white),
-          Position.a8: Rook(Team.black),
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.e1: King.white,
+          Position.e8: King.black,
+          Position.d1: Queen.white,
+          Position.d8: Queen.black,
+          Position.a1: Rook.white,
+          Position.a8: Rook.black,
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -464,21 +413,9 @@ void main() {
 
         // Act: Test multiple moves
         final moves = <Move>[
-          QueenMove(
-            from: Position.d1,
-            to: Position.d4,
-            moving: Queen(Team.white),
-          ),
-          RookMove(
-            from: Position.a1,
-            to: Position.a4,
-            moving: Rook(Team.white),
-          ),
-          QueenMove(
-            from: Position.d1,
-            to: Position.h5,
-            moving: Queen(Team.white),
-          ),
+          QueenMove(from: Position.d1, to: Position.d4, moving: Queen.white),
+          RookMove(from: Position.a1, to: Position.a4, moving: Rook.white),
+          QueenMove(from: Position.d1, to: Position.h5, moving: Queen.white),
         ];
 
         // Assert: All should complete without errors
@@ -487,15 +424,13 @@ void main() {
           expect(result, isA<Map<Team, Check>>());
         }
       });
-
       test('should maintain board integrity across multiple detections', () {
         // Setup
-        final customPieces = {
-          Position.e1: King(Team.white),
-          Position.e8: King(Team.black),
-          Position.d1: Queen(Team.white),
-        };
-        boardState = BoardState.custom(customPieces);
+        boardState = BoardState.custom({
+          Position.e1: King.white,
+          Position.e8: King.black,
+          Position.d1: Queen.white,
+        });
         checkDetector = MovementManager(
           boardState,
           const [],
@@ -512,7 +447,7 @@ void main() {
         final move = QueenMove(
           from: Position.d1,
           to: Position.d4,
-          moving: Queen(Team.white),
+          moving: Queen.white,
         );
 
         // Run detection multiple times
@@ -528,24 +463,22 @@ void main() {
       test('enpassant should avoid check', () {
         // Setup: Position where white king would be in check from black rook
         // but can escape by capturing en passant
-        final customPieces = {
+        boardState = BoardState.custom({
           // White pieces
-          Position.e4: King(Team.white),
-          Position.e5: Pawn(Team.white),
+          Position.e4: King.white,
+          Position.e5: Pawn.white,
 
           // Black pieces
-          Position.d8: Rook(Team.black),
-          Position.h6: Bishop(Team.black),
-          Position.g6: Pawn(Team.black),
+          Position.d8: Rook.black,
+          Position.h6: Bishop.black,
+          Position.g6: Pawn.black,
           // This pawn will move two squares
-          Position.f7: Pawn(Team.black),
-          Position.g4: Pawn(Team.black),
-          Position.d3: Pawn(Team.black),
+          Position.f7: Pawn.black,
+          Position.g4: Pawn.black,
+          Position.d3: Pawn.black,
           // Black king (required)
-          Position.a8: King(Team.black),
-        };
-
-        boardState = BoardState.custom(customPieces);
+          Position.a8: King.black,
+        });
         checkDetector = MovementManager(
           boardState,
           [],
@@ -557,7 +490,7 @@ void main() {
             // (enables en passant)
             from: Position.f7,
             to: Position.f5,
-            moving: Pawn(Team.black),
+            moving: Pawn.black,
           ),
         );
 

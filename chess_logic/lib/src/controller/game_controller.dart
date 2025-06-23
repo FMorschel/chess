@@ -21,7 +21,7 @@ class GameController {
       _custom = null,
       _scores = moveHistory.scores..addMissing(_teams),
       _movementManager = MovementManager(
-        BoardState(history: moveHistory),
+        BoardState(),
         moveHistory ?? [],
         _teams,
       ),
@@ -128,6 +128,7 @@ class GameController {
 
     return controller;
   }
+  
 
   final Map<Position, Piece>? _custom;
   final List<TeamScore> _scores;
@@ -135,12 +136,15 @@ class GameController {
   final MovementManager _movementManager;
 
   late int _currentTeamIndex;
-  GameState _gameState;
 
   /// Number of half-moves since the last capture or pawn move.
   /// Used for the 50-move rule.
   int _halfmoveClock;
+  GameState _gameState;
 
+  /// The current halfmove clock count - number of half-moves since last pawn
+  /// move or capture
+  int get halfmoveClock => _halfmoveClock;
   List<Team> get teams => List.unmodifiable(_teams);
   List<TeamScore> get scores => List.unmodifiable(_scores);
   List<Move> get history => _movementManager.moveHistory;
@@ -150,10 +154,6 @@ class GameController {
   GameState get gameState => _gameState;
   Team? get winner =>
       _gameState == GameState.teamWin ? history.last.moving.team : null;
-
-  /// The current halfmove clock count - number of half-moves since last pawn
-  /// move or capture
-  int get halfmoveClock => _halfmoveClock;
 
   List<Move> movesFor({Team? team, Position? position}) => state.occupiedSquares
       .where(
@@ -188,17 +188,22 @@ class GameController {
   }
 
   void _updateStateAfterMove(Move<Piece>? move) {
-    if (move != null && move.check == Check.checkmate) {
+    if (move?.check == Check.checkmate) {
       _gameState = GameState.teamWin;
+      return;
     }
     if (_insufficientMaterial) {
       _gameState = GameState.draw;
+      return;
     }
     // Fifty-move rule: if no capture or pawn move in the last 50 moves
     if (_halfmoveClock >= (_teams.length * 50)) {
       _gameState = GameState.draw;
+      return;
     }
-    if (move != null) _nextTeam();
+    if (move != null) {
+      _nextTeam();
+    }
     if (_stalemate) {
       _gameState = GameState.stalemate;
     }
