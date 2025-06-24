@@ -6,6 +6,7 @@ import '../position/position.dart';
 import '../square/piece.dart';
 import '../team/team.dart';
 import 'board_state.dart';
+import 'game_rule_engine.dart';
 import 'game_state.dart';
 import 'game_state_manager.dart';
 import 'movement_manager.dart';
@@ -30,6 +31,7 @@ class GameController {
         moveHistory: moveHistory,
         initialBoardState: BoardState(),
       ),
+      _ruleEngine = const GameRuleEngine(),
       _halfmoveClock = _calculateHalfmoveClock(moveHistory ?? []) {
     _updateStateAfterMove(moveHistory?.lastOrNull);
   }
@@ -45,6 +47,7 @@ class GameController {
         _teams,
         initialBoardState: BoardState.empty(),
       ),
+      _ruleEngine = const GameRuleEngine(),
       _halfmoveClock = 0;
   GameController.custom(this._teams, Map<Position, Piece> customPieces)
     : assert(
@@ -61,6 +64,7 @@ class GameController {
         _teams,
         initialBoardState: BoardState.custom(customPieces),
       ),
+      _ruleEngine = const GameRuleEngine(),
       _halfmoveClock = 0;
 
   /// Clean up resources
@@ -72,6 +76,7 @@ class GameController {
   final ScoreManager _scoreManager;
   final MovementManager _movementManager;
   final GameStateManager _stateManager;
+  final GameRuleEngine _ruleEngine;
 
   /// Number of half-moves since the last capture or pawn move.
   /// Used for the 50-move rule.
@@ -155,12 +160,12 @@ class GameController {
       _stateManager.updateGameState(GameState.teamWin);
       return;
     }
-    if (_insufficientMaterial) {
+    if (_ruleEngine.hasInsufficientMaterial(state)) {
       _stateManager.updateGameState(GameState.draw);
       return;
     }
     // Fifty-move rule: if no capture or pawn move in the last 50 moves
-    if (_halfmoveClock >= (_teams.length * 50)) {
+    if (_ruleEngine.isFiftyMoveRule(_halfmoveClock, _teams)) {
       _stateManager.updateGameState(GameState.draw);
       return;
     }
@@ -176,6 +181,9 @@ class GameController {
   /// The current halfmove clock count - number of half-moves since last pawn
   /// move or capture
   int get halfmoveClock => _halfmoveClock;
+
+  /// Access to the game rule engine for special rule validation
+  GameRuleEngine get ruleEngine => _ruleEngine;
 
   List<Team> get teams => _stateManager.teams;
 
@@ -195,84 +203,4 @@ class GameController {
   Team? get winner => _stateManager.gameState == GameState.teamWin
       ? history.last.moving.team
       : null;
-
-  /// Checks if the current board position has insufficient material for
-  /// checkmate
-  ///
-  /// According to FIDE rules, the game is drawn if neither side has sufficient
-  /// material to deliver checkmate. This includes:
-  ///
-  /// 1. King vs King
-  /// 2. King vs King + Bishop/Knight (lone minor piece)
-  /// 3. King + Bishop vs King + Bishop (same color squares)
-  ///
-  /// Examples:
-  /// ```dart
-  /// // King vs King - insufficient material
-  /// final controller = GameController.custom([Team.white, Team.black], {
-  ///   Position.e1: King.white,
-  ///   Position.e8: King.black,
-  /// });
-  /// assert(controller._insufficientMaterial == true);
-  ///
-  /// // King + Queen vs King - sufficient material
-  /// final controller2 = GameController.custom([Team.white, Team.black], {
-  ///   Position.e1: King.white,
-  ///   Position.d1: Queen.white,
-  ///   Position.e8: King.black,
-  /// });
-  /// assert(controller2._insufficientMaterial == false);
-  /// ```
-  bool get _insufficientMaterial {
-    final pieces = state.occupiedSquares.map((square) => square.piece).toList();
-
-    // Count pieces by type and team
-    final whitePieces = pieces
-        .where((piece) => piece.team == Team.white)
-        .toList();
-    final blackPieces = pieces
-        .where((piece) => piece.team == Team.black)
-        .toList();
-
-    // King vs King
-    if (whitePieces.length == 1 && blackPieces.length == 1) {
-      return whitePieces.first is King && blackPieces.first is King;
-    }
-
-    // King vs King + minor piece (Bishop or Knight)
-    if ((whitePieces.length == 1 && blackPieces.length == 2) ||
-        (whitePieces.length == 2 && blackPieces.length == 1)) {
-      final loneKing = whitePieces.length == 1 ? whitePieces : blackPieces;
-      final twoPieces = whitePieces.length == 2 ? whitePieces : blackPieces;
-      if (loneKing.first is King) {
-        final minorPiece = twoPieces.firstWhere((piece) => piece is! King);
-        return minorPiece is Bishop || minorPiece is Knight;
-      }
-    }
-
-    // King + Bishop vs King + Bishop (same color squares)
-    if (whitePieces.length == 2 && blackPieces.length == 2) {
-      final whiteBishops = whitePieces.whereType<Bishop>().toList();
-      final blackBishops = blackPieces.whereType<Bishop>().toList();
-      final whiteKings = whitePieces.whereType<King>().toList();
-      final blackKings = blackPieces.whereType<King>().toList();
-
-      if (whiteBishops.length == 1 &&
-          blackBishops.length == 1 &&
-          whiteKings.length == 1 &&
-          blackKings.length == 1) {
-        // Find bishop positions to check square colors
-        final whiteBishopOnLight = state.occupiedSquares
-            .firstWhere((square) => square.piece == whiteBishops.first)
-            .lightSquare;
-        final blackBishopOnLight = state.occupiedSquares
-            .firstWhere((square) => square.piece == blackBishops.first)
-            .lightSquare;
-
-        return whiteBishopOnLight == blackBishopOnLight;
-      }
-    }
-
-    return false;
-  }
 }

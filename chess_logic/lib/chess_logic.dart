@@ -8,6 +8,7 @@ library;
 export 'src/controller/board_state.dart';
 // Core game controller
 export 'src/controller/game_controller.dart';
+export 'src/controller/game_rule_engine.dart';
 export 'src/controller/score_manager.dart';
 export 'src/move/check.dart';
 // Moves and movement
