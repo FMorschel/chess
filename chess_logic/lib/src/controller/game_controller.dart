@@ -7,6 +7,7 @@ import '../square/piece.dart';
 import '../team/team.dart';
 import 'board_state.dart';
 import 'game_state.dart';
+import 'game_state_manager.dart';
 import 'movement_manager.dart';
 import 'score_manager.dart';
 import 'team_score.dart';
@@ -18,20 +19,17 @@ class GameController {
         _teams.length > 1,
         'There must be at least two teams to start a game',
       ),
-      _custom = null,
       _scoreManager = ScoreManager(_teams, moveHistory: moveHistory),
       _movementManager = MovementManager(
         BoardState(),
         moveHistory ?? [],
         _teams,
       ),
-      _currentTeamIndex = _teams.indexed
-          .firstWhere(
-            (record) => record.$2 == moveHistory?.lastOrNull?.team,
-            orElse: () => (0, _teams.first),
-          )
-          .$1,
-      _gameState = GameState.inProgress,
+      _stateManager = GameStateManager(
+        _teams,
+        moveHistory: moveHistory,
+        initialBoardState: BoardState(),
+      ),
       _halfmoveClock = _calculateHalfmoveClock(moveHistory ?? []) {
     _updateStateAfterMove(moveHistory?.lastOrNull);
   }
@@ -41,104 +39,43 @@ class GameController {
         _teams.length > 1,
         'There must be at least two teams to start a game',
       ),
-      _custom = null,
       _scoreManager = ScoreManager.empty(_teams),
       _movementManager = MovementManager(BoardState.empty(), [], _teams),
-      _currentTeamIndex = 0,
-      _gameState = GameState.inProgress,
+      _stateManager = GameStateManager(
+        _teams,
+        initialBoardState: BoardState.empty(),
+      ),
       _halfmoveClock = 0;
-
   GameController.custom(this._teams, Map<Position, Piece> customPieces)
     : assert(
         _teams.length > 1,
         'There must be at least two teams to start a game',
       ),
-      _custom = customPieces,
       _scoreManager = ScoreManager.empty(_teams),
       _movementManager = MovementManager(
         BoardState.custom(customPieces),
         [],
         _teams,
       ),
-      _currentTeamIndex = 0,
-      _gameState = GameState.inProgress,
+      _stateManager = GameStateManager(
+        _teams,
+        initialBoardState: BoardState.custom(customPieces),
+      ),
       _halfmoveClock = 0;
 
-  factory GameController.import(Map<String, Map<String, String>> data) {
-    final teams = <Team>[];
-    final customPieces = <Position, Piece>{};
-
-    if (data.containsKey('teams')) {
-      for (final MapEntry(value: name) in data['teams']!.entries) {
-        final team = Team(name);
-        teams.add(team);
-      }
-    }
-
-    if (data.containsKey('custom')) {
-      for (final entry in data['custom']!.entries) {
-        customPieces[Position.fromAlgebraic(entry.key)] = Piece.import(
-          entry.value,
-        );
-      }
-    }
-
-    final controller = GameController.custom(teams, customPieces);
-
-    if (data.containsKey('history')) {
-      for (final MapEntry(key: teamName, value: algebraic)
-          in data['history']!.entries) {
-        final currentTeam = Team(teamName);
-        final move = Move.fromAlgebraic(
-          algebraic,
-          currentTeam,
-          enpassant: ({required from, required to}) {
-            final position = Position(to.file, from.rank);
-            final piece = controller.state[position].piece;
-            if (piece is Pawn && piece.team != currentTeam) {
-              return piece;
-            }
-            return null;
-          },
-          pieceAt: (position) => controller.state[position].piece,
-          pieceOrigin: ({required piece, required to, required ambiguous}) {
-            final squares = controller.state.squares.where(
-              (sq) =>
-                  sq.piece == piece &&
-                  (ambiguous?.couldBe(sq.position) ?? true),
-            );
-            if (squares.length == 1) {
-              return squares.first.position;
-            }
-            if (squares.isEmpty) {
-              throw ArgumentError(
-                'No piece found matching $piece at '
-                '${ambiguous?.toAlgebraic() ?? 'anywhere'}',
-              );
-            }
-            throw ArgumentError(
-              'Ambiguous piece position for $piece at '
-              '${ambiguous?.toAlgebraic() ?? 'anywhere'}',
-            );
-          },
-        );
-        controller.move(move);
-      }
-    }
-
-    return controller;
+  /// Clean up resources
+  void dispose() {
+    _stateManager.dispose();
   }
-  final Map<Position, Piece>? _custom;
-  final ScoreManager _scoreManager;
-  final List<Team> _teams;
-  final MovementManager _movementManager;
 
-  late int _currentTeamIndex;
+  final List<Team> _teams;
+  final ScoreManager _scoreManager;
+  final MovementManager _movementManager;
+  final GameStateManager _stateManager;
 
   /// Number of half-moves since the last capture or pawn move.
   /// Used for the 50-move rule.
   int _halfmoveClock;
-  GameState _gameState;
 
   /// Calculate the halfmove clock based on the move history.
   static int _calculateHalfmoveClock(List<Move> moveHistory) {
@@ -164,9 +101,8 @@ class GameController {
       )
       .expand(_movementManager.possibleMoves)
       .toList();
-
   void move(Move move) {
-    if (_gameState != GameState.inProgress) {
+    if (_stateManager.gameState != GameState.inProgress) {
       throw StateError('Cannot move pieces when the game is not in progress');
     }
     if (move is CaptureMove) {
@@ -174,27 +110,31 @@ class GameController {
     }
     move = _movementManager.move(move);
     _updateHalfmoveClock(move);
+
+    // Update state manager with new board state
+    _stateManager.recordMove(move, _movementManager.state);
+
     _updateStateAfterMove(move);
   }
 
   void pause() {
-    if (_gameState case GameState.inProgress || GameState.paused) {
+    if (_stateManager.gameState case GameState.inProgress || GameState.paused) {
       throw StateError('Cannot pause when the game is not in progress');
     }
-    _gameState = GameState.paused;
+    _stateManager.pause();
   }
 
   void draw() {
-    if (_gameState == GameState.inProgress) {
-      _gameState = GameState.draw;
+    if (_stateManager.gameState == GameState.inProgress) {
+      _stateManager.declareDraw();
       return;
     }
     throw StateError('Cannot draw when the game is not in progress');
   }
 
   void resume() {
-    if (_gameState case GameState.paused || GameState.inProgress) {
-      _gameState = GameState.inProgress;
+    if (_stateManager.gameState case GameState.paused || GameState.inProgress) {
+      _stateManager.resume();
       return;
     }
     throw StateError('Cannot resume when the game is not paused');
@@ -212,28 +152,22 @@ class GameController {
 
   void _updateStateAfterMove(Move<Piece>? move) {
     if (move?.check == Check.checkmate) {
-      _gameState = GameState.teamWin;
+      _stateManager.updateGameState(GameState.teamWin);
       return;
     }
     if (_insufficientMaterial) {
-      _gameState = GameState.draw;
+      _stateManager.updateGameState(GameState.draw);
       return;
     }
     // Fifty-move rule: if no capture or pawn move in the last 50 moves
     if (_halfmoveClock >= (_teams.length * 50)) {
-      _gameState = GameState.draw;
+      _stateManager.updateGameState(GameState.draw);
       return;
     }
-    if (move != null) {
-      _nextTeam();
-    }
     if (_stalemate) {
-      _gameState = GameState.stalemate;
+      _stateManager.updateGameState(GameState.stalemate);
     }
   }
-
-  int _nextTeam() =>
-      _currentTeamIndex = (_currentTeamIndex + 1) % _teams.length;
 
   /// Get the score for a specific team
   int operator [](Team team) =>
@@ -242,32 +176,25 @@ class GameController {
   /// The current halfmove clock count - number of half-moves since last pawn
   /// move or capture
   int get halfmoveClock => _halfmoveClock;
-  List<Team> get teams => List.unmodifiable(_teams);
+
+  List<Team> get teams => _stateManager.teams;
+
   List<TeamScore> get scores => _scoreManager.scores;
-  List<Move> get history => _movementManager.moveHistory;
+
+  List<Move> get history => _stateManager.moveHistory;
+
   BoardState get state => _movementManager.state;
-  Team get currentTeam => _teams[_currentTeamIndex];
+
+  Team get currentTeam => _stateManager.currentTeam;
+
   List<Move> get nextPossibleMoves => movesFor(team: currentTeam);
-  GameState get gameState => _gameState;
+
+  GameState get gameState => _stateManager.gameState;
+
   bool get _stalemate => movesFor(team: currentTeam).isEmpty;
-
-  Team? get winner =>
-      _gameState == GameState.teamWin ? history.last.moving.team : null;
-
-  Map<String, Map<String, String>> get export => {
-    if (_custom case Map(:final entries) when entries.isNotEmpty)
-      'custom': {
-        for (final MapEntry(key: position, value: piece) in entries)
-          position.toAlgebraic(): piece.export,
-      },
-    if (nextPossibleMoves.isNotEmpty)
-      'history': {
-        for (final move in nextPossibleMoves)
-          move.team.name: move.toAlgebraic(),
-      },
-    if (teams.isNotEmpty)
-      'teams': {for (final team in teams) '${team.index}': team.name},
-  };
+  Team? get winner => _stateManager.gameState == GameState.teamWin
+      ? history.last.moving.team
+      : null;
 
   /// Checks if the current board position has insufficient material for
   /// checkmate

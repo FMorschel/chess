@@ -234,10 +234,8 @@ void main() {
             expect(modified.moving, equals(original.moving));
             expect(modified.captured, equals(original.captured));
             expect(modified.check, equals(Check.check));
-            expect(
-              modified.ambiguous,
-              isNull,
-            ); // King moves don't use ambiguous
+            // King moves don't use ambiguous
+            expect(modified.ambiguous, AmbiguousMovementType.none);
           },
         );
       });
@@ -337,14 +335,7 @@ void main() {
       });
 
       test('should handle all ambiguous movement types', () {
-        final ambiguousTypes = [
-          AmbiguousMovementType.file,
-          AmbiguousMovementType.rank,
-          AmbiguousMovementType.both,
-          null,
-        ];
-
-        for (final ambiguous in ambiguousTypes) {
+        for (final ambiguous in AmbiguousMovementType.values) {
           final original = QueenCaptureMove<Rook>(
             from: Position.d1,
             to: Position.d8,

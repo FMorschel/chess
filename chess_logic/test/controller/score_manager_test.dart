@@ -221,11 +221,10 @@ void main() {
 
         scoreManager.processCapture(captureMove);
 
-        final result = scoreManager.toString();
-        expect(result, contains('ScoreManager:'));
-        expect(result, contains('White'));
-        expect(result, contains('captures: 1'));
-        expect(result, contains('score: 1'));
+        final result = scoreManager.toString().split('\n');
+        expect(result[1], contains('White'));
+        expect(result[1], contains('captures: 1'));
+        expect(result[1], contains('score: 1'));
       });
     });
   });

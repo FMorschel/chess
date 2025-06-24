@@ -94,49 +94,6 @@ void main() {
       });
     });
 
-    group('constructor.import', () {
-      test(
-        'should create game controller from import data with teams only',
-        () {
-          final data = {
-            'teams': {'0': 'White', '1': 'Black'},
-          };
-
-          final controller = GameController.import(data);
-
-          expect(controller.teams, hasLength(2));
-          expect(
-            controller.teams.map((t) => t.name),
-            containsAll(['White', 'Black']),
-          );
-        },
-      );
-      test(
-        'should create game controller from import data with custom pieces',
-        () {
-          final data = {
-            'teams': {'0': 'White', '1': 'Black'},
-            'custom': {'e1': 'White - K', 'e8': 'Black - K'},
-          };
-
-          final controller = GameController.import(data);
-
-          expect(controller.teams, hasLength(2));
-          expect(controller.state[Position.e1].piece, isA<King>());
-          expect(controller.state[Position.e8].piece, isA<King>());
-        },
-      );
-      test('should handle empty import data', () {
-        final data = {
-          'teams': {'0': 'White', '1': 'Black'},
-        };
-
-        final controller = GameController.import(data);
-
-        expect(controller.teams, hasLength(2));
-      });
-    });
-
     group('team management', () {
       late GameController controller;
 
@@ -275,42 +232,6 @@ void main() {
       });
     });
 
-    group('export', () {
-      test('should export game state with custom pieces', () {
-        final controller = GameController.custom(teams, {
-          Position.e1: King.white,
-          Position.e8: King.black,
-        });
-
-        final exported = controller.export;
-
-        expect(exported, contains('custom'));
-        expect(exported, contains('teams'));
-        expect(exported['custom'], isNotEmpty);
-        expect(exported['teams'], isNotEmpty);
-      });
-      test('should export game state with move history', () {
-        final testController = GameController.custom(teams, {
-          Position.e1: King.white,
-          Position.e8: King.black,
-          Position.d2: Pawn.white,
-        });
-
-        final exported = testController.export;
-
-        expect(exported, contains('teams'));
-        if (testController.nextPossibleMoves.isNotEmpty) {
-          expect(exported, contains('history'));
-        }
-      });
-
-      test('should export minimal data when no custom pieces or history', () {
-        final exported = GameController.clear(teams).export;
-
-        expect(exported, contains('teams'));
-        expect(exported.containsKey('custom'), isFalse);
-      });
-    });
     group('state', () {
       late GameController controller;
 

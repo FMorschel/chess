@@ -147,7 +147,7 @@ void main() {
     });
 
     group('detectAmbiguousMove', () {
-      test('should return null when move is not ambiguous', () {
+      test('should return none when move is not ambiguous', () {
         // Setup: Only one piece can make the move
         boardState = BoardState.custom({
           Position.e1: King.white,
@@ -166,7 +166,7 @@ void main() {
         final result = moveValidator.detectAmbiguousMove(move);
 
         // Assert
-        expect(result, isNull);
+        expect(result, AmbiguousMovementType.none);
       });
 
       test('should detect file ambiguity', () {

@@ -302,6 +302,7 @@ sealed class CaptureMove<P extends Piece, C extends Piece> extends Move<P> {
          'Captured piece must be from a different team',
        ),
        super.base();
+
   factory CaptureMove.create({
     required P moving,
     required C captured,

@@ -6,8 +6,22 @@
 
 Split responsibilities into separate classes:
 
-- `GameStateManager` (handles game state transitions)
-- `GameRuleEngine` (handles special rules like 50-move rule)
+#### `GameRuleEngine`
+
+Handles special chess rules and game termination conditions:
+
+- **Draw Conditions**:
+  - 50-move rule (no pawn move or capture in 50 moves)
+  - Insufficient material (K vs K, K+B vs K, etc.)
+  - Stalemate detection
+- **Game Termination**:
+  - Checkmate detection and validation
+  - Resignation and timeout handling
+  - Draw by agreement
+- **Special Move Rules**:
+  - En passant legality and expiration
+  - Castling rights management
+  - Pawn promotion validation
 
 ### 2. **Thread Safety Issues:**
 

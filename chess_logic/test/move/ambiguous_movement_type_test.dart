@@ -3,19 +3,23 @@ import 'package:test/test.dart';
 
 void main() {
   group('AmbiguousMovementType', () {
+    test('none', () {
+      expect(AmbiguousMovementType.none.name, 'none');
+      expect(AmbiguousMovementType.none.index, 0);
+    });
     test('file', () {
       expect(AmbiguousMovementType.file.name, 'file');
-      expect(AmbiguousMovementType.file.index, 0);
+      expect(AmbiguousMovementType.file.index, 1);
     });
 
     test('rank', () {
       expect(AmbiguousMovementType.rank.name, 'rank');
-      expect(AmbiguousMovementType.rank.index, 1);
+      expect(AmbiguousMovementType.rank.index, 2);
     });
 
     test('both', () {
       expect(AmbiguousMovementType.both.name, 'both');
-      expect(AmbiguousMovementType.both.index, 2);
+      expect(AmbiguousMovementType.both.index, 3);
     });
     test('values', () {
       expect(
@@ -24,6 +28,7 @@ void main() {
           AmbiguousMovementType.file,
           AmbiguousMovementType.rank,
           AmbiguousMovementType.both,
+          AmbiguousMovementType.none,
         ]),
       );
     });
