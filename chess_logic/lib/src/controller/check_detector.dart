@@ -15,11 +15,26 @@ import 'threat_detector.dart';
 /// This is typically used inside a [MovementManager] to evaluate moves
 /// and determine if they would result in check or checkmate for any team.
 class CheckDetector {
-  CheckDetector(BoardState state) : threatDetector = ThreatDetector(state);
+  CheckDetector(
+    BoardState state, {
+    required List<Move<Piece>> Function(
+      OccupiedSquare<Piece>, {
+      Move<Piece>? untracked,
+    })
+    moveGenerator,
+  }) : _moveGenerator = moveGenerator,
+       threatDetector = ThreatDetector(state);
 
   final ThreatDetector threatDetector;
 
-  late MovementManager _movementManager;
+  /// Function that generates possible moves for a given piece.
+  /// This allows the CheckDetector to evaluate moves without directly
+  /// depending on MovementManager.
+  final List<Move<Piece>> Function(
+    OccupiedSquare square, {
+    Move<Piece>? untracked,
+  })
+  _moveGenerator;
 
   /// Evaluates if a move would create check or checkmate for any team.
   ///
@@ -124,7 +139,7 @@ class CheckDetector {
     }
 
     // Get all possible king moves using the movement manager
-    final possibleMoves = _movementManager.possibleMoves(kingSquare);
+    final possibleMoves = _moveGenerator(kingSquare);
 
     for (final testMove in possibleMoves) {
       // Apply the move temporarily
@@ -215,10 +230,7 @@ class CheckDetector {
     Move move,
   ) {
     // Get all possible moves for the defending piece
-    final possibleMoves = _movementManager.possibleMoves(
-      defenderSquare,
-      untracked: move,
-    );
+    final possibleMoves = _moveGenerator(defenderSquare, untracked: move);
 
     // Check if any of these moves captures the threatening piece
     for (final move in possibleMoves) {
@@ -260,7 +272,7 @@ class CheckDetector {
     );
 
     // Get all possible moves for the defending piece
-    final possibleMoves = _movementManager.possibleMoves(defenderSquare);
+    final possibleMoves = _moveGenerator(defenderSquare);
 
     // Check if any move can block the attack
     for (final move in possibleMoves) {
@@ -311,19 +323,4 @@ class CheckDetector {
   }
 
   BoardState get state => threatDetector.state;
-
-  /// The movement manager used to evaluate possible moves.
-  ///
-  /// Must operate on the same [BoardState] as [state].
-  ///
-  /// This is intended to be set after the [CheckDetector] is created,
-  /// typically by the [MovementManager] itself.
-  set movementManager(MovementManager manager) {
-    if (manager.state != state) {
-      throw ArgumentError(
-        'MovementManager must operate on the same BoardState as ThreatDetector',
-      );
-    }
-    _movementManager = manager;
-  }
 }

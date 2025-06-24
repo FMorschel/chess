@@ -391,7 +391,7 @@ void main() {
           moving: Bishop.white,
           captured: Queen.black,
           check: Check.none,
-          ambiguous: null,
+          ambiguous: AmbiguousMovementType.none,
         );
 
         final modified = original.copyWith(

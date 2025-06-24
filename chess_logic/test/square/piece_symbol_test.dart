@@ -45,12 +45,12 @@ void main() {
     group('promotionSymbols', () {
       test('should return only pieces that can be promoted to', () {
         final promotionSymbols = PieceSymbol.promotionSymbols;
-        
+
         expect(promotionSymbols, contains(PieceSymbol.queen));
         expect(promotionSymbols, contains(PieceSymbol.rook));
         expect(promotionSymbols, contains(PieceSymbol.bishop));
         expect(promotionSymbols, contains(PieceSymbol.knight));
-        
+
         expect(promotionSymbols, isNot(contains(PieceSymbol.king)));
         expect(promotionSymbols, isNot(contains(PieceSymbol.pawn)));
       });

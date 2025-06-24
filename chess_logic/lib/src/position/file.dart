@@ -52,7 +52,7 @@ enum File implements Comparable<File> {
         ? other.index - index
         : index - other.index;
   }
-  
+
   @override
   int compareTo(File other) => index.compareTo(other.index);
 }

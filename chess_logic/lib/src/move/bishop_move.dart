@@ -13,14 +13,13 @@ final class BishopMove extends Move<Bishop> {
          '(${from.toAlgebraic()} -> ${to.toAlgebraic()})',
        ),
        super.base();
-
   static BishopCaptureMove<P> capture<P extends Piece>({
     required Bishop moving,
     required Position from,
     required Position to,
     required P captured,
     Check check = Check.none,
-    AmbiguousMovementType? ambiguous,
+    AmbiguousMovementType ambiguous = AmbiguousMovementType.none,
   }) {
     return BishopCaptureMove<P>(
       moving: moving,

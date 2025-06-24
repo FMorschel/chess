@@ -1,1 +1,1 @@
-enum AmbiguousMovementType { file, rank, both }
+enum AmbiguousMovementType { none, file, rank, both }

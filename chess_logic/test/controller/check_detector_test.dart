@@ -313,7 +313,11 @@ void main() {
       test('should handle empty board gracefully', () {
         // Setup: Completely empty board
         boardState = BoardState.empty();
-        checkDetector = CheckDetector(boardState);
+        checkDetector = MovementManager(
+          boardState,
+          const [],
+          Team.values,
+        ).checkDetector;
 
         // This shouldn't happen in a real game, but test robustness
         final move = PawnInitialMove(

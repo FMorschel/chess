@@ -15,14 +15,13 @@ final class QueenMove extends Move<Queen> {
          '(${from.toAlgebraic()} -> ${to.toAlgebraic()})',
        ),
        super.base();
-
   static QueenCaptureMove<P> capture<P extends Piece>({
     required Queen moving,
     required Position from,
     required Position to,
     required P captured,
     Check check = Check.none,
-    AmbiguousMovementType? ambiguous,
+    AmbiguousMovementType ambiguous = AmbiguousMovementType.none,
   }) {
     return QueenCaptureMove<P>(
       moving: moving,

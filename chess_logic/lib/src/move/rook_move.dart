@@ -14,14 +14,13 @@ final class RookMove extends Move<Rook> {
          '(${from.toAlgebraic()} -> ${to.toAlgebraic()})',
        ),
        super.base();
-
   static RookCaptureMove<P> capture<P extends Piece>({
     required Rook moving,
     required Position from,
     required Position to,
     required P captured,
     Check check = Check.none,
-    AmbiguousMovementType? ambiguous,
+    AmbiguousMovementType ambiguous = AmbiguousMovementType.none,
   }) {
     return RookCaptureMove<P>(
       moving: moving,

@@ -140,7 +140,7 @@ void main() {
         const emptySquare = EmptySquare(Position.e4);
         final manager = MovementManager(boardState, [], teams);
 
-        final moves = manager.possibleMoves(emptySquare);
+        final moves = manager.possibleMovesNoValidation(emptySquare);
         expect(moves, isEmpty);
       });
 
@@ -150,7 +150,7 @@ void main() {
         const square = OccupiedSquare(pawnPosition, pawn);
         final manager = MovementManager(boardState, [], teams);
 
-        final moves = manager.possibleMoves(square);
+        final moves = manager.possibleMovesNoValidation(square);
         expect(moves, isNotEmpty);
         expect(moves.every((move) => move.moving is Pawn), isTrue);
         expect(moves.any((move) => move is PawnMove), isTrue);
@@ -168,7 +168,7 @@ void main() {
         final kingSquare = customBoard[Position.e1];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMoves(kingSquare);
+        final moves = manager.possibleMovesNoValidation(kingSquare);
         expect(moves, isNotEmpty);
         expect(moves.any((move) => move is KingsideCastling), isTrue);
         expect(moves.any((move) => move is QueensideCastling), isTrue);
@@ -191,7 +191,7 @@ void main() {
         final kingSquare = customBoard[Position.e1];
         final manager = MovementManager(customBoard, [kingMove], teams);
 
-        final moves = manager.possibleMoves(kingSquare);
+        final moves = manager.possibleMovesNoValidation(kingSquare);
         expect(moves.any((move) => move is KingsideCastling), isFalse);
         expect(moves.any((move) => move is QueensideCastling), isFalse);
       });
@@ -205,7 +205,7 @@ void main() {
         final queenSquare = customBoard[Position.e4];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMoves(queenSquare);
+        final moves = manager.possibleMovesNoValidation(queenSquare);
         final captureMoves = moves.whereType<CaptureMove>();
         expect(captureMoves, isNotEmpty);
         expect(captureMoves.any((move) => move.to == Position.e7), isTrue);
@@ -226,7 +226,7 @@ void main() {
         final pawnSquare = customBoard[Position.e5];
         final manager = MovementManager(customBoard, [lastMove], teams);
 
-        final moves = manager.possibleMoves(pawnSquare);
+        final moves = manager.possibleMovesNoValidation(pawnSquare);
 
         // For debugging, let's just check if we have any moves at all
         expect(
@@ -242,7 +242,7 @@ void main() {
         final knightSquare = customBoard[Position.d4];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMoves(knightSquare);
+        final moves = manager.possibleMovesNoValidation(knightSquare);
         expect(moves, isNotEmpty);
         expect(moves.every((move) => move.moving is Knight), isTrue);
         expect(moves.any((move) => move is KnightMove), isTrue);
@@ -254,7 +254,7 @@ void main() {
         const emptySquare = EmptySquare(Position.e4);
         final manager = MovementManager(boardState, [], teams);
 
-        final moves = manager.possibleMovesWithCheckAndAmbiguous(emptySquare);
+        final moves = manager.possibleMoves(emptySquare);
         expect(moves, isEmpty);
       });
 
@@ -269,10 +269,8 @@ void main() {
         final knightSquare = customBoard[Position.e2];
         final manager = MovementManager(customBoard, [], teams);
 
-        final allMoves = manager.possibleMoves(knightSquare);
-        final safeMoves = manager.possibleMovesWithCheckAndAmbiguous(
-          knightSquare,
-        );
+        final allMoves = manager.possibleMovesNoValidation(knightSquare);
+        final safeMoves = manager.possibleMoves(knightSquare);
 
         // The knight is pinned and cannot move without exposing the king
         expect(allMoves.isNotEmpty, isTrue);
@@ -290,14 +288,14 @@ void main() {
         final manager = MovementManager(customBoard, [], teams);
 
         // First check if possibleMoves works
-        final allMoves = manager.possibleMoves(queenSquare);
+        final allMoves = manager.possibleMovesNoValidation(queenSquare);
         expect(
           allMoves,
           isNotEmpty,
           reason: 'Queen should have basic moves available',
         );
 
-        final moves = manager.possibleMovesWithCheckAndAmbiguous(queenSquare);
+        final moves = manager.possibleMoves(queenSquare);
 
         // Queen should have at least some moves
         expect(
@@ -316,16 +314,14 @@ void main() {
         final knightSquare = customBoard[Position.d4];
         final manager = MovementManager(customBoard, [], teams);
 
-        final allMoves = manager.possibleMoves(knightSquare);
+        final allMoves = manager.possibleMovesNoValidation(knightSquare);
         expect(
           allMoves,
           isNotEmpty,
           reason: 'Knight should have basic moves available',
         );
 
-        final safeMoves = manager.possibleMovesWithCheckAndAmbiguous(
-          knightSquare,
-        );
+        final safeMoves = manager.possibleMoves(knightSquare);
 
         // Knight should have moves available
         expect(
@@ -344,12 +340,13 @@ void main() {
             Position.h1: Rook.white,
             Position.e8: King.black,
           });
-
           final rookSquare = customBoard[Position.a1];
           final manager = MovementManager(customBoard, [], teams);
 
-          final moves = manager.possibleMovesWithCheckAndAmbiguous(rookSquare);
-          final ambiguousMoves = moves.where((m) => m.ambiguous != null);
+          final moves = manager.possibleMoves(rookSquare);
+          final ambiguousMoves = moves.where(
+            (m) => m.ambiguous != AmbiguousMovementType.none,
+          );
 
           expect(ambiguousMoves, isNotEmpty);
           expect(
@@ -369,9 +366,10 @@ void main() {
 
           final rookSquare = customBoard[Position.a1];
           final manager = MovementManager(customBoard, [], teams);
-
-          final moves = manager.possibleMovesWithCheckAndAmbiguous(rookSquare);
-          final ambiguousMoves = moves.where((m) => m.ambiguous != null);
+          final moves = manager.possibleMoves(rookSquare);
+          final ambiguousMoves = moves.where(
+            (m) => m.ambiguous != AmbiguousMovementType.none,
+          );
 
           expect(ambiguousMoves, isNotEmpty);
           expect(
@@ -393,7 +391,7 @@ void main() {
           final rookSquare = customBoard[Position.a1];
           final manager = MovementManager(customBoard, [], teams);
 
-          final moves = manager.possibleMovesWithCheckAndAmbiguous(rookSquare);
+          final moves = manager.possibleMoves(rookSquare);
           final ambiguousMoves = moves.where(
             (m) => m.ambiguous != AmbiguousMovementType.both,
           );
@@ -415,11 +413,10 @@ void main() {
 
             final rookSquare = customBoard[Position.a1];
             final manager = MovementManager(customBoard, [], teams);
-
-            final moves = manager.possibleMovesWithCheckAndAmbiguous(
-              rookSquare,
+            final moves = manager.possibleMoves(rookSquare);
+            final nonAmbiguousMoves = moves.where(
+              (m) => m.ambiguous == AmbiguousMovementType.none,
             );
-            final nonAmbiguousMoves = moves.where((m) => m.ambiguous == null);
 
             expect(nonAmbiguousMoves, equals(moves));
           },
@@ -436,11 +433,10 @@ void main() {
 
           final knightSquare = customBoard[Position.c3];
           final manager = MovementManager(customBoard, [], teams);
-
-          final moves = manager.possibleMovesWithCheckAndAmbiguous(
-            knightSquare,
+          final moves = manager.possibleMoves(knightSquare);
+          final ambiguousMoves = moves.where(
+            (m) => m.ambiguous != AmbiguousMovementType.none,
           );
-          final ambiguousMoves = moves.where((m) => m.ambiguous != null);
 
           // Knights should have some ambiguous moves to shared destinations
           expect(ambiguousMoves, isNotEmpty);
@@ -461,9 +457,10 @@ void main() {
 
           final queenSquare = customBoard[Position.d1];
           final manager = MovementManager(customBoard, [], teams);
-
-          final moves = manager.possibleMovesWithCheckAndAmbiguous(queenSquare);
-          final ambiguousMoves = moves.where((m) => m.ambiguous != null);
+          final moves = manager.possibleMoves(queenSquare);
+          final ambiguousMoves = moves.where(
+            (m) => m.ambiguous != AmbiguousMovementType.none,
+          );
 
           expect(ambiguousMoves, isNotEmpty);
           expect(
@@ -483,9 +480,10 @@ void main() {
 
           final rookSquare = customBoard[Position.a1];
           final manager = MovementManager(customBoard, [], teams);
-
-          final moves = manager.possibleMovesWithCheckAndAmbiguous(rookSquare);
-          final nonAmbiguousMoves = moves.where((m) => m.ambiguous == null);
+          final moves = manager.possibleMoves(rookSquare);
+          final nonAmbiguousMoves = moves.where(
+            (m) => m.ambiguous == AmbiguousMovementType.none,
+          );
 
           // Should not be ambiguous since black rook is different team
           expect(nonAmbiguousMoves, equals(moves));
@@ -502,9 +500,10 @@ void main() {
 
           final rookSquare = customBoard[Position.a1];
           final manager = MovementManager(customBoard, [], teams);
-
-          final moves = manager.possibleMovesWithCheckAndAmbiguous(rookSquare);
-          final nonAmbiguousMoves = moves.where((m) => m.ambiguous == null);
+          final moves = manager.possibleMoves(rookSquare);
+          final nonAmbiguousMoves = moves.where(
+            (m) => m.ambiguous == AmbiguousMovementType.none,
+          );
 
           // Should not be ambiguous since queen is different piece type
           expect(nonAmbiguousMoves, equals(moves));
@@ -521,11 +520,10 @@ void main() {
 
           final bishopSquare = customBoard[Position.c1];
           final manager = MovementManager(customBoard, [], teams);
-
-          final moves = manager.possibleMovesWithCheckAndAmbiguous(
-            bishopSquare,
+          final moves = manager.possibleMoves(bishopSquare);
+          final ambiguousMoves = moves.where(
+            (m) => m.ambiguous != AmbiguousMovementType.none,
           );
-          final ambiguousMoves = moves.where((m) => m.ambiguous != null);
 
           expect(ambiguousMoves, isNotEmpty);
           expect(
@@ -546,16 +544,14 @@ void main() {
 
           final queenSquare = customBoard[Position.a1];
           final manager = MovementManager(customBoard, [], teams);
-
-          final moves = manager.possibleMovesWithCheckAndAmbiguous(queenSquare);
-          final ambiguousMoves = moves.where((m) => m.ambiguous != null);
+          final moves = manager.possibleMoves(queenSquare);
+          final ambiguousMoves = moves.where(
+            (m) => m.ambiguous != AmbiguousMovementType.none,
+          );
 
           // Should detect various types of ambiguity
           expect(ambiguousMoves, isNotEmpty);
-          final ambiguityTypes = ambiguousMoves
-              .map((m) => m.ambiguous)
-              .where((a) => a != null)
-              .toSet();
+          final ambiguityTypes = ambiguousMoves.map((m) => m.ambiguous).toSet();
           expect(ambiguityTypes.length, equals(3));
         });
       });
@@ -573,7 +569,7 @@ void main() {
         final kingSquare = customBoard[Position.e1];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMoves(kingSquare);
+        final moves = manager.possibleMovesNoValidation(kingSquare);
         final castlingMoves = moves.where(
           (move) => move is KingsideCastling || move is QueensideCastling,
         );
@@ -592,7 +588,7 @@ void main() {
         final kingSquare = customBoard[Position.e1];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMovesWithCheckAndAmbiguous(kingSquare);
+        final moves = manager.possibleMoves(kingSquare);
         final castlingMoves = moves.where(
           (move) => move is KingsideCastling || move is QueensideCastling,
         );
@@ -617,7 +613,7 @@ void main() {
           final kingSquare = customBoard[Position.e1];
           final manager = MovementManager(customBoard, [], teams);
 
-          final moves = manager.possibleMovesWithCheckAndAmbiguous(kingSquare);
+          final moves = manager.possibleMoves(kingSquare);
           final kingsideCastling = moves.whereType<KingsideCastling>();
           final queensideCastling = moves.whereType<QueensideCastling>();
 
@@ -649,7 +645,7 @@ void main() {
           final kingSquare = customBoard[Position.e1];
           final manager = MovementManager(customBoard, [], teams);
 
-          final moves = manager.possibleMovesWithCheckAndAmbiguous(kingSquare);
+          final moves = manager.possibleMoves(kingSquare);
           final kingsideCastling = moves.whereType<KingsideCastling>();
           final queensideCastling = moves.whereType<QueensideCastling>();
 
@@ -682,7 +678,7 @@ void main() {
           final kingSquare = customBoard[Position.e1];
           final manager = MovementManager(customBoard, [], teams);
 
-          final moves = manager.possibleMovesWithCheckAndAmbiguous(kingSquare);
+          final moves = manager.possibleMoves(kingSquare);
           final kingsideCastling = moves.whereType<KingsideCastling>();
           final queensideCastling = moves.whereType<QueensideCastling>();
 
@@ -710,7 +706,7 @@ void main() {
         final kingSquare = customBoard[Position.e8];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMovesWithCheckAndAmbiguous(kingSquare);
+        final moves = manager.possibleMoves(kingSquare);
         final castlingMoves = moves.where(
           (move) => move is KingsideCastling || move is QueensideCastling,
         );
@@ -734,7 +730,7 @@ void main() {
         final kingSquare = customBoard[Position.e1];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMoves(kingSquare);
+        final moves = manager.possibleMovesNoValidation(kingSquare);
 
         // Since we're using possibleMoves instead of
         // possibleMovesWithCheckAndAmbiguous, castling moves might still be
@@ -760,7 +756,7 @@ void main() {
         final manager = MovementManager(customBoard, [lastMove], teams);
 
         final moves = manager
-            .possibleMoves(pawnSquare)
+            .possibleMovesNoValidation(pawnSquare)
             .whereType<EnPassantMove>();
 
         // En passant should be available, but let's just check moves are
@@ -784,7 +780,7 @@ void main() {
           final pawnSquare = customBoard[Position.e5];
           final manager = MovementManager(customBoard, [lastMove], teams);
 
-          final moves = manager.possibleMoves(pawnSquare);
+          final moves = manager.possibleMovesNoValidation(pawnSquare);
           final enPassantMoves = moves.whereType<EnPassantMove>();
 
           expect(enPassantMoves, isEmpty);
@@ -822,7 +818,7 @@ void main() {
         final manager = MovementManager(customBoard, [lastMove], teams);
 
         // Get all possible moves for the white pawn with check consideration
-        final moves = manager.possibleMovesWithCheckAndAmbiguous(pawnSquare);
+        final moves = manager.possibleMoves(pawnSquare);
 
         // Assert: Only the en passant move should be available to escape check
         expect(moves, hasLength(1));
@@ -845,7 +841,7 @@ void main() {
         final kingSquare = customBoard[Position.e1];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMoves(kingSquare);
+        final moves = manager.possibleMovesNoValidation(kingSquare);
         // King should have some moves available (at least a few squares around
         // it)
         expect(moves, isNotEmpty, reason: 'King should have moves available');
@@ -863,7 +859,7 @@ void main() {
         final pawnSquare = customBoard[Position.e4];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMovesWithCheckAndAmbiguous(pawnSquare);
+        final moves = manager.possibleMoves(pawnSquare);
         expect(moves, isEmpty);
       });
     });
@@ -885,7 +881,7 @@ void main() {
         final pawnSquare = customBoard[Position.e5];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMoves(
+        final moves = manager.possibleMovesNoValidation(
           pawnSquare,
           untracked: untrackedMove,
         );
@@ -928,13 +924,15 @@ void main() {
           final manager = MovementManager(customBoard, [historyMove], teams);
 
           // Without untracked - should not have en passant
-          final movesWithoutUntracked = manager.possibleMoves(pawnSquare);
+          final movesWithoutUntracked = manager.possibleMovesNoValidation(
+            pawnSquare,
+          );
           final enPassantWithoutUntracked = movesWithoutUntracked
               .whereType<EnPassantMove>();
           expect(enPassantWithoutUntracked, isEmpty);
 
           // With untracked - should have en passant for f5 pawn
-          final movesWithUntracked = manager.possibleMoves(
+          final movesWithUntracked = manager.possibleMovesNoValidation(
             pawnSquare,
             untracked: untrackedMove,
           );
@@ -963,7 +961,7 @@ void main() {
           final pawnSquare = customBoard[Position.e5];
           final manager = MovementManager(customBoard, [], teams);
 
-          final moves = manager.possibleMoves(
+          final moves = manager.possibleMovesNoValidation(
             pawnSquare,
             untracked: untrackedMove,
           );
@@ -995,7 +993,7 @@ void main() {
           final manager = MovementManager(customBoard, [historyMove], teams);
 
           // Call without untracked parameter
-          final moves = manager.possibleMoves(pawnSquare);
+          final moves = manager.possibleMovesNoValidation(pawnSquare);
           final enPassantMoves = moves.whereType<EnPassantMove>();
 
           expect(
@@ -1021,7 +1019,7 @@ void main() {
         final knightSquare = customBoard[Position.e4];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMoves(
+        final moves = manager.possibleMovesNoValidation(
           knightSquare,
           untracked: untrackedMove,
         );
@@ -1049,7 +1047,7 @@ void main() {
         final pawnSquare = customBoard[Position.c5];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMoves(
+        final moves = manager.possibleMovesNoValidation(
           pawnSquare,
           untracked: untrackedMove,
         );
@@ -1065,7 +1063,10 @@ void main() {
         final pawnSquare = customBoard[Position.e2];
         final manager = MovementManager(customBoard, [], teams);
 
-        final moves = manager.possibleMoves(pawnSquare, untracked: null);
+        final moves = manager.possibleMovesNoValidation(
+          pawnSquare,
+          untracked: null,
+        );
 
         expect(moves, isNotEmpty);
         expect(moves.every((move) => move.moving is Pawn), isTrue);
@@ -1088,7 +1089,7 @@ void main() {
           final pawnSquare = customBoard[Position.d4];
           final manager = MovementManager(customBoard, [], teams);
 
-          final moves = manager.possibleMoves(
+          final moves = manager.possibleMovesNoValidation(
             pawnSquare,
             untracked: untrackedMove,
           );
@@ -1115,8 +1116,10 @@ void main() {
         final kingSquare = customBoard[Position.e1];
         final manager = MovementManager(customBoard, [], teams);
 
-        final movesWithoutUntracked = manager.possibleMoves(kingSquare);
-        final movesWithUntracked = manager.possibleMoves(
+        final movesWithoutUntracked = manager.possibleMovesNoValidation(
+          kingSquare,
+        );
+        final movesWithUntracked = manager.possibleMovesNoValidation(
           kingSquare,
           untracked: untrackedMove,
         );

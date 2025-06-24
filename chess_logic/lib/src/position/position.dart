@@ -41,9 +41,8 @@ final class AmbiguousPosition with EquatableMixin {
 
   @override
   List<Object?> get props => [file, rank];
-
-  AmbiguousMovementType? get ambiguousMovementType => switch ((file, rank)) {
-    (null, null) => null,
+  AmbiguousMovementType get ambiguousMovementType => switch ((file, rank)) {
+    (null, null) => AmbiguousMovementType.none,
     (File(), null) => AmbiguousMovementType.file,
     (null, Rank()) => AmbiguousMovementType.rank,
     (File(), Rank()) => AmbiguousMovementType.both,

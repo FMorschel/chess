@@ -27,7 +27,7 @@ sealed class Move<P extends Piece> extends Equatable
     required Position from,
     required Position to,
     Check check = Check.none,
-    AmbiguousMovementType? ambiguous,
+    AmbiguousMovementType ambiguous = AmbiguousMovementType.none,
   }) {
     return switch (moving) {
           King() => KingMove(from: from, to: to, moving: moving, check: check),
@@ -70,13 +70,12 @@ sealed class Move<P extends Piece> extends Equatable
         }
         as Move<P>;
   }
-
   const Move.base({
     required this.from,
     required this.to,
     required this.moving,
     this.check = Check.none,
-    this.ambiguous,
+    this.ambiguous = AmbiguousMovementType.none,
   }) : assert(
          from != to,
          'Move must be from a different square (from: $from, to: $to)',
@@ -88,12 +87,11 @@ sealed class Move<P extends Piece> extends Equatable
   );
 
   static final _visitor = AlgebraicNotationFormatter();
-
   final Position from;
   final Position to;
   final P moving;
   final Check check;
-  final AmbiguousMovementType? ambiguous;
+  final AmbiguousMovementType ambiguous;
 
   static Move<P> fromAlgebraic<P extends Piece, C extends Piece>(
     String algebraic,
@@ -228,23 +226,25 @@ sealed class Move<P extends Piece> extends Equatable
           check: check,
         );
       }
-
       return CaptureMove.create(
         moving: movingPiece as P,
         captured: captured,
         from: from,
         to: to,
         check: check,
-        ambiguous: ambiguousPosition?.ambiguousMovementType,
+        ambiguous:
+            ambiguousPosition?.ambiguousMovementType ??
+            AmbiguousMovementType.none,
       );
     }
-
     return Move.create(
       moving: movingPiece as P,
       from: from,
       to: to,
       check: check,
-      ambiguous: ambiguousPosition?.ambiguousMovementType,
+      ambiguous:
+          ambiguousPosition?.ambiguousMovementType ??
+          AmbiguousMovementType.none,
     );
   }
 
@@ -254,7 +254,7 @@ sealed class Move<P extends Piece> extends Equatable
     required Position to,
     required C captured,
     Check check = Check.none,
-    AmbiguousMovementType? ambiguous,
+    AmbiguousMovementType ambiguous = AmbiguousMovementType.none,
   }) => CaptureMove<P, C>.create(
     moving: moving,
     from: from,
@@ -296,20 +296,19 @@ sealed class CaptureMove<P extends Piece, C extends Piece> extends Move<P> {
     required super.to,
     required super.moving,
     super.check,
-    super.ambiguous,
+    super.ambiguous = AmbiguousMovementType.none,
   }) : assert(
          captured.team != moving.team,
          'Captured piece must be from a different team',
        ),
        super.base();
-
   factory CaptureMove.create({
     required P moving,
     required C captured,
     required Position from,
     required Position to,
     Check check = Check.none,
-    AmbiguousMovementType? ambiguous,
+    AmbiguousMovementType ambiguous = AmbiguousMovementType.none,
   }) {
     return switch (moving) {
           King() => KingCaptureMove<C>(
@@ -381,5 +380,5 @@ sealed class CaptureMove<P extends Piece, C extends Piece> extends Move<P> {
   CaptureMove<P, C> copyWith({Check? check, AmbiguousMovementType? ambiguous});
 
   @override
-  List<Object?> get props => [...super.props, captured];
+  List<Object?> get props => [...super.props, captured, capturedPosition];
 }

@@ -212,10 +212,7 @@ void main() {
         final result = boardPrinter.getBoardString(boardState);
 
         // Check that file headers appear correctly
-        expect(
-          result,
-          contains('   a b c d e f g h'),
-        );
+        expect(result, contains('   a b c d e f g h'));
         // For compact board, check that positions correspond to correct
         // files
         final customBoard = BoardState.custom({

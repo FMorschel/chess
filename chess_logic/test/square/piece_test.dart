@@ -559,7 +559,7 @@ void main() {
 
         final hashCodes = pieces.map((p) => p.hashCode).toSet();
 
-        // While not guaranteed, different pieces should generally have 
+        // While not guaranteed, different pieces should generally have
         //different hash codes
         expect(hashCodes.length, greaterThan(1));
       });
@@ -1271,41 +1271,38 @@ void main() {
         },
       );
 
-      test(
-        'should enable en passant capture for black pawn when last move was '
-        'white PawnInitialMove',
-        () {
-          // Setup: Black pawn at d4, white pawn just moved from e2 to e4
-          // (PawnInitialMove)
-          const whitePawn = Pawn.white;
-          const blackPawn = Pawn.black;
+      test('should enable en passant capture for black pawn when last move was '
+          'white PawnInitialMove', () {
+        // Setup: Black pawn at d4, white pawn just moved from e2 to e4
+        // (PawnInitialMove)
+        const whitePawn = Pawn.white;
+        const blackPawn = Pawn.black;
 
-          const d4 = Position.d4;
-          const e4 = Position.e4;
-          const e2 = Position.e2;
-          const e3 = Position.e3;
+        const d4 = Position.d4;
+        const e4 = Position.e4;
+        const e2 = Position.e2;
+        const e3 = Position.e3;
 
-          // Place pawns on board
-          boardState.replace(d4 < blackPawn);
-          boardState.replace(e4 < whitePawn);
+        // Place pawns on board
+        boardState.replace(d4 < blackPawn);
+        boardState.replace(e4 < whitePawn);
 
-          // Create the last move - white pawn initial move from e2 to e4
-          final lastMove = PawnInitialMove(from: e2, to: e4, moving: whitePawn);
+        // Create the last move - white pawn initial move from e2 to e4
+        final lastMove = PawnInitialMove(from: e2, to: e4, moving: whitePawn);
 
-          final validPositions = blackPawn.validPositions(
-            boardState,
-            d4,
-            lastMove: lastMove,
-          );
+        final validPositions = blackPawn.validPositions(
+          boardState,
+          d4,
+          lastMove: lastMove,
+        );
 
-          // Should include en passant capture to e3
-          expect(validPositions, contains(e3));
-          expect(
-            validPositions.length,
-            greaterThan(1),
-          ); // Should have forward move + en passant
-        },
-      );
+        // Should include en passant capture to e3
+        expect(validPositions, contains(e3));
+        expect(
+          validPositions.length,
+          greaterThan(1),
+        ); // Should have forward move + en passant
+      });
 
       test(
         'should not enable en passant when last move was not PawnInitialMove',
@@ -1341,44 +1338,41 @@ void main() {
         },
       );
 
-      test(
-        'should not enable en passant when PawnInitialMove destination is '
-        'wrong file',
-        () {
-          // Setup: White pawn at e5, black pawn moved from f7 to f5 (wrong file
-          //for en passant)
-          const whitePawn = Pawn.white;
-          const blackPawn = Pawn.black;
+      test('should not enable en passant when PawnInitialMove destination is '
+          'wrong file', () {
+        // Setup: White pawn at e5, black pawn moved from f7 to f5 (wrong file
+        //for en passant)
+        const whitePawn = Pawn.white;
+        const blackPawn = Pawn.black;
 
-          const e5 = Position.e5;
-          const g5 = Position.g5;
-          const g7 = Position.g7;
-          const f6 = Position.f6;
-          const e6 = Position.e6;
-          const d6 = Position.d6;
+        const e5 = Position.e5;
+        const g5 = Position.g5;
+        const g7 = Position.g7;
+        const f6 = Position.f6;
+        const e6 = Position.e6;
+        const d6 = Position.d6;
 
-          // Place pawns on board
-          boardState.replace(e5 < whitePawn);
-          boardState.replace(g5 < blackPawn);
+        // Place pawns on board
+        boardState.replace(e5 < whitePawn);
+        boardState.replace(g5 < blackPawn);
 
-          // Create PawnInitialMove but to wrong file for en passant
-          final lastMove = PawnInitialMove(from: g7, to: g5, moving: blackPawn);
+        // Create PawnInitialMove but to wrong file for en passant
+        final lastMove = PawnInitialMove(from: g7, to: g5, moving: blackPawn);
 
-          final validPositions = whitePawn.validPositions(
-            boardState,
-            e5,
-            lastMove: lastMove,
-          );
+        final validPositions = whitePawn.validPositions(
+          boardState,
+          e5,
+          lastMove: lastMove,
+        );
 
-          // Should not include en passant capture since f5 is not adjacent to
-          //e5 diagonally
-          expect(validPositions, isNot(contains(f6)));
-          expect(validPositions, isNot(contains(d6)));
-          // Should only have forward move
-          expect(validPositions, contains(e6));
-          expect(validPositions.length, equals(1));
-        },
-      );
+        // Should not include en passant capture since f5 is not adjacent to
+        //e5 diagonally
+        expect(validPositions, isNot(contains(f6)));
+        expect(validPositions, isNot(contains(d6)));
+        // Should only have forward move
+        expect(validPositions, contains(e6));
+        expect(validPositions.length, equals(1));
+      });
       test('should work with en passant and regular captures together', () {
         // Setup: White pawn at e5 can capture both normally and en passant
         const whitePawn = Pawn.white;

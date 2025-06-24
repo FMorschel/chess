@@ -13,7 +13,8 @@ final class PawnMove extends Move<Pawn> {
          '(${from.rank} -> ${to.rank})',
        ),
        assert(
-         ambiguous == null || ambiguous == AmbiguousMovementType.file,
+         ambiguous == AmbiguousMovementType.none ||
+             ambiguous == AmbiguousMovementType.file,
          'Promotion moves can only be ambiguous by file (${ambiguous.name})',
        ),
        super.base();
@@ -67,7 +68,7 @@ final class PawnMove extends Move<Pawn> {
     required PieceSymbol promotion,
     P? captured,
     Check check = Check.none,
-    AmbiguousMovementType? ambiguous,
+    AmbiguousMovementType ambiguous = AmbiguousMovementType.none,
   }) => switch (captured) {
     null => PromotionMove(
       moving: pawn,

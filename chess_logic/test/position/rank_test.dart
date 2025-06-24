@@ -50,29 +50,26 @@ void main() {
       expect(Rank.four.next(Direction.right), isNull);
     });
 
-    test(
-      'should return correct rank for vertical, diagonal and L-shape '
-      'directions',
-      () {
-        // Upward (towards Rank.eight)
-        expect(Rank.one.next(Direction.up), Rank.two);
-        expect(Rank.two.next(Direction.upLeft), Rank.three);
-        expect(Rank.three.next(Direction.upRight), Rank.four);
-        expect(Rank.four.next(Direction.upLeftLeft), Rank.five);
-        expect(Rank.five.next(Direction.upRightRight), Rank.six);
-        expect(Rank.one.next(Direction.upUpLeft), Rank.three);
-        expect(Rank.two.next(Direction.upUpRight), Rank.four);
+    test('should return correct rank for vertical, diagonal and L-shape '
+        'directions', () {
+      // Upward (towards Rank.eight)
+      expect(Rank.one.next(Direction.up), Rank.two);
+      expect(Rank.two.next(Direction.upLeft), Rank.three);
+      expect(Rank.three.next(Direction.upRight), Rank.four);
+      expect(Rank.four.next(Direction.upLeftLeft), Rank.five);
+      expect(Rank.five.next(Direction.upRightRight), Rank.six);
+      expect(Rank.one.next(Direction.upUpLeft), Rank.three);
+      expect(Rank.two.next(Direction.upUpRight), Rank.four);
 
-        // Downward (towards Rank.one)
-        expect(Rank.eight.next(Direction.down), Rank.seven);
-        expect(Rank.seven.next(Direction.downLeft), Rank.six);
-        expect(Rank.six.next(Direction.downRight), Rank.five);
-        expect(Rank.five.next(Direction.downLeftLeft), Rank.four);
-        expect(Rank.four.next(Direction.downRightRight), Rank.three);
-        expect(Rank.eight.next(Direction.downDownLeft), Rank.six);
-        expect(Rank.seven.next(Direction.downDownRight), Rank.five);
-      },
-    );
+      // Downward (towards Rank.one)
+      expect(Rank.eight.next(Direction.down), Rank.seven);
+      expect(Rank.seven.next(Direction.downLeft), Rank.six);
+      expect(Rank.six.next(Direction.downRight), Rank.five);
+      expect(Rank.five.next(Direction.downLeftLeft), Rank.four);
+      expect(Rank.four.next(Direction.downRightRight), Rank.three);
+      expect(Rank.eight.next(Direction.downDownLeft), Rank.six);
+      expect(Rank.seven.next(Direction.downDownRight), Rank.five);
+    });
 
     test('should return null at board edges', () {
       // Top edge (Rank.eight) - Attempting to move further "up"

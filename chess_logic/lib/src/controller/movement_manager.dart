@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 
-import '../move/ambiguous_movement_type.dart';
 import '../move/check.dart';
 import '../move/move.dart';
 import '../position/direction.dart';
@@ -13,13 +12,21 @@ import '../square/square.dart';
 import '../team/team.dart';
 import 'board_state.dart';
 import 'check_detector.dart';
+import 'move_validator.dart';
 import 'threat_detector.dart';
 
 class MovementManager {
   MovementManager(BoardState state, List<Move> moveHistory, List<Team> teams)
-    : _checkDetector = CheckDetector(state),
-      _moveHistory = [] {
-    _checkDetector.movementManager = this;
+    : _moveHistory = [] {
+    _checkDetector = CheckDetector(
+      state,
+      moveGenerator: possibleMovesNoValidation,
+    );
+    _moveValidator = MoveValidator(
+      state,
+      checkDetector: _checkDetector,
+      moveGenerator: possibleMovesNoValidation,
+    );
     if (teams.isEmpty) {
       throw ArgumentError('At least one team must be provided.');
     }
@@ -47,9 +54,10 @@ class MovementManager {
     }
   }
 
-  final CheckDetector _checkDetector;
   final Map<Team, ({bool queen, bool king})> _canCastelling = {};
 
+  late final CheckDetector _checkDetector;
+  late final MoveValidator _moveValidator;
   late final List<Move> _moveHistory;
 
   Move move(Move move) {
@@ -74,37 +82,15 @@ class MovementManager {
   /// - Ambiguous type: whether multiple pieces can make the same move
   ///
   /// Returns an empty list if the square is not occupied.
-  List<Move> possibleMovesWithCheckAndAmbiguous(Square square) {
-    if (square is! OccupiedSquare) {
-      return const [];
-    }
-    final moves = possibleMoves(square);
-    final movesWithCheckAndAmbiguous = <Move>[];
-
-    for (final move in [...moves]) {
-      final results = _checkDetector.moveWouldCreateCheck(move);
-      // Check if this move would put or leave own king in check
-      final ownCheckStatus = results[square.piece.team] ?? Check.none;
-      if (ownCheckStatus != Check.none) {
-        moves.remove(move);
-        continue;
-      }
-      final checkStatus = results.values.maxOrNull ?? Check.none;
-      final ambiguousType = _detectAmbiguousMove(move);
-      final moveWithUpdatedFields = move.copyWith(
-        check: checkStatus,
-        ambiguous: ambiguousType,
-      );
-      movesWithCheckAndAmbiguous.add(moveWithUpdatedFields);
-    }
-
-    return movesWithCheckAndAmbiguous;
+  List<Move> possibleMoves(Square square) {
+    return _moveValidator.createValidMoves(square);
   }
 
   /// Returns a list of all possible moves for the given square.
   ///
   /// If [untracked] is provided, it will be considered as the last move.
-  List<Move> possibleMoves(Square square, {Move? untracked}) {
+  @visibleForTesting
+  List<Move> possibleMovesNoValidation(Square square, {Move? untracked}) {
     if (square is! OccupiedSquare) {
       return const [];
     }
@@ -282,69 +268,6 @@ class MovementManager {
     return moves;
   }
 
-  /// Detects if a move is ambiguous (multiple pieces of the same type
-  /// can move to the same destination).
-  ///
-  /// Returns the [AmbiguousMovementType] if the move is ambiguous,
-  /// or null if it's not ambiguous.
-  AmbiguousMovementType? _detectAmbiguousMove(Move move) {
-    final piece = move.moving;
-    final destination = move.to;
-
-    // Find all pieces of the same type and team that can move to the same
-    // destination
-    final samePieceSquares = <OccupiedSquare>[];
-    for (final square in state.occupiedSquares) {
-      if (square.piece.symbol == piece.symbol &&
-          square.piece.team == piece.team &&
-          square.position != move.from) {
-        final squareMoves = possibleMoves(square);
-        if (squareMoves.any((m) => m.to == destination)) {
-          samePieceSquares.add(square);
-        }
-      }
-    }
-
-    // If no other pieces can move to the same destination, not ambiguous
-    if (samePieceSquares.isEmpty) {
-      return null;
-    }
-
-    // Check if disambiguation is needed by file, rank, or both
-    final currentFile = move.from.file;
-    final currentRank = move.from.rank;
-
-    bool needsRankDisambiguation = false;
-    bool needsFileDisambiguation = false;
-
-    for (final square in samePieceSquares) {
-      if (square.position.file == currentFile) {
-        needsRankDisambiguation = true;
-      }
-      if (square.position.rank == currentRank) {
-        needsFileDisambiguation = true;
-      }
-      // If pieces are not aligned but two of the same type can get to the same
-      // destination, we are handling diagonals and such we need file
-      // disambiguation
-      if (!needsRankDisambiguation && !needsFileDisambiguation) {
-        needsFileDisambiguation = true;
-      }
-    }
-
-    // Determine the type of disambiguation needed
-    if (needsRankDisambiguation && needsFileDisambiguation) {
-      return AmbiguousMovementType.both;
-    }
-    if (needsFileDisambiguation) {
-      return AmbiguousMovementType.file;
-    }
-    if (needsRankDisambiguation) {
-      return AmbiguousMovementType.rank;
-    }
-    return null; // Default to file if unclear
-  }
-
   @visibleForTesting
   Map<Team, ({bool queen, bool king})> get canCastelling => _canCastelling;
 
@@ -354,4 +277,7 @@ class MovementManager {
 
   @visibleForTesting
   CheckDetector get checkDetector => _checkDetector;
+
+  @visibleForTesting
+  MoveValidator get moveValidator => _moveValidator;
 }

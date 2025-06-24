@@ -455,26 +455,23 @@ void main() {
         },
       );
 
-      test(
-        'should return true when move resolves threat by moving threatened '
-        'piece',
-        () {
-          // Setup: King under attack, moving the king to safety
-          boardState = BoardState.custom({e1: whiteKing, e8: blackQueen});
-          threatDetector = ThreatDetector(boardState);
+      test('should return true when move resolves threat by moving threatened '
+          'piece', () {
+        // Setup: King under attack, moving the king to safety
+        boardState = BoardState.custom({e1: whiteKing, e8: blackQueen});
+        threatDetector = ThreatDetector(boardState);
 
-          final kingMove = Move.create(from: e1, to: d1, moving: whiteKing);
-          final whiteKingOnBoard = boardState[e1];
+        final kingMove = Move.create(from: e1, to: d1, moving: whiteKing);
+        final whiteKingOnBoard = boardState[e1];
 
-          expect(
-            threatDetector.wouldMoveResolvePieceThreat(
-              kingMove,
-              whiteKingOnBoard,
-            ),
-            isTrue,
-          );
-        },
-      );
+        expect(
+          threatDetector.wouldMoveResolvePieceThreat(
+            kingMove,
+            whiteKingOnBoard,
+          ),
+          isTrue,
+        );
+      });
       test('should return false when piece is not currently under threat', () {
         // Setup: King is safe, move doesn't affect threat status
         boardState = BoardState.custom({

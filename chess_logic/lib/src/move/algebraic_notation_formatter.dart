@@ -16,7 +16,7 @@ class AlgebraicNotationFormatter
   // One method for each move type
   String formatRegularMove(Move move) {
     _buffer.write(move.moving.toAlgebraic());
-    if (move.ambiguous case final ambiguous? when move is! EnPassantMove) {
+    if (move.ambiguous case final ambiguous when move is! EnPassantMove) {
       _formatAmbiguous(ambiguous, move.from);
     }
     _buffer.write(move.to.toAlgebraic());
@@ -25,7 +25,7 @@ class AlgebraicNotationFormatter
 
   String formatRegularCaptureMove(CaptureMove move) {
     _buffer.write(move.moving.toAlgebraic());
-    if (move.ambiguous case final ambiguous? when move is! EnPassantMove) {
+    if (move.ambiguous case final ambiguous when move is! EnPassantMove) {
       _formatAmbiguous(ambiguous, move.from);
     }
     _buffer.write(_capture);
@@ -75,6 +75,7 @@ class AlgebraicNotationFormatter
   String _formatAmbiguous(AmbiguousMovementType type, Position from) {
     // ignore: unnecessary_statements, to enforce exhaustive matching
     (switch (type) {
+      AmbiguousMovementType.none => _buffer.write(''),
       AmbiguousMovementType.file => _buffer.write(from.file.letter),
       AmbiguousMovementType.rank => _buffer.write(from.rank.value),
       AmbiguousMovementType.both => _buffer.write(from.toAlgebraic()),

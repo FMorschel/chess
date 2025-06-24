@@ -13,14 +13,13 @@ final class KnightMove extends Move<Knight> {
          '(${from.toAlgebraic()} -> ${to.toAlgebraic()})',
        ),
        super.base();
-
   static KnightCaptureMove<P> capture<P extends Piece>({
     required Knight moving,
     required Position from,
     required Position to,
     required P captured,
     Check check = Check.none,
-    AmbiguousMovementType? ambiguous,
+    AmbiguousMovementType ambiguous = AmbiguousMovementType.none,
   }) {
     return KnightCaptureMove<P>(
       moving: moving,

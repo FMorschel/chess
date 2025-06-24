@@ -556,34 +556,31 @@ void main() {
         expect(controller.gameState, equals(GameState.draw));
       });
 
-      test(
-        'should not set draw when King+Bishop vs King+Bishop on different '
-        'colors',
-        () {
-          final controller = GameController.custom(Team.values, {
-            Position.e5: King.white,
-            Position.c1: Bishop.white,
-            Position.e8: King.black,
-            Position.c8: Bishop.black,
-            // Last piece to be captured
-            Position.e4: Pawn.black,
-          });
+      test('should not set draw when King+Bishop vs King+Bishop on different '
+          'colors', () {
+        final controller = GameController.custom(Team.values, {
+          Position.e5: King.white,
+          Position.c1: Bishop.white,
+          Position.e8: King.black,
+          Position.c8: Bishop.black,
+          // Last piece to be captured
+          Position.e4: Pawn.black,
+        });
 
-          expect(controller.gameState, equals(GameState.inProgress));
+        expect(controller.gameState, equals(GameState.inProgress));
 
-          // Move to capture the last piece besides kings and bishops
-          final move = CaptureMove.create(
-            from: Position.e5,
-            to: Position.e4,
-            moving: King.white,
-            captured: Pawn.black,
-          );
+        // Move to capture the last piece besides kings and bishops
+        final move = CaptureMove.create(
+          from: Position.e5,
+          to: Position.e4,
+          moving: King.white,
+          captured: Pawn.black,
+        );
 
-          controller.move(move);
+        controller.move(move);
 
-          expect(controller.gameState, equals(GameState.inProgress));
-        },
-      );
+        expect(controller.gameState, equals(GameState.inProgress));
+      });
 
       group('50-move rule', () {
         test('should initialize halfmove clock to 0 in new game', () {

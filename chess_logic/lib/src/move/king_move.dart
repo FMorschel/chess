@@ -52,7 +52,7 @@ final class KingMove extends Move<King> {
     required Position to,
     required P captured,
     Check check = Check.none,
-    AmbiguousMovementType? ambiguous,
+    AmbiguousMovementType ambiguous = AmbiguousMovementType.none,
   }) {
     return KingCaptureMove(
       moving: moving,
@@ -110,7 +110,7 @@ sealed class CastlingMove extends Move<King> implements KingMove {
          'Both king and rook must be from the same team for castling',
        ),
        assert(
-         rook.ambiguous == null,
+         rook.ambiguous == AmbiguousMovementType.none,
          'Rook move in castling cannot be ambiguous',
        ),
        assert(
