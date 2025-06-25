@@ -15,11 +15,6 @@ import 'board_state.dart';
 class GameRuleEngine {
   const GameRuleEngine();
 
-  /// Gets the opponent team for a given team.
-  Team _getOpponentTeam(Team team) {
-    return team == Team.white ? Team.black : Team.white;
-  }
-
   /// Checks if the game should be drawn based on the 50-move rule.
   ///
   /// According to FIDE rules, the game is drawn if 50 moves have been made
@@ -211,28 +206,30 @@ class GameRuleEngine {
   /// 5. King doesn't pass through or land on a square attacked by opponent
   /// 6. King and rook are on the same rank
   ///
-  /// [king] - The king attempting to castle
-  /// [rook] - The rook involved in castling
-  /// [kingFrom] - King's current position
-  /// [kingTo] - King's target position
-  /// [rookFrom] - Rook's current position
+  /// [move] - The castling move to validate
   /// [boardState] - Current board state
   /// [moveHistory] - List of all moves made in the game
-  /// [isSquareAttacked] - Function to check if a square is under attack
+  /// [isPositionSafeFor] - Function to check if a square is under attack
   ///
   /// Returns true if castling is legal
   bool isCastlingLegal(
-    King king,
-    Rook rook,
-    Position kingFrom,
-    Position kingTo,
-    Position rookFrom,
+    CastlingMove move,
     BoardState boardState,
     List<Move> moveHistory,
-    bool Function(Position position, Team byTeam) isSquareAttacked,
+    bool Function(Position position, Team team) isPositionSafeFor,
   ) {
-    // Check if king and rook are the same team
-    if (king.team != rook.team) {
+    final king = move.moving;
+    final kingFrom = move.from;
+    final kingTo = move.to;
+    final rookFrom = move.rook.from;
+
+    // The king is not in position
+    if (boardState[kingFrom].piece != king) {
+      return false;
+    }
+
+    // The rook is not in position
+    if (boardState[rookFrom].piece != move.rook.moving) {
       return false;
     }
 
@@ -243,64 +240,57 @@ class GameRuleEngine {
 
     // Check if king and rook are in their initial positions
     final homeRank = king.team.homeRank;
-    const kingHomeFile = File.e;
     final isKingInInitialPosition =
-        kingFrom == Position(kingHomeFile, homeRank);
+        kingFrom.rank == homeRank && kingFrom.file.defaultSymbol == king.symbol;
+    if (!isKingInInitialPosition) {
+      return false;
+    }
+
     final isRookInInitialPosition = king.rookPositions
         .map((r) => r.$1)
         .contains(rookFrom);
+    if (!isRookInInitialPosition) {
+      return false;
+    }
 
-    if (!isKingInInitialPosition || !isRookInInitialPosition) {
+    // Check if king is currently in check
+    if (!isPositionSafeFor(kingFrom, king.team)) {
+      return false;
+    }
+
+    // Check if king lands on an attacked square
+    if (!isPositionSafeFor(kingTo, king.team)) {
       return false;
     }
 
     // Check if king or rook have moved
     final kingHasMoved = moveHistory.any(
       (move) =>
-          move.moving == king ||
-          (move.from == kingFrom &&
-              move.moving is King &&
-              move.moving.team == king.team),
+          move.from == kingFrom &&
+          move.moving is King &&
+          move.moving.team == king.team,
     );
-    final rookHasMoved = moveHistory.any(
-      (move) =>
-          move.moving == rook ||
-          (move.from == rookFrom &&
-              move.moving is Rook &&
-              move.moving.team == rook.team),
-    );
-
-    if (kingHasMoved || rookHasMoved) {
+    if (kingHasMoved) {
       return false;
     }
-    // Check if king is currently in check
-    if (isSquareAttacked(kingFrom, _getOpponentTeam(king.team))) {
+
+    final rookHasMoved = moveHistory.any(
+      (move) =>
+          move.from == rookFrom &&
+          move.moving is Rook &&
+          move.moving.team == king.team,
+    );
+    if (rookHasMoved) {
       return false;
     }
 
     // Check if there are pieces between king and rook
-    final minFile = kingFrom.file.index < rookFrom.file.index
-        ? kingFrom.file
-        : rookFrom.file;
-    final maxFile = kingFrom.file.index > rookFrom.file.index
-        ? kingFrom.file
-        : rookFrom.file;
+    final minFile = File.min(kingFrom.file, rookFrom.file);
+    final maxFile = File.max(kingFrom.file, rookFrom.file);
 
     for (int i = minFile.index + 1; i < maxFile.index; i++) {
       final intermediatePosition = Position(File.values[i], kingFrom.rank);
       if (boardState[intermediatePosition].piece != null) {
-        return false;
-      }
-    }
-
-    // Check if king passes through or lands on an attacked square
-    final direction = kingTo.file.index > kingFrom.file.index ? 1 : -1;
-    var currentFile = kingFrom.file;
-
-    while (currentFile != kingTo.file) {
-      currentFile = File.values[currentFile.index + direction];
-      final checkPosition = Position(currentFile, kingFrom.rank);
-      if (isSquareAttacked(checkPosition, _getOpponentTeam(king.team))) {
         return false;
       }
     }

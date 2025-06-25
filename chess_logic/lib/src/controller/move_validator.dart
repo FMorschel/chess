@@ -8,6 +8,7 @@ import '../square/square.dart';
 import '../team/team.dart';
 import 'board_state.dart';
 import 'check_detector.dart';
+import 'game_rule_engine.dart';
 
 /// Service for validating chess moves and enriching them with additional
 /// information.
@@ -41,15 +42,28 @@ class MoveValidator {
   /// - Ambiguous type: whether multiple pieces can make the same move
   ///
   /// Returns an empty list if the square is not occupied.
-  List<Move> createValidMoves(Square square) {
+  List<Move> createValidMoves(
+    Square square,
+    List<Move> history,
+    GameRuleEngine ruleEngine,
+  ) {
     if (square is! OccupiedSquare) {
       return const [];
     }
 
-    final possibleMoves = _moveGenerator(square);
+    final possibleMoves = _moveGenerator(square, untracked: history.lastOrNull);
     final validMoves = <Move>[];
 
     for (final move in possibleMoves) {
+      if (move is CastlingMove) {
+        ruleEngine.isCastlingLegal(
+          move,
+          state,
+          history,
+          checkDetector.threatDetector.isPositionSafeFor,
+        );
+      }
+
       if (!isMoveLegal(move, square.piece.team)) {
         continue; // Skip illegal moves that put own king in check
       }

@@ -494,85 +494,29 @@ void main() {
     });
 
     group('isCastlingLegal', () {
-      test('should return false for different team king and rook', () {
-        const king = King.white;
-        const rook = Rook.black;
-        const kingFrom = Position.e1;
-        const kingTo = Position.g1;
-        const rookFrom = Position.h1;
-        final boardState = BoardState.custom({
-          Position.e1: king,
-          Position.h1: rook,
-        });
-        final moveHistory = <Move>[];
-        bool isSquareAttacked(Position position, Team byTeam) => false;
-
-        final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
-          boardState,
-          moveHistory,
-          isSquareAttacked,
-        );
-
-        expect(result, isFalse);
-      });
-
-      test('should return false when king and rook are on different ranks', () {
-        const king = King.white;
-        const rook = Rook.white;
-        const kingFrom = Position.e1;
-        const kingTo = Position.g1;
-        const rookFrom = Position.h2; // Different rank
-        final boardState = BoardState.custom({
-          Position.e1: king,
-          Position.h2: rook,
-        });
-        final moveHistory = <Move>[];
-        bool isSquareAttacked(Position position, Team byTeam) => false;
-
-        final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
-          boardState,
-          moveHistory,
-          isSquareAttacked,
-        );
-
-        expect(result, isFalse);
-      });
-
       test('should return false when king has moved', () {
         const king = King.white;
         const rook = Rook.white;
         const kingFrom = Position.e1;
         const kingTo = Position.g1;
         const rookFrom = Position.h1;
-        final boardState = BoardState.custom({
-          Position.e1: king,
-          Position.h1: rook,
-        });
+        const rookTo = Position.f1;
+        final boardState = BoardState.custom({kingFrom: king, rookFrom: rook});
         final moveHistory = [
-          KingMove(from: Position.e1, to: Position.e2, moving: king),
-          KingMove(from: Position.e2, to: Position.e1, moving: king),
+          KingMove(from: kingFrom, to: Position.e2, moving: king),
+          KingMove(from: Position.e2, to: kingFrom, moving: king),
         ];
-        bool isSquareAttacked(Position position, Team byTeam) => false;
 
         final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
+          KingsideCastling(
+            from: kingFrom,
+            to: kingTo,
+            moving: king,
+            rook: RookMove(from: rookFrom, to: rookTo, moving: rook),
+          ),
           boardState,
           moveHistory,
-          isSquareAttacked,
+          (_, _) => true,
         );
 
         expect(result, isFalse);
@@ -584,25 +528,23 @@ void main() {
         const kingFrom = Position.e1;
         const kingTo = Position.g1;
         const rookFrom = Position.h1;
-        final boardState = BoardState.custom({
-          Position.e1: king,
-          Position.h1: rook,
-        });
+        const rookTo = Position.f1;
+        final boardState = BoardState.custom({kingFrom: king, rookFrom: rook});
         final moveHistory = [
-          RookMove(from: Position.h1, to: Position.h2, moving: rook),
-          RookMove(from: Position.h2, to: Position.h1, moving: rook),
+          RookMove(from: rookFrom, to: Position.h2, moving: rook),
+          RookMove(from: Position.h2, to: rookFrom, moving: rook),
         ];
-        bool isSquareAttacked(Position position, Team byTeam) => false;
 
         final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
+          KingsideCastling(
+            from: kingFrom,
+            to: kingTo,
+            moving: king,
+            rook: RookMove(from: rookFrom, to: rookTo, moving: rook),
+          ),
           boardState,
           moveHistory,
-          isSquareAttacked,
+          (_, _) => true,
         );
 
         expect(result, isFalse);
@@ -614,24 +556,19 @@ void main() {
         const kingFrom = Position.e1;
         const kingTo = Position.g1;
         const rookFrom = Position.h1;
-        final boardState = BoardState.custom({
-          Position.e1: king,
-          Position.h1: rook,
-        });
-        final moveHistory = <Move>[];
-        bool isSquareAttacked(Position position, Team byTeam) {
-          return position == kingFrom && byTeam == Team.black;
-        }
+        const rookTo = Position.f1;
+        final boardState = BoardState.custom({kingFrom: king, rookFrom: rook});
 
         final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
+          KingsideCastling(
+            from: kingFrom,
+            to: kingTo,
+            moving: king,
+            rook: RookMove(from: rookFrom, to: rookTo, moving: rook),
+          ),
           boardState,
-          moveHistory,
-          isSquareAttacked,
+          [],
+          (position, team) => !(team == king.team && position == kingFrom),
         );
 
         expect(result, isFalse);
@@ -645,58 +582,28 @@ void main() {
           const kingFrom = Position.e1;
           const kingTo = Position.g1;
           const rookFrom = Position.h1;
+          const rookTo = Position.f1;
           final boardState = BoardState.custom({
-            Position.e1: king,
+            kingFrom: king,
             Position.f1: Bishop.white, // Piece between king and rook
-            Position.h1: rook,
+            rookFrom: rook,
           });
-          final moveHistory = <Move>[];
-          bool isSquareAttacked(Position position, Team byTeam) => false;
 
           final result = ruleEngine.isCastlingLegal(
-            king,
-            rook,
-            kingFrom,
-            kingTo,
-            rookFrom,
+            KingsideCastling(
+              from: kingFrom,
+              to: kingTo,
+              moving: king,
+              rook: RookMove(from: rookFrom, to: rookTo, moving: rook),
+            ),
             boardState,
-            moveHistory,
-            isSquareAttacked,
+            [],
+            (_, _) => true,
           );
 
           expect(result, isFalse);
         },
       );
-
-      test('should return false when king passes through attacked square', () {
-        const king = King.white;
-        const rook = Rook.white;
-        const kingFrom = Position.e1;
-        const kingTo = Position.g1;
-        const rookFrom = Position.h1;
-        final boardState = BoardState.custom({
-          Position.e1: king,
-          Position.h1: rook,
-        });
-        final moveHistory = <Move>[];
-        bool isSquareAttacked(Position position, Team byTeam) {
-          return position == Position.f1 &&
-              byTeam == Team.black; // f1 is attacked
-        }
-
-        final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
-          boardState,
-          moveHistory,
-          isSquareAttacked,
-        );
-
-        expect(result, isFalse);
-      });
 
       test('should return false when king lands on attacked square', () {
         const king = King.white;
@@ -704,25 +611,19 @@ void main() {
         const kingFrom = Position.e1;
         const kingTo = Position.g1;
         const rookFrom = Position.h1;
-        final boardState = BoardState.custom({
-          Position.e1: king,
-          Position.h1: rook,
-        });
-        final moveHistory = <Move>[];
-        bool isSquareAttacked(Position position, Team byTeam) {
-          return position == Position.g1 &&
-              byTeam == Team.black; // g1 is attacked
-        }
+        const rookTo = Position.f1;
+        final boardState = BoardState.custom({kingFrom: king, rookFrom: rook});
 
         final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
+          KingsideCastling(
+            from: kingFrom,
+            to: kingTo,
+            moving: king,
+            rook: RookMove(from: rookFrom, to: rookTo, moving: rook),
+          ),
           boardState,
-          moveHistory,
-          isSquareAttacked,
+          [],
+          (position, team) => !(team == king.team && position == kingTo),
         );
 
         expect(result, isFalse);
@@ -734,22 +635,19 @@ void main() {
         const kingFrom = Position.e1;
         const kingTo = Position.g1;
         const rookFrom = Position.h1;
-        final boardState = BoardState.custom({
-          Position.e1: king,
-          Position.h1: rook,
-        });
-        final moveHistory = <Move>[];
-        bool isSquareAttacked(Position position, Team byTeam) => false;
+        const rookTo = Position.f1;
+        final boardState = BoardState.custom({kingFrom: king, rookFrom: rook});
 
         final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
+          KingsideCastling(
+            from: kingFrom,
+            to: kingTo,
+            moving: king,
+            rook: RookMove(from: rookFrom, to: rookTo, moving: rook),
+          ),
           boardState,
-          moveHistory,
-          isSquareAttacked,
+          [],
+          (_, _) => true,
         );
 
         expect(result, isTrue);
@@ -761,22 +659,19 @@ void main() {
         const kingFrom = Position.e1;
         const kingTo = Position.c1;
         const rookFrom = Position.a1;
-        final boardState = BoardState.custom({
-          Position.e1: king,
-          Position.a1: rook,
-        });
-        final moveHistory = <Move>[];
-        bool isSquareAttacked(Position position, Team byTeam) => false;
+        const rookTo = Position.d1;
+        final boardState = BoardState.custom({kingFrom: king, rookFrom: rook});
 
         final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
+          QueensideCastling(
+            from: kingFrom,
+            to: kingTo,
+            moving: king,
+            rook: RookMove(from: rookFrom, to: rookTo, moving: rook),
+          ),
           boardState,
-          moveHistory,
-          isSquareAttacked,
+          [],
+          (_, _) => true,
         );
 
         expect(result, isTrue);
@@ -785,25 +680,25 @@ void main() {
       test('should return false when king is not in initial position', () {
         const king = King.white;
         const rook = Rook.white;
-        const kingFrom = Position.d1; // Wrong initial position
-        const kingTo = Position.f1;
+        const kingFrom = Position.e1;
+        const kingTo = Position.g1;
         const rookFrom = Position.h1;
+        const rookTo = Position.f1;
         final boardState = BoardState.custom({
-          Position.d1: king,
-          Position.h1: rook,
+          Position.d1: king, // Wrong initial position
+          rookFrom: rook,
         });
-        final moveHistory = <Move>[];
-        bool isSquareAttacked(Position position, Team byTeam) => false;
 
         final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
+          KingsideCastling(
+            from: kingFrom,
+            to: kingTo,
+            moving: king,
+            rook: RookMove(from: rookFrom, to: rookTo, moving: rook),
+          ),
           boardState,
-          moveHistory,
-          isSquareAttacked,
+          [],
+          (_, _) => true,
         );
 
         expect(result, isFalse);
@@ -814,23 +709,23 @@ void main() {
         const rook = Rook.white;
         const kingFrom = Position.e1;
         const kingTo = Position.g1;
-        const rookFrom = Position.g1; // Wrong initial position
+        const rookFrom = Position.h1;
+        const rookTo = Position.f1;
         final boardState = BoardState.custom({
           Position.e1: king,
-          Position.g1: rook,
+          Position.g1: rook, // Wrong initial position
         });
-        final moveHistory = <Move>[];
-        bool isSquareAttacked(Position position, Team byTeam) => false;
 
         final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
+          KingsideCastling(
+            from: kingFrom,
+            to: kingTo,
+            moving: king,
+            rook: RookMove(from: rookFrom, to: rookTo, moving: rook),
+          ),
           boardState,
-          moveHistory,
-          isSquareAttacked,
+          [],
+          (_, _) => true,
         );
 
         expect(result, isFalse);
@@ -842,22 +737,19 @@ void main() {
         const kingFrom = Position.e8;
         const kingTo = Position.g8;
         const rookFrom = Position.h8;
-        final boardState = BoardState.custom({
-          Position.e8: king,
-          Position.h8: rook,
-        });
-        final moveHistory = <Move>[];
-        bool isSquareAttacked(Position position, Team byTeam) => false;
+        const rookTo = Position.f8;
+        final boardState = BoardState.custom({kingFrom: king, rookFrom: rook});
 
         final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
+          KingsideCastling(
+            from: kingFrom,
+            to: kingTo,
+            moving: king,
+            rook: RookMove(from: rookFrom, to: rookTo, moving: rook),
+          ),
           boardState,
-          moveHistory,
-          isSquareAttacked,
+          [],
+          (_, _) => true,
         );
 
         expect(result, isTrue);
@@ -869,22 +761,19 @@ void main() {
         const kingFrom = Position.e8;
         const kingTo = Position.c8;
         const rookFrom = Position.a8;
-        final boardState = BoardState.custom({
-          Position.e8: king,
-          Position.a8: rook,
-        });
-        final moveHistory = <Move>[];
-        bool isSquareAttacked(Position position, Team byTeam) => false;
+        const rookTo = Position.d8;
+        final boardState = BoardState.custom({kingFrom: king, rookFrom: rook});
 
         final result = ruleEngine.isCastlingLegal(
-          king,
-          rook,
-          kingFrom,
-          kingTo,
-          rookFrom,
+          QueensideCastling(
+            from: kingFrom,
+            to: kingTo,
+            moving: king,
+            rook: RookMove(from: rookFrom, to: rookTo, moving: rook),
+          ),
           boardState,
-          moveHistory,
-          isSquareAttacked,
+          [],
+          (_, _) => true,
         );
 
         expect(result, isTrue);

@@ -12,6 +12,7 @@ import '../square/square.dart';
 import '../team/team.dart';
 import 'board_state.dart';
 import 'check_detector.dart';
+import 'game_rule_engine.dart';
 import 'move_validator.dart';
 import 'threat_detector.dart';
 
@@ -30,31 +31,10 @@ class MovementManager {
     if (teams.isEmpty) {
       throw ArgumentError('At least one team must be provided.');
     }
-    for (final team in teams) {
-      _canCastelling[team] = (queen: true, king: true);
-    }
     for (final movement in moveHistory) {
-      if (movement.moving case King(:final team)) {
-        _canCastelling[team] = (queen: false, king: false);
-      }
-      if (movement.moving case Rook(:final team)) {
-        if (movement.from.file == File.a) {
-          _canCastelling[team] = (
-            queen: false,
-            king: _canCastelling[team]!.king,
-          );
-        } else if (movement.from.file == File.h) {
-          _canCastelling[team] = (
-            queen: _canCastelling[team]!.queen,
-            king: false,
-          );
-        }
-      }
       move(movement);
     }
   }
-
-  final Map<Team, ({bool queen, bool king})> _canCastelling = {};
 
   late final CheckDetector _checkDetector;
   late final MoveValidator _moveValidator;
@@ -82,9 +62,8 @@ class MovementManager {
   /// - Ambiguous type: whether multiple pieces can make the same move
   ///
   /// Returns an empty list if the square is not occupied.
-  List<Move> possibleMoves(Square square) {
-    return _moveValidator.createValidMoves(square);
-  }
+  List<Move> possibleMoves(Square square, GameRuleEngine ruleEngine) =>
+      _moveValidator.createValidMoves(square, moveHistory, ruleEngine);
 
   /// Returns a list of all possible moves for the given square.
   ///
@@ -100,7 +79,6 @@ class MovementManager {
       case King():
         final positions = piece.validPositions(state, square.position);
         final kingIsInCheck = _checkDetector.isTeamInCheck(piece.team);
-        final (:king, :queen) = _canCastelling[square.piece.team]!;
         for (final (position, direction) in piece.rookPositions) {
           final rookDestination = square.position.next(direction);
           final destination = rookDestination?.next(direction);
@@ -111,11 +89,11 @@ class MovementManager {
           }
           positions.remove(destination);
           if (!kingIsInCheck) {
-            if (queen && position.file == File.a) {
-              final rook = state[position].piece;
-              if (rook is! Rook || rook.team != piece.team) {
-                continue;
-              }
+            final rook = state[position].piece;
+            if (rook is! Rook || rook.team != piece.team) {
+              continue;
+            }
+            if (position.file == File.a) {
               moves.add(
                 QueensideCastling(
                   from: square.position,
@@ -128,11 +106,7 @@ class MovementManager {
                   ),
                 ),
               );
-            } else if (king && position.file == File.h) {
-              final rook = state[position].piece;
-              if (rook is! Rook) {
-                continue;
-              }
+            } else if (position.file == File.h) {
               moves.add(
                 KingsideCastling(
                   from: square.position,
@@ -267,9 +241,6 @@ class MovementManager {
     }
     return moves;
   }
-
-  @visibleForTesting
-  Map<Team, ({bool queen, bool king})> get canCastelling => _canCastelling;
 
   BoardState get state => _checkDetector.state;
   List<Move> get moveHistory => List.unmodifiable(_moveHistory);

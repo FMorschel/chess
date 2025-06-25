@@ -4,6 +4,7 @@ import '../move/check.dart';
 import '../move/move.dart';
 import '../position/position.dart';
 import '../square/piece.dart';
+import '../square/square.dart';
 import '../team/team.dart';
 import 'board_state.dart';
 import 'game_rule_engine.dart';
@@ -31,7 +32,6 @@ class GameController {
         moveHistory: moveHistory,
         initialBoardState: BoardState(),
       ),
-      _ruleEngine = const GameRuleEngine(),
       _halfmoveClock = _calculateHalfmoveClock(moveHistory ?? []) {
     _updateStateAfterMove(moveHistory?.lastOrNull);
   }
@@ -47,8 +47,8 @@ class GameController {
         _teams,
         initialBoardState: BoardState.empty(),
       ),
-      _ruleEngine = const GameRuleEngine(),
       _halfmoveClock = 0;
+
   GameController.custom(this._teams, Map<Position, Piece> customPieces)
     : assert(
         _teams.length > 1,
@@ -64,19 +64,15 @@ class GameController {
         _teams,
         initialBoardState: BoardState.custom(customPieces),
       ),
-      _ruleEngine = const GameRuleEngine(),
       _halfmoveClock = 0;
 
-  /// Clean up resources
-  void dispose() {
-    _stateManager.dispose();
-  }
+  /// Access to the game rule engine for special rule validation
+  static const ruleEngine = GameRuleEngine();
 
   final List<Team> _teams;
   final ScoreManager _scoreManager;
   final MovementManager _movementManager;
   final GameStateManager _stateManager;
-  final GameRuleEngine _ruleEngine;
 
   /// Number of half-moves since the last capture or pawn move.
   /// Used for the 50-move rule.
@@ -98,14 +94,20 @@ class GameController {
     return halfmoveClock;
   }
 
+  /// Clean up resources
+  void dispose() {
+    _stateManager.dispose();
+  }
+
   List<Move> movesFor({Team? team, Position? position}) => state.occupiedSquares
       .where(
         (square) =>
             (team == null || square.piece.team == team) &&
             (position == null || square.position == position),
       )
-      .expand(_movementManager.possibleMoves)
+      .expand(_generateMoves)
       .toList();
+
   void move(Move move) {
     if (_stateManager.gameState != GameState.inProgress) {
       throw StateError('Cannot move pieces when the game is not in progress');
@@ -160,12 +162,12 @@ class GameController {
       _stateManager.updateGameState(GameState.teamWin);
       return;
     }
-    if (_ruleEngine.hasInsufficientMaterial(state)) {
+    if (ruleEngine.hasInsufficientMaterial(state)) {
       _stateManager.updateGameState(GameState.draw);
       return;
     }
     // Fifty-move rule: if no capture or pawn move in the last 50 moves
-    if (_ruleEngine.isFiftyMoveRule(_halfmoveClock, _teams)) {
+    if (ruleEngine.isFiftyMoveRule(_halfmoveClock, _teams)) {
       _stateManager.updateGameState(GameState.draw);
       return;
     }
@@ -181,9 +183,6 @@ class GameController {
   /// The current halfmove clock count - number of half-moves since last pawn
   /// move or capture
   int get halfmoveClock => _halfmoveClock;
-
-  /// Access to the game rule engine for special rule validation
-  GameRuleEngine get ruleEngine => _ruleEngine;
 
   List<Team> get teams => _stateManager.teams;
 
@@ -203,4 +202,7 @@ class GameController {
   Team? get winner => _stateManager.gameState == GameState.teamWin
       ? history.last.moving.team
       : null;
+
+  List<Move> _generateMoves(OccupiedSquare<Piece> square) =>
+      _movementManager.possibleMoves(square, ruleEngine);
 }

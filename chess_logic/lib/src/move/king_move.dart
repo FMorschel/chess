@@ -118,7 +118,9 @@ sealed class CastlingMove extends Move<King> implements KingMove {
          'Castling move must have the same check status as the rook move',
        ),
        assert(
-         rook.from.rank == from.rank && rook.to.rank == to.rank,
+         rook.from.rank == from.rank &&
+             rook.to.rank == to.rank &&
+             to.rank == from.rank,
          'Rook must move on the same rank as the king for castling',
        ),
        super.base();

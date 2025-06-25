@@ -198,25 +198,3 @@ class BoardState {
     }
   }
 }
-
-/// Extension to get default piece symbol for each file in starting position.
-extension on File {
-  /// Default piece symbol for this file in the starting position.
-  PieceSymbol get defaultSymbol {
-    switch (this) {
-      case File.a:
-      case File.h:
-        return PieceSymbol.rook;
-      case File.b:
-      case File.g:
-        return PieceSymbol.knight;
-      case File.c:
-      case File.f:
-        return PieceSymbol.bishop;
-      case File.d:
-        return PieceSymbol.queen;
-      case File.e:
-        return PieceSymbol.king;
-    }
-  }
-}

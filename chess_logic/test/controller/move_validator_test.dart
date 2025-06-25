@@ -1,4 +1,5 @@
 import 'package:chess_logic/src/controller/board_state.dart';
+import 'package:chess_logic/src/controller/game_rule_engine.dart';
 import 'package:chess_logic/src/controller/move_validator.dart';
 import 'package:chess_logic/src/controller/movement_manager.dart';
 import 'package:chess_logic/src/move/ambiguous_movement_type.dart';
@@ -31,7 +32,11 @@ void main() {
         final emptySquare = boardState[Position.e4];
 
         // Act
-        final result = moveValidator.createValidMoves(emptySquare);
+        final result = moveValidator.createValidMoves(
+          emptySquare,
+          [],
+          const GameRuleEngine(),
+        );
 
         // Assert
         expect(result, isEmpty);
@@ -48,7 +53,11 @@ void main() {
         final whiteQueenSquare = boardState[Position.e4];
 
         // Act: Get moves for white queen (moving it would expose king)
-        final result = moveValidator.createValidMoves(whiteQueenSquare);
+        final result = moveValidator.createValidMoves(
+          whiteQueenSquare,
+          [],
+          const GameRuleEngine(),
+        );
 
         // Assert: Some moves should be filtered out
         final movesToD4 = result.where((m) => m.to == Position.d4);
@@ -67,7 +76,11 @@ void main() {
         final whiteQueenSquare = boardState[Position.d1];
 
         // Act
-        final result = moveValidator.createValidMoves(whiteQueenSquare);
+        final result = moveValidator.createValidMoves(
+          whiteQueenSquare,
+          [],
+          const GameRuleEngine(),
+        );
 
         // Assert: Find move that gives check
         final checkMove = result
@@ -89,7 +102,11 @@ void main() {
         final knightSquare = boardState[Position.b1];
 
         // Act
-        final result = moveValidator.createValidMoves(knightSquare);
+        final result = moveValidator.createValidMoves(
+          knightSquare,
+          [],
+          const GameRuleEngine(),
+        );
 
         // Assert: Find move that might be ambiguous
         final moveToD2 = result.where((m) => m.to == Position.d2).firstOrNull;
@@ -472,7 +489,10 @@ void main() {
 
         // Act: Get legal moves for a pawn
         final pawnSquare = boardState[Position.e2];
-        final moves = movementManager.possibleMoves(pawnSquare);
+        final moves = movementManager.possibleMoves(
+          pawnSquare,
+          const GameRuleEngine(),
+        );
 
         // Assert: Should get expected pawn moves
         expect(moves, isNotEmpty);

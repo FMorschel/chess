@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import '../square/piece_symbol.dart';
 import 'direction.dart';
 
 enum File implements Comparable<File> {
@@ -27,6 +26,10 @@ enum File implements Comparable<File> {
 
   final String letter;
 
+  static File max(File a, File b) => a > b ? a : b;
+
+  static File min(File a, File b) => a < b ? a : b;
+
   File? next(Direction direction) => switch (direction) {
     Direction.up || Direction.down => null,
     Direction.left ||
@@ -48,11 +51,32 @@ enum File implements Comparable<File> {
 
   int distanceTo(File other) {
     if (this == other) return 0;
-    return min(index, other.index) == index
-        ? other.index - index
-        : index - other.index;
+    return (index - other.index).abs();
   }
 
   @override
   int compareTo(File other) => index.compareTo(other.index);
+
+  bool operator <(File other) => index < other.index;
+
+  bool operator >(File other) => index > other.index;
+
+  /// Default piece symbol for this file in the starting position.
+  PieceSymbol get defaultSymbol {
+    switch (this) {
+      case File.a:
+      case File.h:
+        return PieceSymbol.rook;
+      case File.b:
+      case File.g:
+        return PieceSymbol.knight;
+      case File.c:
+      case File.f:
+        return PieceSymbol.bishop;
+      case File.d:
+        return PieceSymbol.queen;
+      case File.e:
+        return PieceSymbol.king;
+    }
+  }
 }
