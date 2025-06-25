@@ -753,7 +753,9 @@ void main() {
         );
 
         expect(result, isTrue);
-      });      test('should return true for valid queenside castling', () {
+      });
+
+      test('should return true for valid queenside castling', () {
         const king = King.white;
         const rook = Rook.white;
         const kingFrom = Position.e1;
